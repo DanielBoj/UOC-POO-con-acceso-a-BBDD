@@ -9,9 +9,6 @@ import ciricefp.vista.MenuPrincipal;
  * @author Cirice
  */
 public class OnlineStore {
-    private Datos datos;
-    private MenuPrincipal ventana;
-    private Controlador controlador;
     public static void main(String[] args) {
         System.out.println("OnlineStore Test!");
         // TODO
