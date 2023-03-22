@@ -1,2 +1,4 @@
-package ciricefp.modelo;public class Pedido {
+package ciricefp.modelo;
+
+public class Pedido {
 }

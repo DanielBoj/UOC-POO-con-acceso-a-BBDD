@@ -1,2 +1,4 @@
-package ciricefp.modelo;public class ClienteEstandard {
+package ciricefp.modelo;
+
+public class ClienteEstandard extends Cliente {
 }

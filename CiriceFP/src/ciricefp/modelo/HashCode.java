@@ -1,2 +1,4 @@
-package ciricefp.modelo;public interface HashCode {
+package ciricefp.modelo;
+
+public interface HashCode {
 }

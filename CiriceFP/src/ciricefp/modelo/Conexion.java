@@ -1,2 +1,4 @@
-package ciricefp.modelo;public class Conexion {
+package ciricefp.modelo;
+
+public class Conexion {
 }

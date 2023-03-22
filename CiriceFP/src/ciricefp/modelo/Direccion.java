@@ -1,2 +1,4 @@
-package ciricefp.modelo;public interface Direccion {
+package ciricefp.modelo;
+
+public interface Direccion {
 }
