@@ -3,6 +3,11 @@ package ciricefp.controlador;
 import ciricefp.modelo.*;
 import ciricefp.vista.*;
 
+/**
+ * Esta clase implementa el controlador de la tienda.
+ *
+ * @author Cirice
+ */
 public class Controlador {
 
     private Datos datos;
