@@ -1,5 +1,7 @@
 package ciricefp.modelo;
 
+import ciricefp.controlador.*;
+
 /**
  * Esta clase funciona como un controlador interno para el módulo Modelo siguiendo el patrón MVC.
  *
@@ -13,9 +15,9 @@ public class Datos {
     private Listas<Pedido> pedido;
     private Conexion baseDatos;
 
-    public Datos(Controlador controlador, Conexion conexion) {
+    public Datos(Controlador controlador, Conexion baseDatos) {
         this.controlador = controlador;
-        this.conexion = conexion;
+        this.baseDatos = baseDatos;
         this.clientes = new Listas<Cliente>();
         this.articulos = new Listas<Articulo>();
         this.pedido = new Listas<Pedido>();
@@ -80,6 +82,7 @@ public class Datos {
                 ", clientes=" + clientes +
                 ", articulos=" + articulos +
                 ", pedido=" + pedido +
+                ", baseDatos=" + baseDatos +
                 '}';
     }
 }
