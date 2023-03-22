@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ciricefp/controlador/Controlador.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ciricefp/controlador/OnlineStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" afterDir="false" />
-    </list>
+    <list default="true" id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
