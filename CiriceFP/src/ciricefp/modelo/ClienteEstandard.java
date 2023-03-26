@@ -10,5 +10,24 @@ public class ClienteEstandard extends Cliente {
         super(nombre, domicilio, nif, email);
     }
 
-    // Usa los métodos del padre, al no haber añadido atributo, no hace fata añadir ningún método.
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    public String tipoCliente() {
+        return "Estandard";
+    }
+
+    @Override
+    public double calcAnual() {
+        return 0;
+    }
+
+    @Override
+    public double descuentoEnv() {
+        return 0;
+    }
+
 }

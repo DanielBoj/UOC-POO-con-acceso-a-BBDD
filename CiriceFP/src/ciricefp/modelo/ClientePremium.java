@@ -51,10 +51,28 @@ public class ClientePremium extends Cliente {
 
     @Override
     public String toString() {
-        return "ClientePremium{" +
+        return super.toString() +
+                " - ClientePremium{" +
                 "cuota=" + cuota +
                 ", descuento=" + descuento +
                 ", codSocio='" + codSocio + '\'' +
                 '}';
     }
+
+    @Override
+    public String tipoCliente() {
+        return "Premium";
+    }
+
+    @Override
+    public double calcAnual() {
+        return this.getCuota();
+    }
+
+    @Override
+    public double descuentoEnv() {
+        return this.getDescuento();
+    }
+
+
 }

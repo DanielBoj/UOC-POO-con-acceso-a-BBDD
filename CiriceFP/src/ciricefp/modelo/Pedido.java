@@ -17,11 +17,7 @@ public class Pedido implements Comparable<Pedido> {
     private boolean esEnviado;
     private static int totalPedidos = 0;
 
-    public Pedido(Cliente cliente,
-                  Articulo articulo,
-                  int unidades,
-                  LocalDateTime fechaPedido,
-                  boolean esEnviado) {
+    public Pedido(Cliente cliente, Articulo articulo, int unidades, LocalDateTime fechaPedido, boolean esEnviado) {
         this.numeroPedido = ++totalPedidos;
         this.cliente = cliente;
         this.articulo = articulo;
@@ -67,8 +63,8 @@ public class Pedido implements Comparable<Pedido> {
         this.fechaPedido = fechaPedido;
     }
 
-    public boolean isEsEnviado() {
-        return esEnviado;
+    public boolean getEsEnviado() {
+        return this.esEnviado;
     }
 
     public void setEsEnviado(boolean esEnviado) {
@@ -83,6 +79,28 @@ public class Pedido implements Comparable<Pedido> {
         Pedido.totalPedidos = totalPedidos;
     }
 
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "numeroPedido=" + numeroPedido +
+                ", cliente=" + cliente +
+                ", articulo=" + articulo +
+                ", unidades=" + unidades +
+                ", fechaPedido=" + fechaPedido +
+                ", esEnviado=" + esEnviado +
+                '}';
+    }
+    public boolean pedidoEnviado(){
+        return this.esEnviado;
+    }
+    public double precioEnvio(){
+        double precioEnvio = this.articulo.getGastosEnvio() * this.unidades;
+        double descuentoEnvio= precioEnvio * this.cliente.descuentoEnv() / 100;
+        return precioEnvio - descuentoEnvio;
+
+
+    }
     @Override
     public int compareTo(Pedido sourcePedido) {
         return sourcePedido.getNumeroPedido() == this.numeroPedido? 0 : -1;

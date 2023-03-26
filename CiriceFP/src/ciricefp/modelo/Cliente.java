@@ -72,4 +72,10 @@ public abstract class Cliente implements Comparable<Cliente> {
     public int compareTo (Cliente sourceCliente) {
         return sourceCliente.getNif().equals(this.nif)? 0 : -1;
     }
+
+    abstract public String tipoCliente();
+    abstract public double calcAnual();
+    abstract public double descuentoEnv();
+
+
 }
