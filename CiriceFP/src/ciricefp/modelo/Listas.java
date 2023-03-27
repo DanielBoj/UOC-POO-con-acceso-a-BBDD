@@ -29,6 +29,29 @@ public class Listas<T> {
         this.lista = lista;
     }
 
+    public int getSize() {
+        return this.lista.size();
+    }
+    public void add(T t) {
+        this.lista.add(t);
+    }
+    public void borrar(T t) {
+        this.lista.remove(t);
+    }
+    public T getAt(int position) {
+        return this.lista.get(position);
+    }
+    public void clear() {
+        this.lista.clear();
+    }
+    public boolean isEmpty() {
+        return this.lista.isEmpty();
+    }
+    public ArrayList<T> getArrayList() {
+        ArrayList<T> arrlist = new ArrayList<>(lista);
+        return arrlist;
+    }
+
     @Override
     public String toString() {
         return "Listas{" +
