@@ -37,6 +37,10 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         return codArticulo;
     }
 
+    public void setCodArticulo(String codArticulo) {
+        this.codArticulo = codArticulo;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -86,7 +90,8 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     // Método para comparar dos artículos, implementamos la clase de Java Comparable.
     @Override
     public int compareTo (Articulo sourceArticulo) {
-        return sourceArticulo.getCodArticulo().equals(this.codArticulo)? 0 : -1;
+        return sourceArticulo.getCodArticulo().equals(this.codArticulo) &&
+                sourceArticulo.getDescripcion().equals(this.descripcion)? 0 : -1;
     }
 
     // Generamos el código único del artículo mediante la implementación del interfaz HashCode.

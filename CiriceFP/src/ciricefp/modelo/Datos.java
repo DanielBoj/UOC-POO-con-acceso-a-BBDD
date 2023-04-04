@@ -116,10 +116,18 @@ public class Datos {
         // Creamos el objeto y lo intentamos añadir a la lista
         Articulo articulo = new Articulo(descripcion, precio, gastosEnvio, preparacion);
 
+        // Creamos un artículo temporal para realizar la comparación y comprobamos si el artículo ya existe
+        Articulo articuloSrc = searchArticulo(articulo.getCodArticulo());
         // Comprobamos si el artículo ya existe
-        if (searchArticulo(articulo.getCodArticulo()) != null) {
-            System.out.println(MessageFormat.format("El artículo {0} ya existe", articulo.getDescripcion()));
-            return null;
+        if (articuloSrc != null) {
+            // Comparamos los dos objetos
+            if (articulo.compareTo(articuloSrc) == 0) {
+                System.out.println(MessageFormat.format("El artículo {0} ya existe", articulo.getDescripcion()));
+                return null;
+            } else {
+                // Manejamos la colisión de códigos
+                articulo.setCodArticulo(articulo.generateCodigo(articulo.getDescripcion() + "$!*"));
+            }
         }
 
         // Intentamos añadir el artículo a la lista
