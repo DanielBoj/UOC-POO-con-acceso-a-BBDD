@@ -52,7 +52,7 @@ public class VistaArticulos implements IVista {
             System.out.println("0. Volver al menú principal");
 
             // Pedimos la opción al usuario.
-            opt = menu.pedirOpcion(3);
+            opt = menu.pedirOpcion(4);
             switch (opt) {
                 case '1' -> addArticulo();
                 case '2' -> listArticulos();

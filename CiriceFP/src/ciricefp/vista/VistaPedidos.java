@@ -1,5 +1,6 @@
 package ciricefp.vista;
 
+import ciricefp.modelo.Cliente;
 import ciricefp.vista.interfaces.IVista;
 
 /**
@@ -76,13 +77,108 @@ public class VistaPedidos implements IVista {
     // Añadimos un pedido nuevo.
     public void addPedido() {
         System.out.println("Añadir pedido nuevo: ");
-        // Solicitamos los datos del pedido.
+        System.out.println("1. Introducir NIF de cliente registrado.");
+        System.out.println("2. Crear nuevo cliente.");
+
+        // Pedimos la opción al usuario.
+        char opt = menu.pedirOpcion(2);
+        switch (opt) {
+            case '1' -> addPedidoExistente();
+            case '2' -> addPedidoNuevo();
+            // Manejamos el caso de opción incorrecta.
+            default -> System.out.println("Opción incorrecta");
+        }
+    }
+
+    /* Métodos auxiliares para la creación de un pedido */
+
+    // Añadimos un pedido nuevo a un cliente existente.
+    public void addPedidoExistente() {
+
+        System.out.println("Añadir pedido nuevo a un cliente existente: ");
+
+        // Solicitamos los datos del cliente y del artículo
+        System.out.println("Introduce el NIF del cliente: ");
         String nif = menu.pedirDatos("NIF del cliente: ");
-        String codArticulo = menu.pedirDatos("Código del artículo: ");
+        System.out.println("Introduce el código del artículo: ");
+        String codArticulo;
+
+        // Comprobamos que el artículo existe, repetimos la operación mientras no exista o no se escoja salir.
+        do {
+            codArticulo = menu.pedirDatos("Código del artículo: ");
+
+            if (codArticulo.equals("0")) {
+                return;
+            }
+
+            if (menu.searchArticulo(codArticulo) == null) {
+                System.out.println("El artículo no existe. Introduce un código válido o pulsa 0 para salir.");
+            }
+        } while (menu.searchArticulo(codArticulo) == null);
+
+        // Introducimos el número de unidades.
+        System.out.println("Introduce la cantidad de unidades: ");
         int cantidad = Integer.parseInt(menu.pedirDatos("Cantidad de unidades[Entero]: "));
 
         // Llamamos al método del controlador
         menu.createPedido(nif, codArticulo, cantidad);
+    }
+
+    // Añadimos un pedido nuevo a un cliente nuevo.
+    public void addPedidoNuevo() {
+        System.out.println("Añadir pedido nuevo a un cliente nuevo: ");
+
+        // Capturamos los datos del cliente
+        // Pedimos los datos del cliente
+        System.out.println("Por favor, indica el tipo de cliente");
+        String tipo = "";
+        tipo = menu.getVistaClientes().pedirTipoCliente();
+
+        // Solicitamos los datos del cliente
+        String nombre = menu.pedirDatos("Nombre: ");
+        String nif = menu.pedirDatos("NIF: ");
+        String email = menu.pedirDatos("Email: ");
+        System.out.println("Dirección: ");
+        String domicilio = menu.pedirDatos("Domicilio: ");
+        String poblacion = menu.pedirDatos("Población: ");
+        String provincia = menu.pedirDatos("Provincia: ");
+        String cp = menu.pedirDatos("Código postal: ");
+        String pais = menu.pedirDatos("País: ");
+
+        // Creamos el cliente
+        try {
+            menu.createCliente(nombre, domicilio, poblacion, provincia, cp, pais, nif, email, tipo);
+        } catch (Exception e) {
+            System.out.println("Error al crear el cliente");
+        }
+
+        // Solicitamos los datos del artículo
+        System.out.println("Introduce el código del artículo: ");
+        String codArticulo;
+
+        // Comprobamos que el artículo existe, repetimos la operación mientras no exista o no se escoja salir.
+        do {
+            codArticulo = menu.pedirDatos("Código del artículo: ");
+
+            if (codArticulo.equals("0")) {
+                return;
+            }
+
+            if (menu.searchArticulo(codArticulo) == null) {
+                System.out.println("El artículo no existe. Introduce un código válido o pulsa 0 para salir.");
+            }
+        } while (menu.searchArticulo(codArticulo) == null);
+
+        // Introducimos el número de unidades.
+        System.out.println("Introduce la cantidad de unidades: ");
+        int cantidad = Integer.parseInt(menu.pedirDatos("Cantidad de unidades[Entero]: "));
+
+        // Llamamos al método del controlador
+        try {
+            menu.createPedido(nif, codArticulo, cantidad);
+        } catch (Exception e) {
+            System.out.println("Error al crear el pedido");
+        }
     }
 
     // Mostramos todos los pedidos.

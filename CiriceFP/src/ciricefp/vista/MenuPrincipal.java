@@ -1,6 +1,6 @@
 package ciricefp.vista;
 
-import ciricefp.controlador.*;
+import ciricefp.controlador.Controlador;
 import ciricefp.modelo.Articulo;
 import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Pedido;
@@ -127,7 +127,7 @@ public class MenuPrincipal {
         }
         sb.append("): ");
 
-        System.out.println("Elige una opción (1,2,3 o 0): ");
+        System.out.println(sb);
         resp = teclado.nextLine();
         if (resp.isEmpty()) {
             resp = " ";
@@ -220,9 +220,8 @@ public class MenuPrincipal {
         // Primero comprobamos que la lista no esté vacía.
         if (!controlador.listArticulos().isEmpty()) {
             try{
-                Articulo articulo = controlador.searchArticulo(codigo);
-                System.out.println(articulo.getCodArticulo());
-                return articulo;
+                // Devolvemos el artículo o null si no existe.
+                return controlador.searchArticulo(codigo);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -359,7 +358,7 @@ public class MenuPrincipal {
         Cliente cliente = controlador.searchCliente(nifCliente);
         if (cliente == null) {
             System.out.println("El cliente no existe.");
-            vistaClientes.addCliente();
+            vistaPedidos.addPedidoNuevo();
         }
 
         // Comprobamos si existe el artículo

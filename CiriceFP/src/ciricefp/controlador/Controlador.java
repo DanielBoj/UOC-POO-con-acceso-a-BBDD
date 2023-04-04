@@ -1,14 +1,11 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
-import ciricefp.vista.*;
+import ciricefp.vista.MenuPrincipal;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.ListIterator;
 
 /**
  * Esta clase implementa el controlador principal del modelo MVC.

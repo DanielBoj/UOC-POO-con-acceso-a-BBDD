@@ -3,7 +3,6 @@ package ciricefp.modelo;
 import ciricefp.modelo.interfaces.IPedido;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Esta clase implementa la lógica de negocio para almacenar los Pedidos que pueda hacer un cliente de la tienda online.

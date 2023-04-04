@@ -1,8 +1,7 @@
 package ciricefp.modelo.interfaces;
 
-import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Articulo;
-import ciricefp.modelo.Pedido;
+import ciricefp.modelo.Cliente;
 
 import java.time.LocalDate;
 

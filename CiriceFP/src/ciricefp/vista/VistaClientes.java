@@ -149,7 +149,7 @@ public class VistaClientes implements IVista {
     }
 
     // Método para solicitar el tipo de cliente, solo accesible desde la clase.
-    private String pedirTipoCliente() {
+    public String pedirTipoCliente() {
 
         String tipo = "";
 

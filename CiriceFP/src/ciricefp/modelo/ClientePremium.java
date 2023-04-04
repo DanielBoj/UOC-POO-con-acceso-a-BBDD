@@ -81,8 +81,9 @@ public class ClientePremium extends Cliente {
 
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n")
+                .append("Código de socio: ").append(this.codSocio).append("\n")
                 .append("Cuota: ").append(this.cuota).append("€\n")
-                .append("Descuento: ").append(this.descuento).append("%");
+                .append("Descuento: ").append(this.descuento * 100).append("%");
 
         return sb.toString();
     }
