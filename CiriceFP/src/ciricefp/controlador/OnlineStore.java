@@ -49,9 +49,9 @@ public class OnlineStore {
          prg.controlador.createCliente(new ClientePremium("Platón Hélada", dir, "12345678C", "platon@algo.com"));
 
         // Creamos artículos de prueba.
-        prg.controlador.createArticulo(new Articulo("Artículo 1", 10.50, 10.0, 1));
-        prg.controlador.createArticulo(new Articulo("Artículo 2", 3.50, 20.0, 2));
-        prg.controlador.createArticulo(new Articulo("Artículo 3", 9.85, 30.0, 3));
+        prg.controlador.createArticulo(new Articulo("Corbatero", 10.50, 10.0, 1));
+        prg.controlador.createArticulo(new Articulo("Camiseta", 3.50, 20.0, 2));
+        prg.controlador.createArticulo(new Articulo("Pantalones", 9.85, 30.0, 3));
 
         // Creamos pedidos de prueba.
         prg.controlador.createPedido(prg.controlador.getDatos().getClientes().get(0),
