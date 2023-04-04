@@ -32,8 +32,8 @@ public class Listas<T> {
     public int getSize() {
         return this.lista.size();
     }
-    public void add(T t) {
-        this.lista.add(t);
+    public boolean add(T t) {
+        return this.lista.add(t);
     }
     public void borrar(T t) {
         this.lista.remove(t);

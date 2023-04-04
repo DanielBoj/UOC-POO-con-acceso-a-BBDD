@@ -14,6 +14,13 @@ public class Articulo implements Comparable<Articulo> {
     private int tiempoPreparacion;
     private static int totalArticulos = 0; //TODO --> Tener en cuenta que en el método add() hay que implementar la suma al contador de artículos.
 
+    public Articulo(String codArticulo, String descripcion, double pvp, double gastosEnvio, int tiempoPreparacion) {
+        this.codArticulo = codArticulo;
+        this.descripcion = descripcion;
+        this.pvp = pvp;
+        this.gastosEnvio = gastosEnvio;
+        this.tiempoPreparacion = tiempoPreparacion;
+    }
     public Articulo(String descripcion,
                     double pvp,
                     double gastosEnvio,

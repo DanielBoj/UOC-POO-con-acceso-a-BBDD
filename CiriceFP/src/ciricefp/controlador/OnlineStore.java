@@ -9,12 +9,18 @@ import ciricefp.vista.MenuPrincipal;
  * @author Cirice
  */
 public class OnlineStore {
-    private Datos datos;
-    private MenuPrincipal ventana;
-    private Controlador controlador;
+    private static Datos datos;
+    private static MenuPrincipal ventana;
+    private static Controlador controlador;
     public static void main(String[] args) {
-        System.out.println("OnlineStore Test!");
-        // TODO
+        System.out.println("OnlineStore Test");
+        controlador = new Controlador();
+        ventana = new MenuPrincipal(controlador);
+        datos = new Datos(controlador);
+        controlador.setDatos(datos);
+        controlador.setMenu(ventana);
+
+        ventana.showMenu();
     }
 
     public static void init() {

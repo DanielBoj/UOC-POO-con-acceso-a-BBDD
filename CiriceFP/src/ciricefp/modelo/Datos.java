@@ -18,8 +18,17 @@ public class Datos {
     private Controlador controlador;
     private Listas<Cliente> clientes;
     private Listas<Articulo> articulos;
+    private ArrayList<Articulo> articulosArray;
     private Listas<Pedido> pedido;
     private Conexion baseDatos;
+
+    public Datos(Controlador controlador) {
+        this.controlador = controlador;
+        this.clientes = new Listas<Cliente>();
+        this.articulos = new Listas<Articulo>();
+        articulosArray = new ArrayList<Articulo>();
+        this.pedido = new Listas<Pedido>();
+    }
 
     public Datos(Controlador controlador, Conexion baseDatos) {
         this.controlador = controlador;
@@ -92,7 +101,7 @@ public class Datos {
 
     public Articulo searchArticulo (String codigo){
         for(Articulo art : this.articulos.getLista()) {
-           if( codigo==art.getCodArticulo() ){
+           if( art.getCodArticulo().compareTo(codigo) == 0 ){
                return art;
            }
         }
@@ -120,7 +129,7 @@ public class Datos {
     public ArrayList<Cliente> filterClientesByType(String tipo){
         ArrayList<Cliente> clienteFiltered = new ArrayList<Cliente>();
         for( Cliente cl: this.listClientes() ) {
-            if( tipo == cl.tipoCliente()){
+            if( cl.tipoCliente().compareTo(tipo) == 0 ){
                 clienteFiltered.add(cl);
             }
         }
@@ -128,7 +137,7 @@ public class Datos {
     }
     public Cliente searchCliente (String dni){
         for( Cliente ok : this.clientes.getLista()) {
-            if( dni == ok.getNif()){
+            if( ok.getNif().compareTo(dni) == 0 ){
                 return ok;
             }
         }
@@ -151,6 +160,7 @@ public class Datos {
     public ArrayList<Pedido> listPedidos(){
         return this.pedido.getArrayList();
     }
+    //Cambiada a Void porque devulve boolean
     public void deletePedido (Pedido pedido){
         this.pedido.borrar(pedido);
     }
@@ -183,6 +193,7 @@ public class Datos {
 
     public ArrayList<Pedido> filterPedidoByEstado(String opt){
         ArrayList<Pedido> estadoFiltered = new ArrayList<Pedido>();
+        this.actualizarEstadoPedidos();
         for( Pedido order: this.pedido.getLista() ) {
             switch (opt) {
                 case "Enviado":
@@ -207,7 +218,26 @@ public class Datos {
         this.pedido.clear();
     }
 
+    public int actualizarEstadoPedidos (){
+        int i=0;
+        for( Pedido order: this.pedido.getLista() ) {
+            LocalDateTime finPreparacion = order.getFechaPedido().plusMinutes( order.getArticulo().getTiempoPreparacion() * order.getUnidades() );
+            if (finPreparacion.isBefore(LocalDateTime.now()) ){
+                order.setEsEnviado(true);
+                i++;
+            }
+        }
+        return i;
+    }
+    //RECIBE UN CÓDIGO EN LUGAR DE UN PEDIDO PARA ACTUALIZAR ESTE PEDIDO EN CONCRETO
+    public void actualizarEstadoPedido (Pedido pedido){
+        Pedido pedidoEncontrado = this.searchPedido(pedido.getNumeroPedido());
+        LocalDateTime finPreparacion = pedidoEncontrado.getFechaPedido().plusMinutes( pedidoEncontrado.getArticulo().getTiempoPreparacion() * pedidoEncontrado.getUnidades() );
+        if (finPreparacion.isBefore(LocalDateTime.now()) ){
+            pedidoEncontrado.setEsEnviado(true);
+        }
 
+    }
 
     @Override
     public String toString() {
