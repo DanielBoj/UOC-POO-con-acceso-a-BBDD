@@ -18,7 +18,6 @@ public class Datos {
     private Controlador controlador;
     private Listas<Cliente> clientes;
     private Listas<Articulo> articulos;
-    private ArrayList<Articulo> articulosArray;
     private Listas<Pedido> pedido;
     private Conexion baseDatos;
 
@@ -26,7 +25,11 @@ public class Datos {
         this.controlador = controlador;
         this.clientes = new Listas<Cliente>();
         this.articulos = new Listas<Articulo>();
-        articulosArray = new ArrayList<Articulo>();
+        this.pedido = new Listas<Pedido>();
+    }
+    public Datos() {
+        this.clientes = new Listas<Cliente>();
+        this.articulos = new Listas<Articulo>();
         this.pedido = new Listas<Pedido>();
     }
 
