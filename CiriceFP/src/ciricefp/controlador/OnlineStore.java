@@ -14,6 +14,7 @@ import ciricefp.vista.MenuPrincipal;
  * @since 03-2023
  */
 public class OnlineStore {
+
     public Datos datos;
     public MenuPrincipal ventana;
     public Controlador controlador;
