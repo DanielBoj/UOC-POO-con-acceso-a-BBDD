@@ -1,81 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="CiriceFP:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_jupiter.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/aopalliance-1.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/aopalliance-1.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/apiguardian-api-1.1.2-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/apiguardian-api-1.1.2-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/apiguardian-api-1.1.2.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guava-19.0-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guava-19.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guava-19.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guice-4.1.0-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guice-4.1.0-no_aop.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/guice-4.1.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/javax.inject-1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/javax.inject-1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/javax.inject-1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jcommander-1.72-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jcommander-1.72-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jcommander-1.72.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-5.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-5.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-5.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-5.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-api-5.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-api-5.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-api-5.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-api-5.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-engine-5.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-engine-5.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-engine-5.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-engine-5.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-params-5.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-params-5.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-params-5.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-jupiter-params-5.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-commons-1.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-commons-1.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-commons-1.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-commons-1.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-engine-1.8.1-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-engine-1.8.1-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-engine-1.8.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/junit-platform-engine-1.9.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/opentest4j-1.2.0-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/opentest4j-1.2.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/opentest4j-1.2.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/snakeyaml-1.21-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/snakeyaml-1.21-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/snakeyaml-1.21.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/testng-7.1.0-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/testng-7.1.0-sources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/testng-7.1.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/java/ciricefp/modelo/DatosTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/CiriceFP_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/CiriceFP_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CiriceFP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CiriceFP.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/controlador/Controlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Articulo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Articulo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/ClientePremium.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/ClientePremium.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Datos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Pedido.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/modelo/Pedido.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/GestionOs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/MenuPrincipal.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/MenuPrincipal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaArticulos.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaArticulos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaClientes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaClientes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaPedidos.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CiriceFP/ciricefp/vista/VistaPedidos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/controlador/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/controlador/Controlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/ClientePremium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/ClientePremium.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ciricefp/controlador/OnlineStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/controlador/OnlineStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Pedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/interfaces/IPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/interfaces/IPedido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Direccion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/VistaArticulos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/VistaArticulos.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/VistaClientes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/VistaClientes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/VistaPedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/VistaPedidos.java" afterDir="false" />
     </list>
@@ -107,25 +48,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Downloaded.Files.Path.Enabled": "true",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "last_opened_file_path": "C:/DAM UOC - POO con acceso a BBDD/CiriceFP",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/DAM UOC - POO con acceso a BBDD/CiriceFP&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="Y:\DAM\III Semestre\11 - POO con Acceso a BBDD\DAM UOC - POO con acceso a BBDD\CiriceFP\src\ciricefp\modelo" />
@@ -143,7 +84,7 @@
       <recent name="ciricefp.modelo" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.DatosTest.filterPedidoByEstado">
+  <component name="RunManager" selected="Application.OnlineStore">
     <configuration name="OnlineStore" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ciricefp.controlador.OnlineStore" />
       <module name="CiriceFP" />
@@ -223,10 +164,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.OnlineStore" />
+        <item itemvalue="JUnit.DatosTest.createPedido" />
         <item itemvalue="JUnit.DatosTest.filterPedidoByEstado" />
         <item itemvalue="JUnit.DatosTest.filterPedidosByCliente" />
-        <item itemvalue="JUnit.DatosTest.createPedido" />
-        <item itemvalue="Application.OnlineStore" />
         <item itemvalue="JUnit.DatosTest.listClientes" />
       </list>
     </recent_temporary>

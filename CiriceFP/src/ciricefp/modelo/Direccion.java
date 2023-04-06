@@ -1,7 +1,7 @@
 package ciricefp.modelo;
 
 /**
- * Esta clase funciona como un prototipo para añadir elementoa dirección en las clases que lo necesiten implementar.
+ * Esta clase funciona como un prototipo para añadir elementos dirección en las clases que lo necesiten implementar.
  * En nuestro caso lo usará la clase Cliente.
  *
  * @author Cirice

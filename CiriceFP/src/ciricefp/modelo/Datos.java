@@ -3,7 +3,6 @@ package ciricefp.modelo;
 import ciricefp.controlador.Controlador;
 import ciricefp.modelo.listas.Listas;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -274,6 +273,12 @@ public class Datos {
     }
 
     public ArrayList<Cliente> filterClientesByType(String tipo) {
+
+        // Creamos el tipo de cliente según el tipo
+        switch (tipo) {
+            case "Estandard" -> tipo = "ClienteEstandard";
+            case "Premium" -> tipo = "ClientePremium";
+        }
 
         // Creamos una lista temporal
         ArrayList<Cliente> clientesTemp = new ArrayList<>();

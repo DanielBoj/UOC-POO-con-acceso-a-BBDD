@@ -139,11 +139,9 @@ public class VistaClientes implements IVista {
                 System.out.println(cliente);
                 System.out.println("==================================");
                 System.out.println("Pulsa una tecla para mostrar el siguiente cliente.");
-                try {
-                    char wait = teclado.nextLine().charAt(0);
-                } catch (IndexOutOfBoundsException e) {
-                    break;
-                }
+                System.out.println("Pulsa ENTER para continuar");
+                // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
+                teclado.nextLine();
             }
         }
     }
@@ -153,16 +151,18 @@ public class VistaClientes implements IVista {
 
         String tipo = "";
 
-        System.out.println("Tipo de cliente: ");
-        System.out.println("1. Estandard");
-        System.out.println("2. Premium");
-        char opt = menu.pedirOpcion(2);
-        switch (opt) {
-            case '1' -> tipo = "Estandard";
-            case '2' -> tipo = "Premium";
-            // Manejamos el caso de opción incorrecta.
-            default -> System.out.println("Opción incorrecta");
-        }
+        do {
+            System.out.println("Tipo de cliente: ");
+            System.out.println("0. Estandard");
+            System.out.println("1. Premium");
+            char opt = menu.pedirOpcion(2);
+            switch (opt) {
+                case '0' -> tipo = "Estandard";
+                case '1' -> tipo = "Premium";
+                // Manejamos el caso de opción incorrecta.
+                default -> System.out.println("Opción incorrecta");
+            }
+        } while (tipo.equals(""));
 
         return tipo;
     }

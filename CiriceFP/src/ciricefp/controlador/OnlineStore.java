@@ -27,12 +27,16 @@ public class OnlineStore {
         prg.ventana = new MenuPrincipal();
         prg.controlador = new Controlador(prg.datos, prg.ventana);
         prg.ventana.setControlador(prg.controlador);
+        prg.datos.setControlador(prg.controlador);
 
-        init(prg);
+        int exitValue = init(prg);
 
+        System.exit(exitValue);
     }
 
-    public static void init(OnlineStore prg) {
+    public static int init(OnlineStore prg) {
+
+        try {
 
         /* TEST */
         // Realizamos una carga de datos inicial para probar la aplicación antes de implementar la capa de acceso a datos en BBDD
@@ -44,9 +48,9 @@ public class OnlineStore {
                 "España");
 
         // Creamos clientes de prueba.
-         prg.controlador.createCliente(new ClienteEstandard("Cirice Hélada", dir, "12345678A", "cirice@algo.com"));
-         prg.controlador.createCliente(new ClienteEstandard("Sócrates Hélada", dir, "12345678B", "socrates@algo.com"));
-         prg.controlador.createCliente(new ClientePremium("Platón Hélada", dir, "12345678C", "platon@algo.com"));
+        prg.controlador.createCliente(new ClienteEstandard("Cirice Hélada", dir, "12345678A", "cirice@algo.com"));
+        prg.controlador.createCliente(new ClienteEstandard("Sócrates Hélada", dir, "12345678B", "socrates@algo.com"));
+        prg.controlador.createCliente(new ClientePremium("Platón Hélada", dir, "12345678C", "platon@algo.com"));
 
         // Creamos artículos de prueba.
         prg.controlador.createArticulo(new Articulo("Corbatero", 10.50, 10.0, 1));
@@ -68,5 +72,15 @@ public class OnlineStore {
 
         // Mensaje de despedida.
         System.out.println("Gracias por usar el software de gestión de la tienda online.");
+
+        // Si no ha habido ningún error, devolvemos un valor de éxito.
+        return 0;
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+
+            // Si ha habido algún error, devolvemos un valor de error.
+            return 1;
+        }
     }
 }

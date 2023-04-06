@@ -354,12 +354,8 @@ public class MenuPrincipal {
     /* Pedidos */
     public void createPedido(String nifCliente, String codArticulo, int cantidad) {
 
-        // Comprobamos si existe el cliente
+        // Asignamos el cliente al pedido
         Cliente cliente = controlador.searchCliente(nifCliente);
-        if (cliente == null) {
-            System.out.println("El cliente no existe.");
-            vistaPedidos.addPedidoNuevo();
-        }
 
         // Comprobamos si existe el artículo
         Articulo articulo = controlador.searchArticulo(codArticulo);
@@ -378,6 +374,24 @@ public class MenuPrincipal {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public boolean controlNif(String nif) {
+
+        if (!controlador.listClientes().isEmpty()) {
+            try {
+                Cliente cliente = controlador.searchCliente(nif);
+                if (cliente == null) {
+                    System.out.println("El cliente no existe.");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     // Mostramos todos los pedidos por pantalla.
@@ -464,11 +478,16 @@ public class MenuPrincipal {
                             System.out.println(e.getMessage());
                         }
                     }
-                    case '2' -> { }
+                    case '2' -> {
+                        if (controlador.listPedidos().isEmpty()) {
+                            System.out.println("No hay más pedidos en la lista.");
+                            isSalir = true;
+                        }
+                    }
                     case '0'-> isSalir = true;
                 }
             }
-        } while (!isSalir);
+        } while (!isSalir && !controlador.listPedidos().isEmpty());
     }
 
     // Obtenemos una lista de pedidos filtrados por el estado
@@ -527,4 +546,6 @@ public class MenuPrincipal {
             System.out.println(e.getMessage());
         }
     }
+
+    // TODO -> Validación de datos
 }

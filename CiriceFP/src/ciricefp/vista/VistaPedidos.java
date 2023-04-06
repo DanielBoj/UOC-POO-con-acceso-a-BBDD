@@ -52,7 +52,7 @@ public class VistaPedidos implements IVista {
             System.out.println("3. Actualizar estado de los pedidos enviados");
             System.out.println("4. Mostrar pedidos pendientes de envío");
             System.out.println("5. Eliminar pedidos");
-            System.out.println("5. Mostrar pedidos por cliente");
+            System.out.println("6. Mostrar pedidos por cliente");
             System.out.println("0. Volver al menú principal");
 
             // Pedimos la opción al usuario.
@@ -100,6 +100,25 @@ public class VistaPedidos implements IVista {
         // Solicitamos los datos del cliente y del artículo
         System.out.println("Introduce el NIF del cliente: ");
         String nif = menu.pedirDatos("NIF del cliente: ");
+
+        // Comprobamos que el cliente exista
+        if (!menu.controlNif(nif)) {
+            System.out.println("1. Crear nuevo cliente.");
+            System.out.println("0. Salir.");
+
+            char opt = menu.pedirOpcion(2);
+
+            switch (opt) {
+                case '1' -> addPedidoNuevo();
+                case '0' -> { return; }
+                // Manejamos el caso de opción incorrecta.
+                default -> System.out.println("Opción incorrecta");
+            }
+
+            // Evitamos que se continúe con la ejecución del método.
+            return;
+        }
+
         System.out.println("Introduce el código del artículo: ");
         String codArticulo;
 
@@ -194,6 +213,7 @@ public class VistaPedidos implements IVista {
     // Mostramos los pedidos pendientes de envío.
     public void listPedidosPendientes() {
         System.out.println("Mostrar pedidos pendientes de envío: ");
+        menu.filterPedidosByEstado("Pendiente");
     }
 
     // Iniciamos el submenú para eliminar pedidos
