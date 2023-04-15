@@ -381,17 +381,18 @@ public class MenuPrincipal {
         if (!controlador.listClientes().isEmpty()) {
             try {
                 Cliente cliente = controlador.searchCliente(nif);
+
                 if (cliente == null) {
                     System.out.println("El cliente no existe.");
                 }
+
+                return true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     // Mostramos todos los pedidos por pantalla.

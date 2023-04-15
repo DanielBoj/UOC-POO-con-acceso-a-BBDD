@@ -33,7 +33,7 @@ public class Conexion {
             login = System.getenv("DB_LOCAL_USER");
             pass = System.getenv("DB_LOCAL_PASS");
             url = "jdbc:mysql://" + System.getenv("DB_LOCAL_URL") + "/" + baseDatos +
-                    "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid";
+                    "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid";//&noAccessToProcedureBodies=true";
         } else {
             baseDatos = "onlinestore_db";
             login = System.getenv("DB_PROD_USER");

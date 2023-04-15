@@ -1,6 +1,6 @@
 package ciricefp.modelo.interfaces;
 
-import ciricefp.modelo.Cliente;
+import ciricefp.modelo.*;
 
 /**
  * Las interfaces nos permiten prototipar los métodos que por defecto usará una clase que implemente la interfaz.
@@ -8,11 +8,17 @@ import ciricefp.modelo.Cliente;
  *
  * @author Cirice
  */
-public interface ICliente {
+public interface ICliente extends Comparable<Cliente> {
 
     /* Declaramos los métodos que deberán implementar la clase del tipo Cliente. */
-    public double calcAnual();
-    public double descuentoEnv(double costeEnvio);
-    public String tipoCliente();
-    public int compareTo(Cliente srcCliente);
+    // Hemos migrado la mayor parte de estos métodos a la Factory.
+
+    /**
+     *
+     * @see ciricefp.modelo.interfaces.factory.IClienteFactory
+     */
+    // double calcAnual();
+    //double descuentoEnv(double costeEnvio);
+    // String tipoCliente();
+    int compareTo(Cliente srcCliente);
 }

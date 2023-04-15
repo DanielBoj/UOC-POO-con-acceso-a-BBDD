@@ -1,6 +1,8 @@
 package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.Articulo;
+import ciricefp.modelo.Cliente;
+import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
 import org.jetbrains.annotations.NotNull;
@@ -30,11 +32,11 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         Listas<Articulo> articulos = new Listas<>();
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM articulos";
+        String sql = "CALL get_articulos()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+             ResultSet res = stmt.executeQuery()) {
 
             // Reseteamos el contador de artículos.
             Articulo.resetContador();
@@ -68,11 +70,11 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         Articulo articulo = null;
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM articulos WHERE _id = ?";
+        String sql = "CALL get_articulo_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setLong(1, id);
@@ -102,11 +104,11 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         Articulo articulo = null;
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM articulos WHERE cod_articulo = ?";
+        String sql = "CALL get_articulo_by_cod(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setString(1, key);
@@ -142,66 +144,76 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         if (articulo.getId() != null) {
             // Si el id es mayor que 0, significa que ya existe en la BD.
             // Por lo tanto, ejecutaremos un Update.
-            sql = "UPDATE articulos SET cod_articulo = ?, descripcion = ?, pvp = ?, gastos_envio = ?, tiempo_preparacion = ? WHERE _id = ?";
+            sql = "call update_articulo(?, ?, ?, ?, ?, ?, ?)";
         } else {
             // Si el id es 0, significa que no existe en la BD.
             // Por lo tanto, ejecutaremos un Create.
-            sql = "INSERT INTO articulos (cod_articulo, descripcion, pvp, gastos_envio, tiempo_preparacion) VALUES (?, ?, ?, ?, ?)";
+            sql = "call add_articulo(?, ?, ?, ?, ?, ?)";
         }
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Mapeamos el statement a partir del artículo que recibimos por parámetro.
             getStatement(articulo, stmt);
 
             // Si se trata de un Update, debemos asignar el id al parámetro de la consulta.
             if (articulo.getId() != null) {
-                stmt.setLong(6, articulo.getId());
+                stmt.setLong(7, articulo.getId());
             }
 
-            // Ejecutamos la consulta.
+            // Ejecutamos la consulta, devolverá el ID del artículo si se ha ejecutado correctamente
+            // o -1 de lo contrario.
             stmt.executeUpdate();
 
-            return true;
-
+            return stmt.getLong(1) > 0;
         } catch (SQLException e) {
             System.out.println("No es posible guardar el artículo.");
             e.printStackTrace();
         }
+
+        // Si algo falla, devolvemos false.
         return false;
     }
 
     @Override
     public boolean delete(Long id) {
 
+        // Si el articulo aparece en algún pedido, no se podrá eliminar.
+        Repositorio<Pedido> pedidoRepo = new PedidoRepositorioImpl();
+        if (pedidoRepo.findAll().getLista().stream()
+            .anyMatch(ped -> ped.getArticulo().getId().equals((id)))) {
+            System.out.println("No es posible eliminar el artículo porque está en algún pedido.");
+            return false;
+        }
+
         // Creamos la sentencia SQL para la consulta.
-        String sql = "DELETE FROM articulos WHERE _id = ?";
+        String sql = "call delete_articulo(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            // Preparamos el parámetro de salida.
+            stmt.registerOutParameter(1, Types.NUMERIC);
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
-            stmt.setLong(1, id);
+            stmt.setLong(2, id);
 
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            // Decrementamos el contador de artículos.
-            Articulo.retrocederContador();
-
-            return true;
-
+            // Si la consulta se ha ejecutado correctamente, devolverá el ID del artículo.
+            if (stmt.getLong(1) > 0) {
+                Articulo.retrocederContador();
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println("No es posible eliminar el artículo con id " + id);
             e.printStackTrace();
         }
         return false;
     }
-
-    // Creamos un método para contabilizar el número de registros de la tabla.
 
     @Override
     public int count() {
@@ -229,6 +241,53 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         return total;
     }
 
+
+    @Override
+    public Articulo getLast() {
+
+        // Creamos la sentencia para realizar la consulta.
+        String sql = "SELECT * FROM articulos ORDER BY _id DESC LIMIT 1";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
+        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+            ResultSet res = stmt.executeQuery(sql)) {
+
+            // Recibimos la respuesta y la asignamos al artículo.
+            return res.next()? getArticulo(res) : null;
+
+        } catch (SQLException e) {
+            System.out.println("No es posible obtener el último registro de la tabla.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return count() == 0;
+    }
+
+    @Override
+    public boolean resetId() {
+
+        // Creamos la sentencia para realizar la consulta.
+        String sql = "call reset_id_articulos()";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un CallableStatement.
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+            // Ejecutamos el procedimiento.
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
     @NotNull
@@ -248,14 +307,17 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
     // Mapeamos un statement a partir de un artículo.
     // No es una función pura, pero modifica únicamente una variable que usamos en un método.
-    private static void getStatement(Articulo articulo, PreparedStatement stmt) throws SQLException {
+    private static void getStatement(Articulo articulo, CallableStatement stmt) throws SQLException {
 
         // Asignamos los parámetros a la consulta desde el artículo que recibimos por parámetro.
         // La elección del parámetro se hace por su posición.
-        stmt.setString(1, articulo.getCodArticulo());
-        stmt.setString(2, articulo.getDescripcion());
-        stmt.setDouble(3, articulo.getPvp());
-        stmt.setDouble(4, articulo.getGastosEnvio());
-        stmt.setInt(5, articulo.getTiempoPreparacion());
+        // Preparamos el parámetro de salida.
+        stmt.registerOutParameter(1, Types.NUMERIC);
+
+        stmt.setString(2, articulo.getCodArticulo());
+        stmt.setString(3, articulo.getDescripcion());
+        stmt.setDouble(4, articulo.getPvp());
+        stmt.setDouble(5, articulo.getGastosEnvio());
+        stmt.setInt(6, articulo.getTiempoPreparacion());
     }
 }

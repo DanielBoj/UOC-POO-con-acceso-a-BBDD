@@ -2,7 +2,10 @@ package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.listas.Listas;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * La interfaz Repositorio es la interfaz base de todos los repositorios.
@@ -42,4 +45,12 @@ public interface Repositorio<T> {
     // Contar el número de registros de la tabla.
     int count();
 
+    // Recuperar el último elemento de la tabla.
+    T getLast();
+
+    // Comprobar si la tabla está vacía.
+    boolean isEmpty();
+
+    // Creamos un método estático para resetear los contadores de las tablas.
+    boolean resetId();
 }

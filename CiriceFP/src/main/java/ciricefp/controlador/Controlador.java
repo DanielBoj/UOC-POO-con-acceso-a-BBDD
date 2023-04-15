@@ -227,7 +227,7 @@ public class Controlador {
     }
 
     // Actualizamos las listas desde la BBDD al iniciar la aplicación.
-    public void actualizarListas() {
-        datos.actualizarListas();
+    public void actualizarContadores() {
+        datos.actualizarContadores();
     }
 }

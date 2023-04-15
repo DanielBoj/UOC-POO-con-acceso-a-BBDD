@@ -23,17 +23,17 @@ public class ClienteEstandard extends Cliente {
         return super.toString();
     }
 
-    @Override
-    public String tipoCliente() {
-        return this.getClass().getSimpleName();
-    }
-
-    // un cliente Estándar no tiene descuento en el envío ni paga cuota anual
-    @Override
-    public double calcAnual() { return 0; }
-
-    @Override
-    public double descuentoEnv(double costeEnvio) {
-        return 0;
-    }
+//    @Override
+//    public String tipoCliente() {
+//        return this.getClass().getSimpleName();
+//    }
+//
+//    // un cliente Estándar no tiene descuento en el envío ni paga cuota anual
+//    @Override
+//    public double calcAnual() { return 0; }
+//
+//    @Override
+//    public double descuentoEnv(double costeEnvio) {
+//        return 0;
+//    }
 }

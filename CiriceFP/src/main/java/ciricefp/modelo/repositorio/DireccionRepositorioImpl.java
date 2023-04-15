@@ -32,11 +32,11 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         Listas<Direccion> direcciones = new Listas<>();
 
         // Creamos la sentencia SQL para realizar al consulta.
-        String sql = "SELECT * FROM direcciones";
+        String sql = "CALL get_direcciones()";
 
         // Colocamos los recursos como argumentos del try-with-resources.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+             ResultSet res = stmt.executeQuery()) {
 
             // Recibimos la respuesta y la iteramos. Cada objeto que recibamos, lo convertiremos en una dirección y
             // lo añadiremos a la lista.
@@ -64,22 +64,21 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         Direccion direccion = null;
 
         // Creamos la sentencia SQL para realizar al consulta.
-        String sql = "SELECT * FROM direcciones WHERE _id = ?";
+        String sql = "CALL get_direccion_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta.
             stmt.setLong(1, id);
 
             // Ejecutamos la consulta y obtenemos el resultado. Manejamos el autoclose con el try-with-resources.
-            try (ResultSet res = stmt.executeQuery(sql)) {
+            try (ResultSet res = stmt.executeQuery()) {
 
                 // Recibimos la respuesta y la asignamos a la dirección.
                 // Como solo hay un objeto, no es necesario iterar sino que usamos un bloque condicional.
                 if (res.next()) {
-
                     // Usamos la función de mapeado para obtener la dirección.
                     direccion = getDireccion(res);
                 }
@@ -110,20 +109,18 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         if (direccion.getId() != null) {
             // Si el id no es nulo, significa que la dirección ya existe en la BD.
             // Creamos la sentencia para lanzar una sentencia UPDATE.
-            sql = "UPDATE direcciones SET direccion = ?, ciudad = ?, provincia = ?, " +
-                    "codigo_postal = ?, pais = ? WHERE _id = ?";
+            sql = "call update_direccion(?, ?, ?, ?, ?, ?, ?)";
         } else {
             // Si el id es nulo, significa que la dirección no existe en la BD y debemos crearla.
-            sql = "INSERT INTO direcciones (direccion, ciudad, provincia, codigo_postal, pais) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            sql = "call add_direccion(?, ?, ?, ?, ?, ?)";
         }
 
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
         // Manejamos el autoclose con el try-with-resources.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
-
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
             // Mapeamos el statement con los datos de la dirección.
             getStatement(direccion, stmt);
+
 
             // Añadimos el parámetro id si es necesario.
             if (direccion.getId() != null) {
@@ -133,13 +130,14 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            return true;
-
+            // Si la consulta se ha ejecutado correctamente, devulve el id de la dirección.
+            return stmt.getLong(1) > 0;
         } catch (SQLException e) {
             System.out.println("Error al intentar crear la dirección en la base de datos.");
             e.printStackTrace();
         }
 
+        // Si la consulta no se ha ejecutado correctamente, devolvemos false.
         return false;
     }
 
@@ -147,26 +145,26 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
     public boolean delete(Long id) {
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "DELETE FROM direcciones WHERE _id = ?";
+        String sql = "call delete_direccion(?, ?)";
 
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
         // Manejamos el autoclose con el try-with-resources.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
-
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
             // Asignamos el parámetro a la consulta.
-            stmt.setLong(1, id);
+            stmt.setLong(2, id);
 
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            return true;
-
+            // Si la consulta se ha ejecutado correctamente, devulve el id de la dirección.
+            return stmt.getLong(1) > 0;
         } catch (SQLException e) {
             System.out.println(MessageFormat.format("Error al intentar eliminar la dirección con id {0} " +
                     "de la base de datos.", id));
             e.printStackTrace();
         }
 
+        // Si la consulta no se ha ejecutado correctamente, devolvemos false.
         return false;
     }
 
@@ -195,6 +193,74 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         return total;
     }
 
+    @Override
+    public Direccion getLast() {
+
+        // Creamos la sentencia SQL para la consulta.
+        String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
+
+        // Ejecutamos el Statement como autoclose y obtenemos el resultado.
+        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+             ResultSet res = stmt.executeQuery(sql)) {
+
+            // Si hay un resultado, lo devolvemos.
+            return res.next()? getDireccion(res) : null;
+        } catch (SQLException e) {
+            System.out.println("Error al intentar obtener la última dirección de la base de datos.");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return count() == 0;
+    }
+
+    @Override
+    public boolean resetId() {
+        // Creamos la sentencia para realizar la consulta.
+        String sql = "call reset_id_direcciones()";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un CallableStatement.
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+            // Ejecutamos el procedimiento.
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean deleteAll() {
+        // Creamos la sentencia SQL para la consulta.
+        String sql = "CALL delete_direcciones(?)";
+
+        // Manejamos el autoclose con el try-with-resources.
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            // Preparamos el parámetro de salida.
+            stmt.registerOutParameter(1, Types.INTEGER);
+
+            // Ejecutamos la consulta.
+            stmt.executeUpdate();
+
+            // Capturamos la variable OUT del query.
+            if (stmt.getInt(1) > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al intentar eliminar todas las direcciones de la base de datos.");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
     private static Direccion getDireccion(ResultSet res) throws SQLException {
@@ -214,36 +280,14 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
     // Mapeamos un statement a partir de una dirección.
     // No es una función pura, pero modifica únicamente una variable que usamos en un método.
-    private static void getStatement(Direccion direccion, PreparedStatement stmt) throws SQLException {
-
+    private static void getStatement(Direccion direccion, CallableStatement stmt) throws SQLException {
         // Asignamos los parámetros a la consulta desde el artículo que recibimos por parámetro.
         // La elección del parámetro se hace por su posición.
-        stmt.setString(1, direccion.getDireccion());
-        stmt.setString(2, direccion.getCiudad());
-        stmt.setString(3, direccion.getProvincia());
-        stmt.setString(4, direccion.getCodigoPostal());
-        stmt.setString(5, direccion.getPais());
-    }
-
-    // Creamos un método especial para esta clase para obtener el último elemento generado en la tabla.
-    public static Direccion getLast() {
-
-        // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
-
-        // Ejecutamos el Statement como autoclose y obtenemos el resultado.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
-
-            // Si hay un resultado, lo devolvemos.
-            if (res.next()) {
-                return getDireccion(res);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al intentar obtener la última dirección de la base de datos.");
-            e.printStackTrace();
-        }
-
-        return null;
+        stmt.registerOutParameter(1, Types.BIGINT);
+        stmt.setString(2, direccion.getDireccion());
+        stmt.setString(3, direccion.getCiudad());
+        stmt.setString(4, direccion.getProvincia());
+        stmt.setString(5, direccion.getCodigoPostal());
+        stmt.setString(6, direccion.getPais());
     }
 }

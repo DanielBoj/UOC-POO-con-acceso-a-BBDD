@@ -1,6 +1,7 @@
 package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.IPedido;
+import ciricefp.modelo.interfaces.factory.IClienteFactory;
 
 import java.time.LocalDate;
 
@@ -23,9 +24,7 @@ public class Pedido implements Comparable<Pedido>, IPedido {
     private static int totalPedidos = 0;
 
     // Constructor sin argumentos por defecto
-    public Pedido() {
-        this.numeroPedido = totalPedidos;
-    }
+    public Pedido() { }
 
     // Constructor con los argumentos mínimos que necesita el pedido
     public Pedido(Cliente cliente,
@@ -36,7 +35,7 @@ public class Pedido implements Comparable<Pedido>, IPedido {
         this.unidades = unidades;
         this.fechaPedido = LocalDate.now();
         this.esEnviado = false;
-        this.numeroPedido = ++totalPedidos;
+        this.numeroPedido = 0;
     }
 
     // Constructor con todos los argumentos
@@ -50,8 +49,7 @@ public class Pedido implements Comparable<Pedido>, IPedido {
         this.unidades = unidades;
         this.fechaPedido = fechaPedido;
         this.esEnviado = esEnviado;
-
-        this.numeroPedido = ++totalPedidos;
+        this.numeroPedido = 0;
     }
 
     // Constructor con todos los argumentos y el id de nuestro modelo relacional
@@ -67,8 +65,7 @@ public class Pedido implements Comparable<Pedido>, IPedido {
         this.unidades = unidades;
         this.fechaPedido = fechaPedido;
         this.esEnviado = esEnviado;
-
-        this.numeroPedido = ++totalPedidos;
+        this.numeroPedido = 0;
     }
 
     /* Getters & Setters */
@@ -308,7 +305,8 @@ public class Pedido implements Comparable<Pedido>, IPedido {
     @Override
     public double precioEnvio() {
 
-        return this.cliente.tipoCliente().equals("ClientePremium")? this.articulo.getGastosEnvio() - this.cliente.descuentoEnv(this.articulo.getGastosEnvio()) :
+        return IClienteFactory.tipoCliente(this.cliente).equals("ClientePremium")?
+                this.articulo.getGastosEnvio() - IClienteFactory.descuentoEnv(this.cliente, this.articulo.getGastosEnvio()) :
                 this.articulo.getGastosEnvio();
     }
 

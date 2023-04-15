@@ -1,6 +1,7 @@
 package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.ICliente;
+import ciricefp.modelo.interfaces.factory.IClienteFactory;
 
 /**
  * Esta clase implementa la lógica de negocio de un cliente que puede comprar en la tienda.
@@ -8,7 +9,7 @@ import ciricefp.modelo.interfaces.ICliente;
  *
  * @author Cirice
  */
-public abstract class Cliente implements Comparable<Cliente>, ICliente {
+public abstract class Cliente implements Comparable<Cliente>, ICliente, IClienteFactory {
 
     // Atributos de la clase.
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
@@ -29,8 +30,6 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente {
         this.domicilio = domicilio;
         this.nif = nif;
         this.email = email;
-
-        totalClientes++;
     }
 
     // Constructor que recibe además el id de nuestro modelo relacional
@@ -40,8 +39,6 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente {
         this.domicilio = domicilio;
         this.nif = nif;
         this.email = email;
-
-        totalClientes++;
     }
 
     /* Getters & Setters */
@@ -81,6 +78,10 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente {
         return totalClientes;
     }
 
+    public static void setTotalClientes(Integer totalClientes) {
+        Cliente.totalClientes = totalClientes;
+    }
+
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
     public Long getId() {
         return id;
@@ -97,7 +98,7 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente {
         // Usamos un string builder
         StringBuilder sb = new StringBuilder("Cliente: ");
         sb.append(nombre).append("\n")
-                .append("Tipo: ").append(tipoCliente()).append("\n")
+                .append("Tipo: ").append(IClienteFactory.tipoCliente(this)).append("\n")
                 .append("Domicilio: \n").append(domicilio).append("\n")
                 .append("NIF: ").append(nif).append("\n")
                 .append("Email: ").append(email).append("\n")
@@ -113,16 +114,16 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente {
     }
 
     /* Métodos abstractos --> Cada clase hija debe implementar su versión de estos métodos */
-    // Obtenemos el tipo de cliente en formato string
-    public abstract String tipoCliente();
-
-    // Nos deveulve la anualiadad del cliente.
-    /* IMPORTANTE */
-    // En el caso práctico se especifica que la anualidad es fija para todos los clientes, por eso el método simplemente devolverá el valor del atributo.
-    public abstract double calcAnual();
-
-    // Método para calcular el descuento que se le aplica al cliente en función de su tipo.
-    public abstract double descuentoEnv(double costeEnvio);
+//    // Obtenemos el tipo de cliente en formato string
+//    public abstract String tipoCliente();
+//
+//    // Nos deveulve la anualiadad del cliente.
+//    /* IMPORTANTE */
+//    // En el caso práctico se especifica que la anualidad es fija para todos los clientes, por eso el método simplemente devolverá el valor del atributo.
+//    public abstract double calcAnual();
+//
+//    // Método para calcular el descuento que se le aplica al cliente en función de su tipo.
+//    public abstract double descuentoEnv(double costeEnvio);
 
     // Este método puede usarse para modificar el contador de clientes.
     public static void advanceTotalClientes() {

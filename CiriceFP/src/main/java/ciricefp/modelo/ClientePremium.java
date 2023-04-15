@@ -14,7 +14,6 @@ public class ClientePremium extends Cliente {
     private double cuota;
     private double descuento;
     private String codSocio;
-    private static int totalSocios = 0;
 
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.
     public ClientePremium (String nombre,
@@ -29,8 +28,6 @@ public class ClientePremium extends Cliente {
 
         // Generamos el código de socio.
         this.codSocio = this.generateCodCliente(nif);
-
-        totalSocios++;
     }
 
     // Constructor que recibe además los parámetros de descuento y cuota.
@@ -46,8 +43,6 @@ public class ClientePremium extends Cliente {
 
         // Generamos el código de socio.
         this.codSocio = this.generateCodCliente(nif);
-
-        totalSocios++;
     }
 
     // Producto 3 --> COnstructor vacío
@@ -79,10 +74,6 @@ public class ClientePremium extends Cliente {
         this.codSocio = codSocio;
     }
 
-    public static int getTotalSocios() {
-        return totalSocios;
-    }
-
     // StringBuilder nos permite implementar un patrón de diseño de string para el método toString() de una forma visual muy clara.
     @Override
     public String toString() {
@@ -110,15 +101,15 @@ public class ClientePremium extends Cliente {
     /* IMPORTANTE */
     // Un cliente Premium tiene un descuento del 20% en el envío y paga una cuota anual de 30€.
     // Según el caso práctico estos valores son fijos, por eso directamente devolvemos el valor del atributo.
-    @Override
-    public double calcAnual() {
-        return this.getCuota();
-    }
-
-    @Override
-    public double descuentoEnv(double costeEnvio) {
-        return costeEnvio * this.descuento;
-    }
+//    @Override
+//    public double calcAnual() {
+//        return this.getCuota();
+//    }
+//
+//    @Override
+//    public double descuentoEnv(double costeEnvio) {
+//        return costeEnvio * this.descuento;
+//    }
 
     // Implementación del método para generar un código único usando el NIF del cliente y la interfaz HashCode.
     private String generateCodCliente(String key) {

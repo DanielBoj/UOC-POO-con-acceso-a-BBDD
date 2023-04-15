@@ -1,6 +1,7 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
+import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.utils.Conexion;
 import ciricefp.vista.MenuPrincipal;
 
@@ -51,7 +52,7 @@ public class OnlineStore {
 
         // Actualizamos las listas de datos desde la BD.
         try {
-            prg.controlador.actualizarListas();
+            prg.controlador.actualizarContadores();
         } catch (Exception e) {
             System.out.println("Error al actualizar las listas de datos.");
             e.printStackTrace();
@@ -71,9 +72,9 @@ public class OnlineStore {
 
             // Creamos clientes de prueba.
             System.out.println("==== CREACIÓN DE CLIENTES ====");
-            System.out.println(prg.controlador.createCliente(new ClienteEstandard("Cirice Hélada", dir, "12345678A", "cirice@algo.com")));
-            System.out.println(prg.controlador.createCliente(new ClienteEstandard("Sócrates Hélada", dir, "12345678B", "socrates@algo.com")));
-            System.out.println(prg.controlador.createCliente(new ClientePremium("Platón Hélada", dir, "12345678C", "platon@algo.com")));
+            System.out.println(prg.controlador.createCliente(IClienteFactory.createCliente("Cirice Hélada", dir, "12345678A", "cirice@algo.com", "estandard")));
+            System.out.println(prg.controlador.createCliente(IClienteFactory.createCliente("Sócrates Hélada", dir, "12345678B", "socrates@algo.com", "estandard")));
+            System.out.println(prg.controlador.createCliente(IClienteFactory.createCliente("Platón Hélada", dir, "12345678C", "platon@algo.com", "premium")));
 
 
             // Creamos artículos de prueba.

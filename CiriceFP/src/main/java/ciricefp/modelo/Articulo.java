@@ -31,8 +31,6 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         this.gastosEnvio = gastosEnvio;
         this.tiempoPreparacion = tiempoPreparacion;
         this.codArticulo = generateCodigo(this.descripcion);
-
-        totalArticulos++;
     }
 
     // Sobrecarga de constructor para adaptarlo a nuestro modelo relacional. Este constructor debe de pasar
@@ -49,12 +47,10 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         this.pvp = pvp;
         this.gastosEnvio = gastosEnvio;
         this.tiempoPreparacion = tiempoPreparacion;
-
-        totalArticulos++;
     }
 
     // Creamos también un constructor sin parámetros
-    public Articulo() { totalArticulos++; }
+    public Articulo() { }
 
     /* Getters & Setters */
     public String getCodArticulo() {
@@ -104,6 +100,14 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public static int getTotalArticulos() {
+        return totalArticulos;
+    }
+
+    public static void setTotalArticulos(int totalArticulos) {
+        Articulo.totalArticulos = totalArticulos;
     }
 
     // StringBuilder nos permite implementar un patrón de diseño de string para el método toString() de una forma visual muy clara.

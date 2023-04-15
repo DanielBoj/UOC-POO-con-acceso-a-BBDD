@@ -1,6 +1,7 @@
 package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.*;
+import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +32,11 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         Listas<Cliente> clientes = new Listas<>();
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM clientes c " +
-                "LEFT JOIN clientes_estandard ce ON (ce.cliente_id = c._id) " +
-                "LEFT JOIN clientes_premium cp ON (cp.cliente_id = c._id)" +
-                "JOIN direcciones d ON (d._id = c.direccion_id)";
+        String sql = "CALL get_clientes()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+             ResultSet res = stmt.executeQuery()) {
 
             // Reseteamos el número de clientes.
             Cliente.resetTotalClientes();
@@ -71,15 +69,11 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         Cliente cliente = null;
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM clientes c " +
-                "LEFT JOIN clientes_estandard ce ON (ce.cliente_id = c._id) " +
-                "LEFT JOIN clientes_premium cp ON (cp.cliente_id = c._id)" +
-                "JOIN direcciones d ON (d._id = c.direccion_id)" +
-                "WHERE c._id = ?";
+        String sql = "CALL get_cliente_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setLong(1, id);
@@ -109,15 +103,11 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         Cliente cliente = null;
 
         // Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM clientes c " +
-                "LEFT JOIN clientes_estandard ce ON (ce.cliente_id = c._id) " +
-                "LEFT JOIN clientes_premium cp ON (cp.cliente_id = c._id)" +
-                "JOIN direcciones d ON (d._id = c.direccion_id)" +
-                "WHERE c.nif = ?";
+        String sql = "call get_cliente_by_nif(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setString(1, key);
@@ -144,6 +134,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
     /* Al estar guardando un modelo de objeto complejo, realizaremos una inserción por pasos.
     * Primero, insertaremos los datos de la tabla padre de las entidades Cliente.
     * Después, insertaremos los datos de la tabla hija de las entidades Cliente.
+    * A la vez, tenemos que tener en cuenta el manejo de la Dirección, que también es una entidad.
     */
     @Override
     public boolean save(Cliente cliente) {
@@ -164,38 +155,55 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             // Por lo tanto, ejecutaremos un Update.
 
             // Realizamos la inserción de los datos para la tabla padre de las entidades Cliente.
-            sql = "UPDATE clientes SET nombre = ?, direccion_id = ?, nif = ?, email = ? WHERE _id = ?";
+            // Empezamos por la tabla padre.
+            sql = "call update_cliente(?, ?, ?, ?, ?, ?)";
 
-            try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+            try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+
+                // Preparamos el parámetro de salida.
+                stmt.registerOutParameter(1, Types.BIGINT);
 
                 // Generamos el modelo de cliente para la actualización.
-                stmt.setString(1, cliente.getNombre());
-                stmt.setLong(2, cliente.getDomicilio().getId());
-                stmt.setString(3, cliente.getNif());
-                stmt.setString(4, cliente.getEmail());
-                stmt.setLong(5, cliente.getId());
+                stmt.setString(2, cliente.getNombre());
+                stmt.setLong(3, cliente.getDomicilio().getId());
+                stmt.setString(4, cliente.getNif());
+                stmt.setString(5, cliente.getEmail());
+                stmt.setLong(6, cliente.getId());
 
                 // Ejecutamos la consulta.
-                isSaved = stmt.executeUpdate() > 0;
+                stmt.executeUpdate();
+
+                // Si la consulta se ha ejecutado correctamente, devovlerá el id del cliente.
+                isSaved = stmt.getLong(1) > 0;
+
+                // Modificamos la dirección del cliente.
+                Repositorio<Direccion> repoDireccion = new DireccionRepositorioImpl();
+                repoDireccion.save(cliente.getDomicilio());
 
                 // A continuación, realizamos la inserción de los datos para la tabla hija de las
                 // entidades Cliente.
                 // Dadas las caracteríscas de nuestra lógica de negocio, no es necesario realizar
                 // cambios si se trata de un cliente estandard.
-                if (cliente.tipoCliente().equals("ClientePremium")) {
+                if (IClienteFactory.tipoCliente(cliente).equals("ClientePremium")) {
                     // Actualizamos la sentencia sql
-                    sql = "UPDATE clientes_premium SET cuota_anual = ?, descuento = ?  WHERE cliente_id = ?";
+                    sql = "call update_cliente_premium(?, ?, ?, ?)";
 
                     // Generamos la consulta con autoclose.
-                    try (PreparedStatement stmtPremium = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+                    try (CallableStatement stmtPremium = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+
+                        // Preparamos el parámetro de salida.
+                        stmt.registerOutParameter(1, Types.BIGINT);
 
                         // Generamos el modelo para la actualización del Cliente Premium.
-                        stmtPremium.setDouble(1, ((ClientePremium) cliente).getCuota());
-                        stmtPremium.setDouble(2, ((ClientePremium) cliente).getDescuento());
-                        stmtPremium.setLong(3, cliente.getId());
+                        stmtPremium.setDouble(2, IClienteFactory.getCuota(cliente));
+                        stmtPremium.setDouble(3, IClienteFactory.getDescuento(cliente));
+                        stmtPremium.setLong(4, cliente.getId());
 
                         // Ejecutamos la consulta.
-                        isSaved = stmtPremium.executeUpdate() > 0;
+                        stmtPremium.executeUpdate();
+
+                        // Si la consulta se ha ejecutado correctamente, devovlerá el id del cliente.
+                        isSaved = stmtPremium.getLong(1) > 0;
                     }
                 }
             } catch (SQLException e) {
@@ -207,66 +215,87 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             // Por lo tanto, ejecutaremos un Insert.
 
             // Realizamos la inserción de los datos para la tabla padre de las entidades Cliente.
-            sql = "INSERT INTO clientes (nombre, direccion_id, nif, email) VALUES (?, ?, ?, ?)";
+            sql = "call add_cliente(?, ?, ?, ?, ?)";
 
             // Generamos la consulta con autoclose.
-            try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+            try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                // Preparamos el parámetro de salida.
+                stmt.registerOutParameter(1, Types.NUMERIC);
+
                 // Como se trata de un insert, primero debemos crear la Dirección asociada al cliente
                 // manteniendo nuestra integridad referencial.
                 Repositorio<Direccion> repoDireccion = new DireccionRepositorioImpl();
 
                 // Generamos el modelo para la inserción del Cliente.
-                stmt.setString(1, cliente.getNombre());
+                stmt.setString(2, cliente.getNombre());
+
                 // Insertamos la dirección y obtenemos el id generado.
                 if (repoDireccion.save(cliente.getDomicilio())) {
-                    stmt.setLong(2, Objects.requireNonNull(DireccionRepositorioImpl.getLast()).getId());
+                    stmt.setLong(3, Objects.requireNonNull(repoDireccion.getLast()).getId());
                 } else {
                     System.out.println("No se ha podido crear la dirección");
                     return false;
                 }
-                stmt.setString(3, cliente.getNif());
-                stmt.setString(4, cliente.getEmail());
+                stmt.setString(4, cliente.getNif());
+                stmt.setString(5, cliente.getEmail());
 
                 // Ejecutamos la consulta.
-                isSaved = stmt.executeUpdate() > 0;
+                if (stmt.executeUpdate() > 0) {
+                    // Recibimos como respuesta el ID del cliente generado.
+                    cliente.setId(stmt.getLong(1));
+
+                    // Actualizamos el flag de éxito.
+                    isSaved = true;
+                }
 
                 // A continuación debemos identificar de qué tipo de Cliente se trata.
                 // Para ello, utilizaremos el método tipoCliente() de la clase Cliente.
-                flag = cliente.tipoCliente();
+                flag = IClienteFactory.tipoCliente(cliente);
 
                 switch (flag) {
                     // Para un cliente estandard debemos indicar el ID del cliente en la tabla de
                     // clientes estandard.
                     case "ClienteEstandard" -> {
                         // Creamos la sentencia SQL para la consulta.
-                        sql = "INSERT INTO clientes_estandard (cliente_id) VALUES (?)";
+                        sql = "call add_cliente_estandard(?, ?)";
 
                         // Generamos la consulta con autoclose.
-                        try (PreparedStatement stmtEstandard = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+                        try (CallableStatement stmtEstandard = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                            // Preparamos el parámetro de salida.
+                            stmt.registerOutParameter(1, Types.NUMERIC);
+
                             // Generamos el modelo para la inserción del Cliente Estandard.
-                            stmtEstandard.setLong(1, findOne(cliente.getNif()).getId());
+                            stmtEstandard.setLong(2, cliente.getId());
 
                             // Ejecutamos la consulta.
-                            isSaved = stmtEstandard.executeUpdate() > 0;
+                            stmtEstandard.executeUpdate();
+
+                            // Si la consulta se ha ejecutado correctamente, devovlerá el id del cliente.
+                            isSaved = stmtEstandard.getLong(1) > 0;
                         }
                     }
                     // Para un cliente premium debemos indicar el descuento, la cuota anual y el código
                     // de socio en la tabla de clientes premium.
                     case "ClientePremium" -> {
                         // Creamos la sentencia SQL para la consulta.
-                        sql = "INSERT INTO clientes_premium (cliente_id, cuota_anual, descuento, cod_socio) " +
-                                "VALUES (?, ?, ?, ?)";
+                        sql = "call add_cliente_premium(?, ?, ?, ?, ?)";
 
                         // Generamos la consulta con autoclose.
-                        try (PreparedStatement stmtPremium = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+                        try (CallableStatement stmtPremium = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                            // Preparamos el parámetro de salida.
+                            stmt.registerOutParameter(1, Types.NUMERIC);
+
                             // Generamos el modelo para la inserción del Cliente Premium.
-                            stmtPremium.setLong(1, findOne(cliente.getNif()).getId());
-                            stmtPremium.setDouble(2, ((ClientePremium) cliente).getCuota());
-                            stmtPremium.setDouble(3, ((ClientePremium) cliente).getDescuento());
-                            stmtPremium.setString(4, ((ClientePremium) cliente).getCodSocio());
+                            stmtPremium.setLong(2, cliente.getId());
+                            stmtPremium.setDouble(3, IClienteFactory.getCuota(cliente));
+                            stmtPremium.setDouble(4, IClienteFactory.getDescuento(cliente));
+                            stmtPremium.setString(5, IClienteFactory.getCodSocio(cliente));
 
                             // Ejecutamos la consulta.
-                            isSaved = stmtPremium.executeUpdate() > 0;
+                            stmtPremium.executeUpdate();
+
+                            // Si la consulta se ha ejecutado correctamente, devovlerá el id del cliente.
+                            isSaved = stmtPremium.getLong(1) > 0;
                         }
                     }
                 }
@@ -285,27 +314,47 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         // La eliminación constará de 2 pasos, primero eliminaremos la dirección y luego el cliente.
         // Capturamos el ID de la dirección del objeto Cliente para poder eliminarlo.
 
+        // Si el cliente aparece en algún pedido, no se podrá eliminar.
+        Repositorio<Pedido> pedidoRepo = new PedidoRepositorioImpl();
+        if (pedidoRepo.findAll().getLista().stream()
+                .anyMatch(ped -> ped.getCliente().getId().equals(id))) {
+            System.out.println("No se puede eliminar el cliente porque está asociado a un pedido.");
+            return false;
+        }
+
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
-        String sql = "DELETE FROM clientes WHERE _id = ?";
+        String sql = "call delete_cliente(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            // Preparamos el parámetro de salida.
+            stmt.registerOutParameter(1, Types.NUMERIC);
+
             // Eliminamos el registro correspodiente a la dirección en la tabla correspondiente.
             Repositorio<Direccion> direccionRepo = new DireccionRepositorioImpl();
-            direccionRepo.delete(findById(id).getDomicilio().getId());
+            // Primero obtenemos el objeto Direccion a partir del ID del cliente.
+            // A continuación, obtenemos la ID de la dirección y la eliminamos.
+            if (!direccionRepo.delete(findById(id).getDomicilio().getId())) {
+                System.out.println("No se ha podido eliminar la dirección");
+                return false;
+            }
+
+            // Preparamos el parámetro de salida.
+            stmt.registerOutParameter(1, Types.NUMERIC);
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
-            stmt.setLong(1, id);
+            stmt.setLong(2, id);
 
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            // Decrecemos el número de clientes
-            Cliente.decreaseTotalClientes();
-
-            return true;
-
+            // Si la consulta se ha ejecutado correctamente, devolverá el id del cliente.
+            if (stmt.getLong(1) > 0) {
+                // Decrecemos el número de clientes
+                Cliente.decreaseTotalClientes();
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println("No es posible eliminar el artículo con id " + id);
             e.printStackTrace();
@@ -337,6 +386,55 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         }
 
         return total;
+    }
+
+    @Override
+    public Cliente getLast() {
+
+        // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
+        String sql = "SELECT * FROM clientes c " +
+                "LEFT JOIN clientes_estandard ce ON (ce.cliente_id = c._id) " +
+                "LEFT JOIN clientes_premium cp ON (cp.cliente_id = c._id)" +
+                "JOIN direcciones d ON (d._id = c.direccion_id)" +
+                "ORDER BY c._id DESC LIMIT 1";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
+        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+            ResultSet res = stmt.executeQuery(sql)) {
+
+            // Recibimos la respuesta y la asignamos al cliente.
+            return res.next()? getCliente(res) : null;
+        } catch (SQLException e) {
+            System.out.println("No es posible obtener el último registro de la tabla.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return count() == 0;
+    }
+
+    @Override
+    public boolean resetId() {
+
+        // Creamos la sentencia para realizar la consulta.
+        String sql = "call reset_id_clientes()";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un CallableStatement.
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+            // Ejecutamos el procedimiento.
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.

@@ -47,11 +47,11 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
 
         // Creamos la sentencia SQL parar la consulta, en este caso manejaremos la complejidad de la
         // entidad apoyándonos en la lógica implementada en el módulo Repositorio.
-        String sql = "SELECT * FROM pedidos";
+        String sql = "CALL get_pedidos()";
 
         // Colocamos los recursos como argumentos del try-with-resources.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+             ResultSet res = stmt.executeQuery()) {
 
             // Recibimos la respuesta y la iteramos. Cada objeto que recibamos, lo convertiremos en un pedido y
             // lo añadiremos a la lista.
@@ -83,11 +83,11 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         Pedido pedido = null;
 
         // Creamos la sentencia SQL que obtendrá el pedido por su id.
-        String sql = "SELECT * FROM pedidos WHERE _id = ?";
+        String sql = "CALL get_pedido_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
             // Establecemos el parámetro de la consulta.
 
             stmt.setLong(1, id);
@@ -111,21 +111,18 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
     @Override
     public Pedido findOne(String key) {
 
-        // Parseamos el String a Long.
-        Integer numPedido = Integer.parseInt(key);
-
         // Creamos el objeto que contendrá el pedido.
         Pedido pedido = null;
 
         // Creamos la sentencia SQL que obtendrá el pedido por su id.
-        String sql = "SELECT * FROM pedidos WHERE numero_pedido = ?";
+        String sql = "CALL get_pedido_by_numero_pedido(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Pasamos el parámetro de búsqueda a la consulta.
-            stmt.setInt(1, numPedido);
+            stmt.setInt(1, Integer.parseInt(key));
 
             // Ejecutamos la consulta y obtenemos el resultado. Manejamos el autoclose con un try-with-resources.
             try (ResultSet res = stmt.executeQuery()) {
@@ -145,7 +142,6 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
 
     @Override
     public boolean save(Pedido pedido) {
-
         // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
@@ -154,31 +150,29 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         // Evaluamos si existe ID para el pedido.
         if (pedido.getId() != null) {
             // Si es así, actualizamos el pedido.
-            sql = "UPDATE pedidos SET numero_pedido = ?, cliente_id = ?, articulo_id = ?, " +
-                    "unidades = ?, fecha_pedido = ?, es_enviado = ? WHERE _id = ?";
+            sql = "call update_pedido(?, ?, ?, ?, ?, ?, ?, ?)";
         } else {
             // Si no, creamos un nuevo pedido.
-            sql = "INSERT INTO pedidos (numero_pedido, cliente_id, articulo_id, unidades, fecha_pedido, es_enviado) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            sql = "call add_pedido(?, ?, ?, ?, ?, ?, ?)";
         }
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
 
             // Mapeamos el statement a partir del artículo que recibimos por parámetro.
             getStatement(pedido, stmt);
 
             // Si el pedido tiene id, lo establecemos como parámetro de la consulta para realizar la modificación.
             if (pedido.getId() != null) {
-                stmt.setLong(7, pedido.getId());
+                stmt.setLong(8, pedido.getId());
             }
 
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            // Devolvemos true si no ha habido excepciones.
-            return true;
+            // Si la consulta ha sido exitosa, devuelve el id del pedido.
+            return stmt.getLong(1) > 0;
         } catch (SQLException e) {
             System.out.println("No ha sido posible guardar el pedido en la base de datos.");
             e.printStackTrace();
@@ -192,29 +186,33 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
     public boolean delete(Long id) {
 
         // Creamos la sentencia SQL para eliminar el pedido.
-        String sql = "DELETE FROM pedidos WHERE _id = ?";
+        String sql = "call = delete_pedido(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql)) {
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            // Preparamos el parámetro de salida.
+            stmt.registerOutParameter(1, Types.BIGINT);
 
             // Pasamos el argumento de la consulta.
-            stmt.setLong(1, id);
+            stmt.setLong(2, id);
 
             // Ejecutamos la consulta.
             stmt.executeUpdate();
 
-            // Decrementamos el contador de pedidos.
-            Pedido.decrementarTotalPedidos();
-
-            // Si no ha habido excepciones, devolvemos true.
-            return true;
-
+            // Si la consulta ha sido exitosa, devuelve el id del pedido.
+            if (stmt.getLong(1) > 0) {
+                // Si se ha eliminado el pedido, decrementamos el contador de pedidos.
+                Pedido.decrementarTotalPedidos();
+                // Devolvemos true.
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println(MessageFormat.format("No ha sido posible eliminar el pedido con id {0}", id));
             e.printStackTrace();
         }
 
+        // Si ha habido excepciones, devolvemos false.
         return false;
     }
 
@@ -242,6 +240,51 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         }
 
         return total;
+    }
+
+    @Override
+    public Pedido getLast() {
+
+        // Creamos la sentencia SQL para obtener el último pedido.
+        String sql = "SELECT * FROM pedidos ORDER BY _id DESC LIMIT 1";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un Statement ya que no recibimos parámetros.
+        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+            ResultSet res = stmt.executeQuery(sql)) {
+
+            // Recibimos la respuesta y la asignamos al pedido.
+            return res.next() ? getPedido(res) : null;
+        } catch (SQLException e) {
+            System.out.println("No ha sido posible obtener el último pedido.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return count() == 0;
+    }
+
+    @Override
+    public boolean resetId() {
+
+        // Creamos la sentencia para realizar la consulta.
+        String sql = "call reset_id_articulos()";
+
+        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
+        // Creamos la consulta a la BD mediante un CallableStatement.
+        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+            // Ejecutamos el procedimiento.
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     // Creamos un método para mapear un objeto Pedido a través de los resultador de una query.
@@ -285,15 +328,17 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
     // Creamos un método que nos permita mapear el statement a partir de un pedido.
     // Por la complejidad de este objeto, deberemos pasar los ID de las entidades asociadas.
     // De esta forma mantenemos la integridad referencial de la BD.
-    private void getStatement(Pedido pedido, PreparedStatement stmt) throws SQLException {
+    private void getStatement(Pedido pedido, CallableStatement stmt) throws SQLException {
 
         // Mapeamos el statement a partir del artículo que recibimos por parámetro.
-        stmt.setInt(1, pedido.getNumeroPedido());
-        stmt.setLong(2, pedido.getCliente().getId());
-        stmt.setLong(3, pedido.getArticulo().getId());
-        stmt.setInt(4, pedido.getUnidades());
+        // Preparamos el parámetro de salida.
+        stmt.registerOutParameter(1, Types.BIGINT);
+        stmt.setInt(2, pedido.getNumeroPedido());
+        stmt.setLong(3, pedido.getCliente().getId());
+        stmt.setLong(4, pedido.getArticulo().getId());
+        stmt.setInt(5, pedido.getUnidades());
         // Tenemos que convertir el tipo de datos de LocalDate a Date para poder insertarlo en la BD.
-        stmt.setDate(5, Date.valueOf(pedido.getFechaPedido()));
-        stmt.setBoolean(6, pedido.getEsEnviado());
+        stmt.setDate(6, Date.valueOf(pedido.getFechaPedido()));
+        stmt.setBoolean(7, pedido.getEsEnviado());
     }
 }
