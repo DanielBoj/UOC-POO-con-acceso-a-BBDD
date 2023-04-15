@@ -227,7 +227,11 @@ public class Controlador {
     }
 
     // Actualizamos las listas desde la BBDD al iniciar la aplicación.
-    public void actualizarContadores() {
-        datos.actualizarContadores();
+    public int actualizarContadores() {
+        return datos.actualizarContadores();
     }
+
+    // Actualizamos las listas de códigos únicos para que funcione bien la implementación del
+    // manejador de colisiones en la creación de códigos únicos.
+    public int actualizarCodigosUnicos() { return datos.actualizarCodigos(); }
 }

@@ -2,18 +2,22 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.HashCode;
 
+import java.util.ArrayList;
+
 /**
  * Esta clase implementa la lógica de negocio para el subtipo de Cliente Premium.
  * Esta clase es una subclase de la superclase Cliente e implementa los métodos abstractos.
  *
  * @author Cirice
  */
-public class ClientePremium extends Cliente {
+public class ClientePremium extends Cliente implements HashCode {
 
     // Atributos de la clase.
     private double cuota;
     private double descuento;
     private String codSocio;
+
+    private static ArrayList<String> codigos;
 
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.
     public ClientePremium (String nombre,
@@ -26,8 +30,10 @@ public class ClientePremium extends Cliente {
         this.cuota = 30;
         this.descuento = 0.2;
 
+        codigos =  new ArrayList<>();
+
         // Generamos el código de socio.
-        this.codSocio = this.generateCodCliente(nif);
+        this.codSocio = this.generateCodigo(nif);
     }
 
     // Constructor que recibe además los parámetros de descuento y cuota.
@@ -41,12 +47,15 @@ public class ClientePremium extends Cliente {
         this.cuota = cuota;
         this.descuento = descuento;
 
+        codigos =  new ArrayList<>();
+
         // Generamos el código de socio.
-        this.codSocio = this.generateCodCliente(nif);
+        this.codSocio = this.generateCodigo(nif);
     }
 
     // Producto 3 --> COnstructor vacío
     public ClientePremium() {
+        codigos = new ArrayList<>();
     }
 
     /* Getters & Setters */
@@ -72,6 +81,14 @@ public class ClientePremium extends Cliente {
 
     public void setCodSocio(String codSocio) {
         this.codSocio = codSocio;
+    }
+
+    public static ArrayList<String> getCodigos() {
+        return codigos;
+    }
+
+    public static void setCodigos(ArrayList<String> codigos) {
+        ClientePremium.codigos = codigos;
     }
 
     // StringBuilder nos permite implementar un patrón de diseño de string para el método toString() de una forma visual muy clara.
@@ -111,8 +128,33 @@ public class ClientePremium extends Cliente {
 //        return costeEnvio * this.descuento;
 //    }
 
+    @Override
     // Implementación del método para generar un código único usando el NIF del cliente y la interfaz HashCode.
-    private String generateCodCliente(String key) {
+    public String generateCodigo(String key) {
+        // Obtenemos el código generado.
+        String codigo = HashCode.generateHash(key);
+
+        // Comprobamos que el código no exista
+        codigo = manageCollisions(codigo, codigos);
+
         return "PREMIUM" + HashCode.generateHash(key);
+    }
+
+
+    // Método para gestionar las colisiones mediante una función recursiva.
+    @Override
+    public String manageCollisions(String key, ArrayList<String> set) {
+        // Primero definimos el caso base.
+        // Normalizamos el código
+        String codigo = "PREMIUM" + key;
+        // Recorremos la lista buscando coincidencias.
+        if (set.stream().noneMatch(codigo::equals)) {
+
+            // Si no hay coincidencias, devolvemos el código generado.
+            return key;
+        }
+
+        // Si hay coincidencias, generamos un nuevo código.
+        return manageCollisions(key + "1", set);
     }
 }

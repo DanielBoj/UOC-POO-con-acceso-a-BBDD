@@ -45,18 +45,23 @@ public class OnlineStore {
         System.exit(exitValue);
     }
 
+    // Los valores de retorno nos informarán de los errores que se han producido durante la ejecución.
     public static int init(OnlineStore prg) {
 
         // Creamos un valor de retorno por defecto.
         int exitValue = 0;
 
-        // Actualizamos las listas de datos desde la BD.
+        // Actualizamos los datos que necesitan las funciones automatizadas de la app
+        // desde la BD.
         try {
-            prg.controlador.actualizarContadores();
+            if (prg.controlador.actualizarContadores() < 0 &&
+            prg.controlador.actualizarCodigosUnicos() < 0) {
+                exitValue = 4;
+            }
         } catch (Exception e) {
             System.out.println("Error al actualizar las listas de datos.");
             e.printStackTrace();
-            return 4;
+            exitValue = 4;
         }
 
         try {
@@ -113,7 +118,7 @@ public class OnlineStore {
                 prg.controlador.showMenu();
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-                return 2;
+                exitValue += 2;
             }
 
             // Mensaje de despedida.
@@ -121,14 +126,14 @@ public class OnlineStore {
 
             /* IMPORTANTE -> Cerramos la conexión a la BD */
             // Si no ha habido ningún error, devolvemos un valor de éxito.
-            exitValue = Conexion.closeConnection();
-
-            return exitValue;
+            exitValue = Conexion.closeConnection() != 0 ? 0 : 3;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 
             // Si ha habido algún error, devolvemos un valor de error.
-            return 1;
+            exitValue += 3;
         }
+
+        return exitValue;
     }
 }

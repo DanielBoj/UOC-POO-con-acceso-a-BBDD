@@ -922,7 +922,7 @@ public class Datos {
     }
 
     // Actualizamos las listas.
-    public void actualizarContadores() {
+    public int actualizarContadores() {
         // Creamos los repositorios para consultar la BD.
         Repositorio<Articulo> repositorioArticulo = new ArticuloRepositorioImpl();
         Repositorio<Cliente> repositorioCliente = new ClienteRepositorioImpl();
@@ -932,8 +932,55 @@ public class Datos {
             Articulo.setTotalArticulos(repositorioArticulo.count());
             Cliente.setTotalClientes(repositorioCliente.count());
             Pedido.setTotalPedidos(repositorioPedido.count());
+
+            // Devolvemos 1 si se han actualizado los contadores
+            return 1;
         } catch (IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
+
+        // Si hay algún error devolvemos 0.
+        return 0;
+    }
+
+    public int actualizarCodigos() {
+        // Usaremos una única variable temporal para almacenar los códigos.
+        ArrayList<String> codigosTemp = new ArrayList<>();
+
+        // Creamos los repositorios para consultar la BD.
+        Repositorio<Articulo> repositorioArticulo = new ArticuloRepositorioImpl();
+        Repositorio<Cliente> repositorioCliente = new ClienteRepositorioImpl();
+
+        // Obtenemos los codigos de articulos.
+        try {
+            // Primero obtenemos la lista de todos los artículos de la BD.
+            repositorioArticulo.findAll()
+                    // Iteramos por la lista y añadimos los códigos a la lista temporal.
+                    .forEach(articulo -> codigosTemp.add(articulo.getCodArticulo()));
+
+            // Seteamos la nueva lista de códigos en la clase Articulo.
+            Articulo.setCodigos(codigosTemp);
+
+            // Repetimos el proceso para los clientes, pero en este caso hemso de filtrar
+            // los clientes del tipo Premium.
+            // Obtenemos la lista de clientes y la convertimos y la mapeamos.
+            repositorioCliente.findAll().getLista().stream()
+                    // Filtramos los clientes del tipo Premium mediante el método instanceof.
+                    .filter(cliente -> cliente instanceof ClientePremium)
+                    // Iteramos por la lista y añadimos los códigos a la lista temporal.
+                    .forEach(cliente -> codigosTemp.add(((ClientePremium) cliente).getCodSocio()));
+
+            // Seteamos la nueva lista de códigos en la clase ClientePremium.
+            ClientePremium.setCodigos(codigosTemp);
+
+            // Devolvemos una sálida de éxito.
+            return 1;
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Devolvemos una salida de error.
+        return 0;
     }
 }

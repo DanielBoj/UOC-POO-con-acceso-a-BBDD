@@ -1,5 +1,7 @@
 package ciricefp.modelo.interfaces;
 
+import java.util.ArrayList;
+
 /**
  * Interfaz para la generación de códigos hash. Lo usarán las clases ClientePremium y Artículo.
  *
@@ -10,7 +12,8 @@ public interface HashCode {
     int CODE_SIZE = 10000;
     // Método a implementar por las clases que implementen esta interfaz.
     String generateCodigo(String key);
-    // TODO --> String manageColission(String hash);
+
+    String manageCollisions(String key, ArrayList<String> set);
 
     // Generamos el Hash mediante el método hashCode() de la clase String.
     static String generateHash(String key) {

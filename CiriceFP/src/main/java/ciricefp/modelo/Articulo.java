@@ -3,6 +3,8 @@ package ciricefp.modelo;
 import ciricefp.modelo.interfaces.HashCode;
 import ciricefp.modelo.interfaces.IArticulo;
 
+import java.util.ArrayList;
+
 /**
  * Esta clase implementa la lógica de negocio de un artículo que se puede comprar en la tienda.
  *
@@ -21,6 +23,8 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     private int tiempoPreparacion; // En días
     private static int totalArticulos = 0;
 
+    private static ArrayList<String> codigos;
+
     // Constructor implementando la creación automática del código único de artículo.
     public Articulo(String descripcion,
                     double pvp,
@@ -31,6 +35,8 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         this.gastosEnvio = gastosEnvio;
         this.tiempoPreparacion = tiempoPreparacion;
         this.codArticulo = generateCodigo(this.descripcion);
+
+        codigos =  new ArrayList<>();
     }
 
     // Sobrecarga de constructor para adaptarlo a nuestro modelo relacional. Este constructor debe de pasar
@@ -47,10 +53,12 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         this.pvp = pvp;
         this.gastosEnvio = gastosEnvio;
         this.tiempoPreparacion = tiempoPreparacion;
+
+        codigos =  new ArrayList<>();
     }
 
     // Creamos también un constructor sin parámetros
-    public Articulo() { }
+    public Articulo() { codigos =  new ArrayList<>(); }
 
     /* Getters & Setters */
     public String getCodArticulo() {
@@ -110,6 +118,14 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         Articulo.totalArticulos = totalArticulos;
     }
 
+    public static ArrayList<String> getCodigos() {
+        return codigos;
+    }
+
+    public static void setCodigos(ArrayList<String> codigos) {
+        Articulo.codigos = codigos;
+    }
+
     // StringBuilder nos permite implementar un patrón de diseño de string para el método toString() de una forma visual muy clara.
     @Override
     public String toString() {
@@ -135,7 +151,31 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     // Generamos el código único del artículo mediante la implementación del interfaz HashCode.
     @Override
     public String generateCodigo(String key) {
-        return "A" + HashCode.generateHash(key);
+
+        // Obtenemos el código generado.
+        String codigo = HashCode.generateHash(key);
+
+        // Comprobamos que el código no exista
+        codigo = manageCollisions(codigo, codigos);
+
+        return "A" + codigo;
+    }
+
+    // Creamos una función recursiva para comprobar si el código generado ya existe.
+    @Override
+    public String manageCollisions(String key, ArrayList<String> set) {
+        // Primero definimos el caso base.
+        // Normalizamos el código
+        String codigo = "A" + key;
+        // Recorremos la lista buscando coincidencias.
+        if (set.stream().noneMatch(codigo::equals)) {
+
+            // Si no hay coincidencias, devolvemos el código generado.
+            return key;
+        }
+
+        // Si hay coincidencias, generamos un nuevo código.
+        return manageCollisions(key + "1", set);
     }
 
     // Método para incrementar el contador de artículos.
