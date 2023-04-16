@@ -226,7 +226,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
             ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al total.
@@ -250,7 +250,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
             ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al artículo.

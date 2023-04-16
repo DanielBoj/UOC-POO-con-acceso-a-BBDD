@@ -31,7 +31,7 @@ public class OnlineStore {
         OnlineStore prg = new OnlineStore();
 
         // Instanciamos una nueva conexión a la BD siguiendo el patrón Singleton.
-        Connection db = Conexion.getInstance("dev");
+        Connection db = Conexion.getInstance(System.getenv("ENV"));
 
         // Instanciamos los controladores.
         prg.datos = new Datos();
@@ -54,14 +54,12 @@ public class OnlineStore {
         // Actualizamos los datos que necesitan las funciones automatizadas de la app
         // desde la BD.
         try {
-            if (prg.controlador.actualizarContadores() < 0 &&
-            prg.controlador.actualizarCodigosUnicos() < 0) {
-                exitValue = 4;
-            }
+            prg.controlador.actualizarCodigosUnicos();
+            prg.controlador.actualizarContadores();
         } catch (Exception e) {
             System.out.println("Error al actualizar las listas de datos.");
             e.printStackTrace();
-            exitValue = 4;
+            exitValue = 2;
         }
 
         try {
@@ -118,7 +116,7 @@ public class OnlineStore {
                 prg.controlador.showMenu();
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-                exitValue += 2;
+                exitValue = exitValue * 10 + 3;
             }
 
             // Mensaje de despedida.
@@ -126,12 +124,12 @@ public class OnlineStore {
 
             /* IMPORTANTE -> Cerramos la conexión a la BD */
             // Si no ha habido ningún error, devolvemos un valor de éxito.
-            exitValue = Conexion.closeConnection() != 0 ? 0 : 3;
+            exitValue = Conexion.closeConnection() > 0 ? (exitValue * 10 + 4) : 0;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 
             // Si ha habido algún error, devolvemos un valor de error.
-            exitValue += 3;
+            exitValue = exitValue * 10 + 4;
         }
 
         return exitValue;

@@ -88,7 +88,7 @@ public class Datos {
 
         // Intentamos añadir el artículo a la BD.
         // Comprobamos si el artículo ya existe
-        if (repositorio.findOne(articulo.getCodArticulo()) == null) {
+        if (!checkArticulo(articulo)) {
             // Añadimos el artículo a la BD
             try {
                 if (repositorio.save(articulo)) {
@@ -99,6 +99,7 @@ public class Datos {
                     return repositorio.getLast();
                 }
             } catch (NullPointerException e) {
+                System.out.println("Error al crear el artículo.");
                 e.printStackTrace();
             }
         } else {
@@ -117,7 +118,7 @@ public class Datos {
 
         // Intentamos añadir el artículo a la BD.
         // Comprobamos si el artículo ya existe
-        if (repositorio.findOne(articulo.getCodArticulo()) == null) {
+        if (!checkArticulo(articulo)) {
             // Añadimos el artículo a la BD
             try {
                 if (repositorio.save(articulo)) {
@@ -128,6 +129,7 @@ public class Datos {
                     return repositorio.getLast();
                 }
             } catch (NullPointerException e) {
+                System.out.println("Error al crear el artículo.");
                 e.printStackTrace();
             }
         } else {
@@ -153,7 +155,8 @@ public class Datos {
                 return repositorio.findAll().cloneOf();
             }
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al listar los artículos.");
+            e.printStackTrace();
         }
 
         // Si falla, devolvemos una lista vacía
@@ -171,6 +174,7 @@ public class Datos {
         try {
             return repositorio.findById(id);
         } catch (NullPointerException e) {
+            System.out.println("Error al buscar el artículo por ID.");
             e.printStackTrace();
         }
 
@@ -194,6 +198,7 @@ public class Datos {
             try {
                 return repositorio.findOne(codigo);
             } catch (NullPointerException e) {
+                System.out.println("Error al buscar el artículo.");
                 e.printStackTrace();
             }
         }
@@ -228,6 +233,7 @@ public class Datos {
                 repositorio.resetId();
             }
         } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error al limpiar la lista de artículos.");
             e.printStackTrace();
         }
 
@@ -253,8 +259,8 @@ public class Datos {
             Cliente cliente = (Cliente) IClienteFactory.createCliente(nombre, domicilio, nif, email, tipo);
 
             // Comprobamos que el cliente no exista
-            assert Objects.requireNonNull(cliente).getNif() != null;
-            if (repositorio.findOne(cliente.getNif()) != null) {
+
+            if (checkCliente(cliente)) {
                 System.out.println(MessageFormat.format("El cliente {0} ya existe", cliente.getNombre()));
                 return null;
             }
@@ -266,6 +272,7 @@ public class Datos {
                 return repositorio.getLast();
             }
         } catch (NullPointerException e) {
+            System.out.println("Error al crear el cliente");
             e.printStackTrace();
         }
 
@@ -283,8 +290,7 @@ public class Datos {
         try {
 
             // Comprobamos que el cliente no exista
-            assert Objects.requireNonNull(cliente).getNif() != null;
-            if (repositorio.findOne(cliente.getNif()) != null) {
+            if (checkCliente(cliente)) {
                 System.out.println(MessageFormat.format("El cliente {0} ya existe", cliente.getNombre()));
                 return null;
             }
@@ -297,6 +303,7 @@ public class Datos {
                 return repositorio.getLast();
             }
         } catch (NullPointerException e) {
+            System.out.println("Error al crear el cliente.");
             e.printStackTrace();
         }
 
@@ -317,6 +324,7 @@ public class Datos {
                 return repositorio.findAll().cloneOf();
             }
         } catch (NullPointerException e) {
+            System.out.println("Error al listar los clientes.");
             e.printStackTrace();
         }
 
@@ -335,6 +343,7 @@ public class Datos {
         try {
             return repositorio.findById(id);
         } catch (NullPointerException e) {
+            System.out.println("Error al buscar el cliente por ID.");
             e.printStackTrace();
         }
 
@@ -369,7 +378,8 @@ public class Datos {
 
             } catch (IndexOutOfBoundsException e) {
                 // Si se produce una excepción, la lista temporal quedará vacía
-                System.out.println(e.getMessage());
+                System.out.println("Error al filtrar los clientes por tipo");
+                e.printStackTrace();
             }
         }
 
@@ -392,7 +402,7 @@ public class Datos {
                 return repositorio.findOne(nif);
             } catch (NullPointerException e) {
                 System.out.println(MessageFormat.format("Error al buscar el cliente con NIF {0}", nif));
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -437,7 +447,8 @@ public class Datos {
                     repositorioDireccion.resetId();
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al limpiar la lista de clientes");
+                e.printStackTrace();
             }
         }
 
@@ -457,6 +468,7 @@ public class Datos {
         try {
             return repositorio.findById(cliente.getId());
         } catch (NullPointerException e) {
+            System.out.println("Error al obtener el cliente");
             e.printStackTrace();
         }
 
@@ -475,7 +487,8 @@ public class Datos {
             try {
                 return repositorio.save(cliente)? cliente : null;
             } catch (NullPointerException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al actualizar el cliente");
+                e.printStackTrace();
             }
         }
 
@@ -500,7 +513,8 @@ public class Datos {
                     return cliente;
                 }
             } catch (NullPointerException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al eliminar el cliente");
+                e.printStackTrace();
             }
         }
 
@@ -545,7 +559,8 @@ public class Datos {
                 return repositorio.getLast();
             }
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al crear el pedido");
+            e.printStackTrace();
         }
 
         // Si el proceso falla o el pedido no se añade correctamente, devolvemos null.
@@ -580,7 +595,8 @@ public class Datos {
                 return repositorio.getLast();
             }
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al crear el pedido.");
+            e.printStackTrace();
         }
 
         return null;
@@ -599,7 +615,8 @@ public class Datos {
             try {
                 return repositorio.findAll().cloneOf();
             } catch (NullPointerException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al listar los pedidos.");
+                e.printStackTrace();
             }
         }
 
@@ -618,6 +635,7 @@ public class Datos {
         try {
             return repositorio.findById(id);
         } catch (NullPointerException e) {
+            System.out.println("Error al buscar el pedido por ID.");
             e.printStackTrace();
         }
 
@@ -649,6 +667,7 @@ public class Datos {
                 }
             } catch (NullPointerException e) {
                 // Si se produce un error, devolvemos null
+                System.out.println("Error al eliminar el pedido.");
                 e.printStackTrace();
             }
         } else {
@@ -675,6 +694,7 @@ public class Datos {
             try {
                 return repositorio.findOne(String.valueOf(numeroPedido));
             } catch (NullPointerException | IndexOutOfBoundsException e) {
+                System.out.println("Error al buscar el pedido.");
                 e.printStackTrace();
             }
         }
@@ -707,7 +727,8 @@ public class Datos {
                         // Finalizamos iterando sobre la lista y añadiendo los pedidos a la lista temporal.
                         .forEach(pedidosTemp::add);
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al filtrar los pedidos por cliente.");
+                e.printStackTrace();
             }
         }
 
@@ -761,7 +782,8 @@ public class Datos {
                     default -> pedidosTemp.addAll(repositorio.findAll().getLista());
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al filtrar los pedidos.");
+                e.printStackTrace();
             }
         }
 
@@ -795,7 +817,8 @@ public class Datos {
                     // Finalizamos iterando sobre la lista y añadiendo los pedidos a la lista temporal.
                     .forEach(pedidosTemp::add);
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al filtrar los pedidos por fecha");
+                e.printStackTrace();
             }
         }
 
@@ -828,7 +851,8 @@ public class Datos {
                     repositorio.resetId();
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al eliminar los pedidos de la BD");
+                e.printStackTrace();
             }
         }
 
@@ -868,7 +892,8 @@ public class Datos {
                                 contPedidos.getAndIncrement();
                             });
             } catch (IndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error al actualizar el estado de los pedidos");
+                e.printStackTrace();
             }
         }
 
@@ -936,7 +961,8 @@ public class Datos {
             // Devolvemos 1 si se han actualizado los contadores
             return 1;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al actualizar los contadores");
+            e.printStackTrace();
         }
 
         // Si hay algún error devolvemos 0.
@@ -977,10 +1003,48 @@ public class Datos {
             return 1;
 
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al actualizar los códigos de los artículos y clientes.");
+            e.printStackTrace();
         }
 
         // Devolvemos una salida de error.
         return 0;
+    }
+
+    /* Métodos de comprobación de existencia de artículos y clientes en la BD. */
+    // Comprobamos si ya existe un artículo en la BD.
+    public boolean checkArticulo(Articulo src) {
+        // Creamos un repositorio para ejecutar acciones sobre la lista de artículos de la BD.
+        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+
+        assert Objects.requireNonNull(src).getDescripcion() != null;
+        // Comprobamos si existe el artículo en la BD.
+        try {
+            return repositorio.findAll().getLista().stream()
+                    .anyMatch(articulo -> articulo.getDescripcion().equals(src.getDescripcion()));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error al comprobar el artículo en la BD.");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Comprobamos si ya existe un cliente en la BD.
+    public boolean checkCliente(Cliente src) {
+        // Creamos un repositorio para ejecutar acciones sobre la lista de clientes de la BD.
+        Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
+
+        assert Objects.requireNonNull(src).getNif() != null;
+        // Comprobamos si existe el cliente en la BD.
+        try {
+            return repositorio.findAll().getLista().stream()
+                    .anyMatch(cliente -> cliente.getNif().equals(src.getNif()));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error al comprobar el cliente en la BD.");
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

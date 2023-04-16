@@ -144,8 +144,7 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     // Método para comparar dos artículos, implementamos la clase de Java Comparable.
     @Override
     public int compareTo (Articulo sourceArticulo) {
-        return sourceArticulo.getCodArticulo().equals(this.codArticulo) &&
-                sourceArticulo.getDescripcion().equals(this.descripcion)? 0 : -1;
+        return sourceArticulo.getDescripcion().equals(this.descripcion)? 0 : -1;
     }
 
     // Generamos el código único del artículo mediante la implementación del interfaz HashCode.
@@ -175,7 +174,8 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
         }
 
         // Si hay coincidencias, generamos un nuevo código.
-        return manageCollisions(key + "1", set);
+        key = Integer.toString(Integer.parseInt(key) + 1);
+        return manageCollisions(key, set);
     }
 
     // Método para incrementar el contador de artículos.

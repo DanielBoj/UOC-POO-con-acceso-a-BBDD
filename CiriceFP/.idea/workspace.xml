@@ -6,12 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/HashCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/HashCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Articulo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Articulo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClientePremium.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClientePremium.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/HashCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/HashCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

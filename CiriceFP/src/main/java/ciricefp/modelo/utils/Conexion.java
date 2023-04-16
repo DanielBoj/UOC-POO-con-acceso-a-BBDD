@@ -1,5 +1,7 @@
 package ciricefp.modelo.utils;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,6 +20,9 @@ public class Conexion {
 
     // Atributo Singleton
     private static Connection conn;
+
+    // Atributo para el pool de conexiones
+    private static BasicDataSource pool;
 
     // Opcional --> Lo usaremos si tenemos tiempo de implementar un sistema de encriptado del pass.
     private static String key;
@@ -86,18 +91,20 @@ public class Conexion {
         return login;
     }
 
-    public String getPass() {
-        // TODO -> Codificar pass
-        return pass;
-    }
-
     public String getUrl() {
         return url;
     }
 
+    // Patron Singleton
     public Connection getConn() {
         return conn;
     }
+
+    // Ejemplo pool de conexiones
+    public static BasicDataSource getPool() {
+        return pool;
+    }
+
 
     // Queremos que el pass sea totalmente privado Todo Codificar pass
 
@@ -112,7 +119,9 @@ public class Conexion {
                 '}';
     }
 
-    // Método Singleton para realizar la conexión a la BD.
+    // Método Singleton para realizar la conexión a la BD. Si la conexión aún no se ha
+    // creado, crea la conexión, pero si ya existe, devuelve la conexión creada, aplicando
+    // de este modo el patrón Singleton.
     public static Connection getInstance(String tipoEntorno) {
         if (conn == null) {
 
@@ -124,6 +133,8 @@ public class Conexion {
                 new Conexion("prod");
             }
         }
+
+        // Si la conexión ya existe, la devuelve.
         return conn;
     }
 
@@ -140,5 +151,34 @@ public class Conexion {
             e.printStackTrace();
             return 1;
         }
+    }
+
+    // Encriptar pass
+    // https://www.baeldung.com/java-encrypt-decrypt
+    // https://www.baeldung.com/java-aes-encryption-decryption
+
+    /* Ejemplo de creación de un Pool de conexiones. */
+    public static BasicDataSource getPoolInstance() throws SQLException {
+        if (pool == null) {
+            pool = new BasicDataSource();
+
+            // Configuramos el pool de conexiones
+            pool.setUrl(url);
+            pool.setUsername(login);
+            pool.setPassword(pass);
+
+            // Configuramos el tamaño del pool
+            pool.setInitialSize(3);
+            pool.setMaxTotal(10);
+            pool.setMinIdle(3);
+            pool.setMaxIdle(10);
+        }
+
+        return pool;
+    }
+
+    // Obtenemos una sola conexión del pool de conexiones
+    public static Connection getPoolConnection() throws SQLException {
+        return getPoolInstance().getConnection();
     }
 }

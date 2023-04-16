@@ -144,6 +144,9 @@ public class ClientePremium extends Cliente implements HashCode {
     // Método para gestionar las colisiones mediante una función recursiva.
     @Override
     public String manageCollisions(String key, ArrayList<String> set) {
+        if (set.isEmpty()) {
+            return key;
+        }
         // Primero definimos el caso base.
         // Normalizamos el código
         String codigo = "PREMIUM" + key;
@@ -154,6 +157,7 @@ public class ClientePremium extends Cliente implements HashCode {
             return key;
         }
 
+        key = Integer.toString(Integer.parseInt(key) + 1);
         // Si hay coincidencias, generamos un nuevo código.
         return manageCollisions(key + "1", set);
     }

@@ -179,7 +179,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Creamos la consulta a la BD mediante un Statement ya que no recibimos parámetros.
         // Manejamos el autoclose con el try-with-resources.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
              ResultSet res = stmt.executeQuery(sql)) {
             // Recibimos el resultado y lo asignamos a la variable.
             if (res.next()) {
@@ -200,7 +200,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
 
         // Ejecutamos el Statement como autoclose y obtenemos el resultado.
-        try (Statement stmt = getConnection(System.getenv("ENV")).createStatement();
+        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
              ResultSet res = stmt.executeQuery(sql)) {
 
             // Si hay un resultado, lo devolvemos.
