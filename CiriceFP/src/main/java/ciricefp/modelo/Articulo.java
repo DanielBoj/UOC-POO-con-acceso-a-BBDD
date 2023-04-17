@@ -163,6 +163,9 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     // Creamos una función recursiva para comprobar si el código generado ya existe.
     @Override
     public String manageCollisions(String key, ArrayList<String> set) {
+        if (set.isEmpty()) {
+            return key;
+        }
         // Primero definimos el caso base.
         // Normalizamos el código
         String codigo = "A" + key;

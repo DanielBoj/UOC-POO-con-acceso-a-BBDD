@@ -7,6 +7,7 @@
     <groupId>CiriceFP</groupId>
     <artifactId>CiriceFP-OnlineStore</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>19</maven.compiler.source>

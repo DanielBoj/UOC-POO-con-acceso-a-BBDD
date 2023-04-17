@@ -1,7 +1,6 @@
 package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.Articulo;
-import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;

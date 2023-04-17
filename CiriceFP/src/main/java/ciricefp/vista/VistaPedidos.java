@@ -212,7 +212,7 @@ public class VistaPedidos implements IVista {
     // Mostramos los pedidos pendientes de envío.
     public void listPedidosPendientes() {
         System.out.println("Mostrar pedidos pendientes de envío: ");
-        menu.filterPedidosByEstado("Pendiente");
+        menu.filterPedidosByEstado("pendiente");
     }
 
     // Iniciamos el submenú para eliminar pedidos

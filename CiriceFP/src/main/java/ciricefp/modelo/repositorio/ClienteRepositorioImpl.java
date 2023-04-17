@@ -164,16 +164,15 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
                 stmt.registerOutParameter(1, Types.BIGINT);
 
                 // Generamos el modelo de cliente para la actualización.
-                stmt.setString(2, cliente.getNombre());
-                stmt.setLong(3, cliente.getDomicilio().getId());
-                stmt.setString(4, cliente.getNif());
-                stmt.setString(5, cliente.getEmail());
+                setCliente(cliente, stmt);
+
+                // Asignamos el id del cliente ya que es un update.
                 stmt.setLong(6, cliente.getId());
 
                 // Ejecutamos la consulta.
                 stmt.executeUpdate();
 
-                // Si la consulta se ha ejecutado correctamente, devovlerá el id del cliente.
+                // Si la consulta se ha ejecutado correctamente, devolverá el id del cliente.
                 isSaved = stmt.getLong(1) > 0;
 
                 // Modificamos la dirección del cliente.
@@ -440,7 +439,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
     // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
     @NotNull
-    private Cliente getCliente(ResultSet res) throws SQLException {
+    private static Cliente getCliente(ResultSet res) throws SQLException {
 
         // Comprobamos qué tipo de cliente es y creamos la instancia de cliente y de dirección.
         Cliente cliente = null;
@@ -481,5 +480,15 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         }
 
         return cliente;
+    }
+
+    private static void setCliente(Cliente cliente, CallableStatement stmt) throws SQLException {
+
+            // Asignamos los valores comunes para los clientes.
+            stmt.setString(2, cliente.getNombre());
+            stmt.setLong(3, cliente.getDomicilio().getId());
+            stmt.setString(4, cliente.getNif());
+            stmt.setString(5, cliente.getEmail());
+
     }
 }

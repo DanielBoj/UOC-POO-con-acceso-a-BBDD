@@ -234,4 +234,10 @@ public class Controlador {
     // Actualizamos las listas de códigos únicos para que funcione bien la implementación del
     // manejador de colisiones en la creación de códigos únicos.
     public int actualizarCodigosUnicos() { return datos.actualizarCodigos(); }
+
+    // Método para ejecutar una carga de datos de test en la BD.
+    public int loadTestData() { return datos.loadTestData(); }
+
+    // Método para comprobar si existen datos en la BD.
+    public boolean checkData() { return datos.checkData(); }
 }

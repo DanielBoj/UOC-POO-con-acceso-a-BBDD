@@ -5,6 +5,8 @@ import ciricefp.modelo.interfaces.ICliente;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.repositorio.*;
+import ciricefp.modelo.repositorio.testdataloader.LoadDataImpl;
+import ciricefp.modelo.repositorio.testdataloader.LoadDataRepositorio;
 import ciricefp.modelo.utils.Conexion;
 import org.jetbrains.annotations.NotNull;
 
@@ -744,6 +746,9 @@ public class Datos {
     // Filtramos los pedidos enviados y los ordenamos por fecha de envío
     public ArrayList<Pedido> filterPedidosByEstado(String opt) {
 
+        // Por seguridad, pasamos la opción a minúsculas.
+        opt = opt.toLowerCase();
+
         // Creamos una lista temporal
         ArrayList<Pedido> pedidosTemp = new ArrayList<>();
 
@@ -986,7 +991,7 @@ public class Datos {
 
             // Seteamos la nueva lista de códigos en la clase Articulo.
             Articulo.setCodigos(codigosTemp);
-
+            codigosTemp.clear();
             // Repetimos el proceso para los clientes, pero en este caso hemso de filtrar
             // los clientes del tipo Premium.
             // Obtenemos la lista de clientes y la convertimos y la mapeamos.
@@ -998,7 +1003,7 @@ public class Datos {
 
             // Seteamos la nueva lista de códigos en la clase ClientePremium.
             ClientePremium.setCodigos(codigosTemp);
-
+            codigosTemp.clear();
             // Devolvemos una sálida de éxito.
             return 1;
 
@@ -1046,5 +1051,34 @@ public class Datos {
         }
 
         return false;
+    }
+
+    // Creamos un proceso para cargar los datos de test en la BD.
+    public int loadTestData() {
+        // Creamos el repositorio para ejecutar acciones sobre la BD.
+        LoadDataRepositorio repositorio = new LoadDataImpl();
+
+        // Por seguridad, volvemos a comprobar si la BD está vacía.
+        if (repositorio.checkData()) {
+            return 0;
+        }
+
+        // Ejecutamos el método para cargar los datos de test.
+        try {
+            return repositorio.loadData();
+        } catch (Exception e) {
+            System.out.println("Error al cargar los datos de test en la BD.");
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    // Comprobamos de forma independiente si la BD está vacía.
+    public boolean checkData() {
+        // Creamos el repositorio para ejecutar acciones sobre la BD.
+        LoadDataRepositorio repositorio = new LoadDataImpl();
+
+        // Comprobamos si la BD está vacía.
+        return repositorio.checkData();
     }
 }

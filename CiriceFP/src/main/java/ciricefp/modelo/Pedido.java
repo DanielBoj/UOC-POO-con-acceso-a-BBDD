@@ -298,7 +298,7 @@ public class Pedido implements Comparable<Pedido>, IPedido {
         LocalDate fechaEnvio = this.calcularFechaEnvio();
 
         // Devolvemos true si la fecha de envío es igual o posterior a la fecha del pedido.
-        return this.fechaPedido.equals(fechaEnvio) || this.fechaPedido.isAfter(fechaEnvio);
+        return this.fechaPedido.equals(fechaEnvio) || this.fechaPedido.isBefore(fechaEnvio);
     }
 
     // Calculamos el precio del envío teniendo en cuenta el descuento aplicable a clientes Premium

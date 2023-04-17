@@ -93,6 +93,16 @@ public class MenuPrincipal {
         boolean salir = false;
         char opcio;
 
+        // Mostramos un menú inicial si no existen datos en la BD para que el usuario cargar datos de test.
+        if (!controlador.checkData()) {
+            loadTestData();
+        }
+
+        // Mostramos el menú principal.
+        System.out.println("==================================");
+        System.out.println("Bienvenido a la aplicación de gestión de pedidos de la empresa OnlineStore.");
+        System.out.println("==================================");
+
         do {
             System.out.println("1. Gestión Articulos");
             System.out.println("2. Gestión Clientes");
@@ -545,6 +555,39 @@ public class MenuPrincipal {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    // Preguntamos al usuario si desea cargar los datos de test de la BD y los intentanos cargar.
+    // Si la BD tiene datos no se realiza la consulta.
+    public void loadTestData() {
+        // Preguntamos al usuario si desea cargar los datos de test de la BD.
+        System.out.println("¿Desea cargar los datos de test de la BD?");
+        System.out.println("1. Si");
+        System.out.println("0. No");
+        char opt = pedirOpcion(2);
+
+        // Creamos un flag para comprobar el resultado.
+        int res = 0;
+
+        switch (opt) {
+            case '1' -> {
+                res = controlador.loadTestData();
+
+                // Enviamos la respuesta al usuario.
+                System.out.println("Comprobando si hay datos en la BD...");
+                switch (res) {
+                    case 0 -> System.out.println("La BD ya tiene datos.");
+                    case 1 -> System.out.println("Datos cargados correctamente.");
+                    case -1 -> System.out.println("Error al cargar los datos.");
+                }
+
+                System.out.println("Pulsa ENTER para continuar.");
+                // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
+                teclado.nextLine();
+                System.out.println("==================================");
+            }
+            case '0' -> System.out.println("No se han cargado los datos de test.");
         }
     }
 

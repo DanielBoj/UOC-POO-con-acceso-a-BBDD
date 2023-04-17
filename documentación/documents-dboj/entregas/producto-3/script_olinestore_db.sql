@@ -121,7 +121,7 @@ alter table pedidos
 drop procedure if exists add_direccion;
 delimiter //
 create procedure add_direccion(
-    out idout int unsigned,
+    out idout int,
 	in direccion varchar(255),
 	in ciudad varchar(255),
 	in provincia varchar(255),
@@ -148,7 +148,7 @@ delimiter ;
 drop procedure if exists add_cliente;
 delimiter //
 create procedure add_cliente(
-    out cliente_id int unsigned,
+    out cliente_id int,
     in nombre varchar(255),
     in direccion_id int unsigned,
     in nif varchar(255),
@@ -158,7 +158,6 @@ create procedure add_cliente(
   begin
 	-- Creamos el cliente
 	insert into clientes (nombre, direccion_id, nif, email) values (nombre, direccion_id, nif, email);
-	-- Obtenemos el id del cliente
 	-- Devolvemos el id del cliente
 	set cliente_id = last_insert_id();
   end;
@@ -168,7 +167,7 @@ delimiter ;
 -- Manejo de la table hija clientes_estandard
 drop procedure if exists add_cliente_estandard;
 delimiter //
-create procedure add_cliente_estandard(out idout int unsigned, 
+create procedure add_cliente_estandard(out idout int, 
     in cliente_id int unsigned)
   modifies sql data
   begin
@@ -184,7 +183,7 @@ delimiter ;
 drop procedure if exists add_cliente_premium;
 delimiter //
 create procedure add_cliente_premium(
-    out idout int unsigned,
+    out idout int,
     in cliente_id int unsigned,
     in cuota_anual decimal(10,2),
     in descuento decimal(10,2),
@@ -204,7 +203,7 @@ delimiter ;
 drop procedure if exists add_articulo;
 delimiter //
 create procedure add_articulo(
-    out idout int unsigned,
+    out idout int,
     in cod_articulo varchar(255),
     in descripcion varchar(255),
     in pvp decimal(10, 2),
@@ -227,7 +226,7 @@ delimiter ;
 drop procedure if exists add_pedido;
 delimiter //
 create procedure add_pedido(
-    out idout int unsigned,
+    out idout int,
     in numero_pedido int unsigned,
     in cliente_id int unsigned,
     in articulo_id int unsigned,
@@ -424,7 +423,7 @@ delimiter ;
 drop procedure if exists update_cliente;
 delimiter //
 create procedure update_cliente(
-    out result int unsigned,
+    out result int,
     in nombre varchar(255),
     in direccion_id int unsigned,
     in nif varchar(255),
@@ -436,7 +435,7 @@ modifies sql data
 	-- Comprobamos si el cliente existe
 	if exists (select * from clientes where _id = id) then
 		-- Actualizamos el cliente
-		update clientes set nombre = nombre, direccion_id = direccion_id, nif = nif, email = email where _id = id;
+		update clientes cl set cl.nombre = nombre, cl.direccion_id = direccion_id, cl.nif = nif, cl.email = email where _id = id;
 		set result = id;
 	else
 	  set result = -1;
@@ -452,7 +451,7 @@ delimiter ;
 drop procedure if exists update_cliente_premium;
 delimiter //
 create procedure update_cliente_premium(
-    out result int unsigned,
+    out result int,
     in cuota_anual decimal(10,2),
     in descuento decimal(10,2),
     in id int unsigned
@@ -462,7 +461,7 @@ modifies sql data
     -- Comprobamos si el cliente existe
     if exists (select * from clientes_premium where cliente_id = id) then
         -- Actualizamos el cliente
-        update clientes_premium set cuota_anual = cuota_anual, descuento = descuento where cliente_id = id;
+        update clientes_premium cp set cp.cuota_anual = cuota_anual, cp.descuento = descuento where cliente_id = id;
         set result = id;
     else
       set result = -1;
@@ -476,7 +475,7 @@ delimiter ;
 drop procedure if exists update_articulo;
 delimiter //
 create procedure update_articulo(
-    out result int unsigned,
+    out result int,
     in cod_articulo varchar(255),
     in descripcion varchar(255),
     in pvp decimal(10, 2),
@@ -489,8 +488,8 @@ modifies sql data
 	-- Comprobamos si el artículo existe
 	if exists (select * from articulos where _id = id) then
 	  -- Actualizamos el artículo
-	  update articulos set cod_articulo = cod_articulo, descripcion = descripcion, pvp = pvp, gastos_envio = gastos_envio,
-	  tiempo_preparacion = tiempo_preparacion where _id = id;
+	  update articulos a set a.cod_articulo = cod_articulo, a.descripcion = descripcion, a.pvp = pvp, a.gastos_envio = gastos_envio,
+	  a.tiempo_preparacion = tiempo_preparacion where _id = id;
 	  -- Devolvemos el id del artículo
 	  set result = id;
 	else
@@ -504,7 +503,7 @@ delimiter ;
 drop procedure if exists update_pedido;
 delimiter //
 create procedure update_pedido(
-    out result int unsigned,
+    out result int,
     in numero_pedido int unsigned,
     in cliente_id int unsigned,
     in articulo_id int unsigned,
@@ -516,10 +515,10 @@ create procedure update_pedido(
 modifies sql data
     begin
       -- Comprobamos si existe el pedido
-      if exists (select * from pedidos where _id - id) then
+      if exists (select * from pedidos where _id = id) then
         -- Actualizamos el pedido
-        update pedidos set numero_pedido = numero_pedido, cliente_id = cliente_id, articulo_id = articulo_id, unidades = unidades,
-        fecha_pedido = fecha_pedido, es_enviado = es_enviado where _id = id;
+        update pedidos p set p.numero_pedido = numero_pedido, p.cliente_id = cliente_id, p.articulo_id = articulo_id, p.unidades = unidades,
+        p.fecha_pedido = fecha_pedido, p.es_enviado = es_enviado where _id = id;
         -- Devolvemos el id del pedido
         set result = id;
       else
@@ -529,35 +528,11 @@ modifies sql data
 //
 delimiter ;
 
-
--- Creamos un procedimiento para actualizar el estado de un pedido, es decir, el campo es_enviado
--- Devolvemos el id del pedido
-drop procedure if exists update_pedido;
-delimiter //
-create procedure update_pedido(
-    out result int unsigned,
-    in id int unsigned
-    )
-  modifies sql data
-  begin
-	-- Comprobamos si el pedido existe
-	if exists (select * from pedidos where _id = id) then
-	  -- Actualizamos el pedido
-	  update pedidos set es_enviado = true where _id = id;
-	  -- Devolvemos el id del pedido
-	  set result = id;
-	else
-	  set result = -1;
-	end if;
-  end;
-//
-delimiter ;
-
 -- Creamos un proceso para actualizar una dirección.
 drop procedure if exists update_direccion;
 delimiter //
 create procedure update_direccion(
-    out result int unsigned,
+    out result int,
     in direccion varchar(255),
     in ciudad varchar(255),
     in provincia varchar(255),
@@ -570,8 +545,8 @@ modifies sql data
         -- Comprobamos si la dirección existe
         if exists (select * from direcciones where _id = id) then
             -- Actualizamos la dirección
-            update direcciones set direccion = direccion, ciudad = ciudad, provincia = provincia, codigo_postal = codigo_postal,
-            pais = pais where _id = id;
+            update direcciones d set d.direccion = direccion, d.ciudad = ciudad, d.provincia = provincia, d.codigo_postal = codigo_postal,
+            d.pais = pais where _id = id;
             -- Devolvemos el id de la dirección
             set result = id;
         else
@@ -590,7 +565,7 @@ delimiter ;
 drop procedure if exists delete_cliente;
 delimiter //
 create procedure delete_cliente(
-    out result int unsigned,
+    out result int,
     in id int unsigned
     )
   modifies sql data
@@ -611,7 +586,7 @@ delimiter ;
 -- Creamos un procedimiento para eliminar todos los clientes, devolvemos el número de clientes eliminados
 drop procedure if exists delete_clientes;
 delimiter //
-create procedure delete_clientes(out total_deleted int unsigned)
+create procedure delete_clientes(out total_deleted int)
   modifies sql data
   begin
 	-- Creamos una variable para guardar el número de clientes eliminados
@@ -643,7 +618,7 @@ delimiter ;
 drop procedure if exists delete_articulo;
 delimiter //
 create procedure delete_articulo(
-    out result int unsigned,
+    out result int,
     in id int unsigned
     )
   modifies sql data
@@ -664,7 +639,7 @@ delimiter ;
 -- Creamos un procedimiento para eliminar todos los artículos, devolvemos el número de artículos eliminados
 drop procedure if exists delete_articulos;
 delimiter //
-create procedure delete_articulos(out total_deleted int unsigned)
+create procedure delete_articulos(out total_deleted int)
     modifies sql data
 	begin
 	-- Creamos una variable para guardar el número de artículos eliminados
@@ -690,7 +665,7 @@ delimiter ;
 drop procedure if exists delete_pedido;
 delimiter //
 create procedure delete_pedido(
-    out result int unsigned,
+    out result int,
     in id int unsigned
     )
   modifies sql data
@@ -711,7 +686,7 @@ delimiter ;
 -- Creamos un procedimiento para eliminar todos los pedidos, devolvemos el número de pedidos eliminados
 drop procedure if exists delete_pedidos;
 delimiter //
-create procedure delete_pedidos(out total_deleted int unsigned)
+create procedure delete_pedidos(out total_deleted int)
 	modifies sql data
   begin
 	-- Creamos una variable para guardar el número de pedidos eliminados
@@ -737,7 +712,7 @@ delimiter ;
 drop procedure if exists delete_direccion;
 delimiter //
 create procedure delete_direccion(
-    out result int unsigned,
+    out result int,
     in id int unsigned
     ) 
     modifies sql data
@@ -758,7 +733,7 @@ delimiter ;
 -- Creamos un procedimiento para eliminar todas las direcciones, devolvemos el número de direcciones eliminadas
 drop procedure if exists delete_direcciones;
 delimiter //
-create procedure delete_direcciones(out total_deleted int unsigned)
+create procedure delete_direcciones(out total_deleted int)
     modifies sql data
     begin
         -- Creamos una variable para guardar el número de direcciones eliminadas
@@ -854,3 +829,96 @@ grant execute on onlinestore_db.* to os_admin_role;
 -- y le adjudicamos el rol os_admin_role. Le damos la clave por defecto de la BD.
 create user if not exists 'os_admin'@'%' identified by 'ciricefp';
 grant os_admin_role to os_admin;
+
+-- Por último, creamos dos procesos para realizar una carga de datos inicial
+-- en la base de datos si el usuario lo desea.
+-- Creamos los datos de testing
+drop procedure if exists add_datos_test;
+delimiter //
+create procedure add_datos_test (out p_res int)
+    modifies sql data
+    begin
+        declare exit handler for sqlexception
+        begin
+            rollback;
+            set p_res = -1;
+        end;
+    start transaction;
+        set p_res = 0;
+        if (select count(_id) from clientes) = 0 then
+            -- Insertamos una dirección de prueba
+            insert into direcciones
+                (direccion, ciudad, provincia, codigo_postal, pais)
+            values
+                ('Calle 1', 'Madrid', 'Madrid', '28001', 'España');
+
+            -- Insertamos 3 clientes de prueba
+            insert into clientes
+                (nombre, direccion_id, nif, email)
+            values
+                ('Cirice Helada', 1, '12345678A', 'cirice@algo.com'),
+                ('Socrates Helada', 1, '12345678B', 'socartes@algo.com'),
+                ('Platon Helada', 1, '12345678C', 'platon@algo.com');
+
+            -- Los 2 primeros clientes serán estandard
+            insert into clientes_estandard
+                (cliente_id)
+            values
+                (1),
+                (2);
+
+            -- El último cliente será premium
+            insert into clientes_premium
+                (cliente_id, cuota_anual, descuento, cod_socio)
+            values
+                (3, 30.0, 0.2, 'PREMIUM0000');
+            set p_res = 1;
+        end if;
+        if (select count(_id) from articulos) = 0 then
+            -- Insertamos 3 productos de prueba
+            insert into articulos
+                (cod_articulo, descripcion, pvp, gastos_envio, tiempo_preparacion)
+            values
+                ('A0001', 'Corbatero', 10.50, 10.0, 1),
+                ('A0002', 'Camiseta', 3.50, 20.0, 2),
+                ('A0003', 'Pantalones', 9.85, 30.0, 3);
+            set p_res = 1;
+        end if;
+        if (select count(_id) from pedidos) = 0 then
+        -- Insertamos 1 pedido de prueba
+        insert into pedidos
+            (numero_pedido, cliente_id, articulo_id, unidades, fecha_pedido, es_enviado)
+        values
+            (1, 1, 1, 5, '2023-04-01', 0);
+            set p_res = 1;
+        end if;
+    commit;
+    end;
+//
+delimiter ;
+
+-- Creamos un procedimiento para comprobar si existen datos en la BD.
+drop procedure if exists check_datos;
+delimiter //
+create procedure check_datos (out p_res int)
+    begin
+        declare exit handler for sqlexception
+        begin
+            rollback;
+            set p_res = -1;
+        end;
+        start transaction;
+            set p_res = 0;
+            if (select count(_id) from clientes) > 0 then
+                set p_res = 1;
+            end if;
+            if (select count(_id) from articulos) > 0 then
+                set p_res = 1;
+            end if;
+            if (select count(_id) from pedidos) > 0 then
+                set p_res = 1;
+            end if;
+        commit;
+    end;
+//
+delimiter ;
