@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Importamos la librería para trabajar con archivos .env
+import io.github.cdimascio.dotenv.Dotenv;
+
 /**
  * Esta clase implementa la lógica para realizar el acceso a la base de datos.
  *
@@ -17,6 +20,9 @@ public class Conexion {
     private static String login;
     private static String pass;
     private static String url;
+
+    // Creamos una instancia de la clase para poder usar archivos .env
+    private static final Dotenv dotenv = Dotenv.load();
 
     // Atributo Singleton
     private static Connection conn;
@@ -34,16 +40,16 @@ public class Conexion {
         // ?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid
         // para evitar el error de la hora.
         if (tipoEntorno.equals("dev")) {
-            baseDatos = "onlinestore_db";
-            login = System.getenv("DB_LOCAL_USER");
-            pass = System.getenv("DB_LOCAL_PASS");
-            url = "jdbc:mysql://" + System.getenv("DB_LOCAL_URL") + "/" + baseDatos +
-                    "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid";//&noAccessToProcedureBodies=true";
+            baseDatos = dotenv.get("DB_LOCAL_NAME");
+            login = dotenv.get("DB_LOCAL_USER");
+            pass = dotenv.get("DB_LOCAL_PASS");
+            url = "jdbc:mysql://" + dotenv.get("DB_LOCAL_URL") + "/" + baseDatos +
+                    "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid";
         } else {
-            baseDatos = "onlinestore_db";
-            login = System.getenv("DB_PROD_USER");
-            pass = System.getenv("DB_PROD_PASS");
-            url = "jdbc:mysql://" + System.getenv("DB_PROD_URL") + "/" + baseDatos;
+            baseDatos = dotenv.get("DB_PROD_NAME");
+            login = dotenv.get("DB_PROD_USER");
+            pass = dotenv.get("DB_PROD_PASS");
+            url = "jdbc:mysql://" + dotenv.get("DB_PROD_URL") + "/" + baseDatos;
         }
         try {
             // Cargamos la conexión con un valor por defecto.

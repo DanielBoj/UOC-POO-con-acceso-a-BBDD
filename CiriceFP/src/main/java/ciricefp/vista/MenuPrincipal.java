@@ -455,6 +455,7 @@ public class MenuPrincipal {
     public void deletePedido() {
 
         boolean isSalir = false;
+        int totalPedidos = controlador.listPedidos().size();
 
         // Primero comprobamos que la lista no esté vacía.
         if (controlador.listPedidos().isEmpty()) {
@@ -479,9 +480,15 @@ public class MenuPrincipal {
                     case '1'-> {
                         try {
                             Pedido pedidoEliminado = controlador.deletePedido(pedido);
-                            System.out.println("Pedido eliminado correctamente.");
-                            // Mostramos el pedido eliminado y esperamos a que el usuario pulse una tecla para continuar.
-                            controlador.printTicket(pedidoEliminado);
+                            if (pedidoEliminado != null) {
+                                System.out.println("Pedido eliminado correctamente.");
+                                // Mostramos el pedido eliminado y esperamos a que el usuario pulse una tecla para continuar.
+                                controlador.printTicket(pedidoEliminado);
+                            } else {
+                                System.out.println("==================================");
+                                System.out.println("No se ha podido eliminar el pedido.");
+                                System.out.println("==================================");
+                            }
                             System.out.println("Pulsa ENTER para continuar");
                             // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
                             teclado.nextLine();
@@ -497,8 +504,9 @@ public class MenuPrincipal {
                     }
                     case '0'-> isSalir = true;
                 }
+                totalPedidos--;
             }
-        } while (!isSalir && !controlador.listPedidos().isEmpty());
+        } while (!isSalir && totalPedidos > 0);
     }
 
     // Obtenemos una lista de pedidos filtrados por el estado

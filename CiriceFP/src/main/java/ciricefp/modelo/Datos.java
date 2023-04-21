@@ -579,6 +579,9 @@ public class Datos {
         // Asignamos un número de pedido a través del último número de pedido + 1.
         pedido.setNumeroPedido(repositorio.isEmpty()? 1 : repositorio.getLast().getNumeroPedido() + 1);
 
+        // Nos aseguramos de que enviado sea false:
+        pedido.setEsEnviado(false);
+
         // Ejecutamos el método para crear el pedido en la BD, si se añade correctamente devolvemos el pedido.
         try {
             // Comprobamos que el pedido sea nuevo, si no lo es devolvemos null.
@@ -658,6 +661,7 @@ public class Datos {
         // Comprobamos si el pedido está enviado
         if (!pedido.pedidoEnviado() && !repositorio.isEmpty()) {
             try {
+                Pedido deletedPedido = pedido;
                 // Ejecutamos el método para eliminar el pedido de la BD.
                 if (repositorio.delete(pedido.getId())) {
 
@@ -667,6 +671,7 @@ public class Datos {
                     // Devolvemos el pedido eliminado.
                     return pedido;
                 }
+                System.out.println("El pedido no puede ser eliminado porque ya está enviado!");
             } catch (NullPointerException e) {
                 // Si se produce un error, devolvemos null
                 System.out.println("Error al eliminar el pedido.");
@@ -884,6 +889,8 @@ public class Datos {
                 // Obtenemos la lista de pedidos de la BD y usamos progración funcional
                 // para filtrarla e iterarla.
                 listPedidos().getLista().stream()
+                            // Descartamos los pedidos que ya estén marcados como enviados
+                            .filter(pedido -> !pedido.getEsEnviado())
                             // Filtramos los pedidos que estén enviados
                             .filter(Pedido::pedidoEnviado)
                             .forEach(pedido -> {

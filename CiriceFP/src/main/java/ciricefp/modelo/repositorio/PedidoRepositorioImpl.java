@@ -186,7 +186,7 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
     public boolean delete(Long id) {
 
         // Creamos la sentencia SQL para eliminar el pedido.
-        String sql = "call = delete_pedido(?, ?)";
+        String sql = "call delete_pedido(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.

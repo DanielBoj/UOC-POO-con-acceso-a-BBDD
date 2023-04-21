@@ -1,11 +1,13 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
-import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.utils.Conexion;
 import ciricefp.vista.MenuPrincipal;
 
 import java.sql.Connection;
+
+// Librería para trabajar con archivos .env
+import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  * Esta clase implementa el main de la tienda.
@@ -23,6 +25,8 @@ public class OnlineStore {
     public MenuPrincipal ventana;
     public Controlador controlador;
 
+    // Instanciamos el archivo .env
+    private static final Dotenv dotenv = Dotenv.load();
 
     public static void main(String[] args) {
         System.out.println("OnlineStore Test!");
@@ -31,7 +35,7 @@ public class OnlineStore {
         OnlineStore prg = new OnlineStore();
 
         // Instanciamos una nueva conexión a la BD siguiendo el patrón Singleton.
-        Connection db = Conexion.getInstance(System.getenv("ENV"));
+        Connection db = Conexion.getInstance(dotenv.get("ENV"));
 
         // Instanciamos los controladores.
         prg.datos = new Datos();
