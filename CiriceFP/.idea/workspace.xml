@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ArtifactsWorkspaceSettings">
-    <artifacts-to-build>
-      <artifact name="CiriceFP:jar" />
-    </artifacts-to-build>
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/CiriceFP_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/CiriceFP_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CiriceFP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CiriceFP.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/controlador/OnlineStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/controlador/OnlineStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/modelo/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/modelo/Direccion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/MenuPrincipal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/VistaClientes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/VistaClientes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ciricefp/vista/VistaPedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ciricefp/vista/VistaPedidos.java" afterDir="false" />
-    </list>
+    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,7 +15,6 @@
       <list>
         <option value="Class" />
         <option value="Interface" />
-        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -40,7 +24,19 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2NKwgD7pU0PBbChUcPotyO7GN7r" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2OJmztQV06w4yhCF8M4vrmNHvab" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -51,135 +47,70 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/DAM UOC - POO con acceso a BBDD/CiriceFP&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/VM/Shared/workspace/UOC/UOC-POO-con-acceso-a-BBDD/CiriceFP&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="Y:\DAM\III Semestre\11 - POO con Acceso a BBDD\DAM UOC - POO con acceso a BBDD\CiriceFP\src\ciricefp\modelo" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP" />
+      <recent name="C:\VirtualMachines\workspace\CiriceFP\src\test\java" />
+      <recent name="C:\VirtualMachines\workspace\CiriceFP\src\main\java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\DAM\III Semestre\11 - POO con Acceso a BBDD\DAM UOC - POO con acceso a BBDD\CiriceFP\test" />
-    </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
-    <key name="CreateTestDialog.RecentsKey">
-      <recent name="ciricefp.modelo" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="ciricefp.modelo" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP\target" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP\src\main\java\ciricefp" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.OnlineStore">
-    <configuration name="OnlineStore" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager">
+    <configuration name="OnlineStore" type="Application" factoryName="Application" nameIsGenerated="true">
+      <envs>
+        <env name="DB_LOCAL_NAME" value="onlinestore_db" />
+        <env name="DB_LOCAL_PASS" value="batty" />
+        <env name="DB_LOCAL_URL" value="localhost:3306" />
+        <env name="DB_LOCAL_USER" value="root" />
+        <env name="DB_PROD_NAME" value="onlinestore_db" />
+        <env name="DB_PROD_PASS" value="ciricefp" />
+        <env name="DB_PROD_URL" value="uoc-ciricefp-db.c3jhdyiljohu.eu-west-3.rds.amazonaws.com" />
+        <env name="DB_PROD_USER" value="admin" />
+        <env name="ENV" value="dev" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="ciricefp.controlador.OnlineStore" />
-      <module name="CiriceFP" />
+      <module name="CiriceFP-OnlineStore" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ciricefp.controlador.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DatosTest.createPedido" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CiriceFP" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ciricefp.modelo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="true" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="true" PATH="src/main/java/ciricefp/.env" />
+        </ENTRIES>
       </extension>
-      <option name="PACKAGE_NAME" value="ciricefp.modelo" />
-      <option name="MAIN_CLASS_NAME" value="ciricefp.modelo.DatosTest" />
-      <option name="METHOD_NAME" value="createPedido" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DatosTest.filterPedidoByEstado" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CiriceFP" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ciricefp.modelo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ciricefp.modelo" />
-      <option name="MAIN_CLASS_NAME" value="ciricefp.modelo.DatosTest" />
-      <option name="METHOD_NAME" value="filterPedidoByEstado" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DatosTest.filterPedidosByCliente" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CiriceFP" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ciricefp.modelo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ciricefp.modelo" />
-      <option name="MAIN_CLASS_NAME" value="ciricefp.modelo.DatosTest" />
-      <option name="METHOD_NAME" value="filterPedidosByCliente" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DatosTest.listClientes" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CiriceFP" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ciricefp.modelo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ciricefp.modelo" />
-      <option name="MAIN_CLASS_NAME" value="ciricefp.modelo.DatosTest" />
-      <option name="METHOD_NAME" value="listClientes" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.OnlineStore" />
-        <item itemvalue="JUnit.DatosTest.createPedido" />
-        <item itemvalue="JUnit.DatosTest.filterPedidoByEstado" />
-        <item itemvalue="JUnit.DatosTest.filterPedidosByCliente" />
-        <item itemvalue="JUnit.DatosTest.listClientes" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="" />
-      <created>1679426190997</created>
+      <changelist id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="" />
+      <created>1681287326415</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679426190997</updated>
+      <updated>1681287326415</updated>
     </task>
     <servers />
   </component>
