@@ -4,7 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="" />
+    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/script_olinestore_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/.env" beforeDir="false" afterPath="$PROJECT_DIR$/target/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Articulo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Articulo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Cliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Cliente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClienteEstandard.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClienteEstandard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClientePremium.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/ClientePremium.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Direccion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Direccion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Pedido.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Pedido.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/HashCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/HashCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/ICliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/ICliente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/factory/IClienteFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/interfaces/factory/IClienteFactory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/Repositorio.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/Repositorio.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/MenuPrincipal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/MenuPrincipal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaArticulos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaArticulos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaClientes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaClientes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,17 +93,6 @@
   </component>
   <component name="RunManager">
     <configuration name="OnlineStore" type="Application" factoryName="Application" nameIsGenerated="true">
-      <envs>
-        <env name="DB_LOCAL_NAME" value="onlinestore_db" />
-        <env name="DB_LOCAL_PASS" value="batty" />
-        <env name="DB_LOCAL_URL" value="localhost:3306" />
-        <env name="DB_LOCAL_USER" value="root" />
-        <env name="DB_PROD_NAME" value="onlinestore_db" />
-        <env name="DB_PROD_PASS" value="ciricefp" />
-        <env name="DB_PROD_URL" value="uoc-ciricefp-db.c3jhdyiljohu.eu-west-3.rds.amazonaws.com" />
-        <env name="DB_PROD_USER" value="admin" />
-        <env name="ENV" value="dev" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="ciricefp.controlador.OnlineStore" />
       <module name="CiriceFP-OnlineStore" />
       <extension name="coverage">
