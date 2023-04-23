@@ -5,6 +5,7 @@ import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Direccion;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -19,6 +20,9 @@ import java.text.MessageFormat;
  * @since 04-2023
  */
 public class DireccionRepositorioImpl implements Repositorio<Direccion> {
+
+    // Añadimos un atributo para obtener los valores del archivo .env.
+    private static final Dotenv dotenv = Dotenv.load();
 
     // Comenzamos por usar un método para crear la conexión a la BBDD.
     private static Connection getConnection(String tipo) {
@@ -35,7 +39,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         String sql = "CALL get_direcciones()";
 
         // Colocamos los recursos como argumentos del try-with-resources.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql);
              ResultSet res = stmt.executeQuery()) {
 
             // Recibimos la respuesta y la iteramos. Cada objeto que recibamos, lo convertiremos en una dirección y
@@ -68,7 +72,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta.
             stmt.setLong(1, id);
@@ -117,7 +121,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
         // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Mapeamos el statement con los datos de la dirección.
             getStatement(direccion, stmt);
 
@@ -149,7 +153,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
         // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Asignamos el parámetro a la consulta.
             stmt.setLong(2, id);
 
@@ -179,7 +183,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Creamos la consulta a la BD mediante un Statement ya que no recibimos parámetros.
         // Manejamos el autoclose con el try-with-resources.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
              ResultSet res = stmt.executeQuery(sql)) {
             // Recibimos el resultado y lo asignamos a la variable.
             if (res.next()) {
@@ -200,7 +204,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
 
         // Ejecutamos el Statement como autoclose y obtenemos el resultado.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
              ResultSet res = stmt.executeQuery(sql)) {
 
             // Si hay un resultado, lo devolvemos.
@@ -225,7 +229,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un CallableStatement.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)){
             // Ejecutamos el procedimiento.
             stmt.execute();
             return true;
@@ -242,7 +246,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         String sql = "CALL delete_direcciones(?)";
 
         // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Preparamos el parámetro de salida.
             stmt.registerOutParameter(1, Types.INTEGER);
 

@@ -1,6 +1,7 @@
 package ciricefp.modelo.repositorio.testdataloader;
 
 import ciricefp.modelo.utils.Conexion;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
 
@@ -12,6 +13,10 @@ import java.sql.*;
  * @since 04-2023
  */
 public class LoadDataImpl implements LoadDataRepositorio {
+
+    // Añadimos una clase para obtener los valores del archivo .env
+    private static final Dotenv dotenv = Dotenv.load();
+
     // Comenzamos por usar un método para crear la conexión a la BBDD.
     private Connection getConnection(String tipo) {
         return Conexion.getInstance(tipo);
@@ -25,7 +30,7 @@ public class LoadDataImpl implements LoadDataRepositorio {
         String sql = "call add_datos_test(?)";
 
         // Colocamos los recursos en un bloque try-with-resources y preparamas la ejecución de la sentencia.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Preparamaos el parámetro de salida.
             stmt.registerOutParameter(1, Types.INTEGER);
 
@@ -47,7 +52,7 @@ public class LoadDataImpl implements LoadDataRepositorio {
         String sql = "call check_datos(?)";
 
         // Colocamos los recursos en un bloque try-with-resources y preparamas la ejecución de la sentencia.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Preparamos el parámetro de salida.
             stmt.registerOutParameter(1, Types.NUMERIC);
 

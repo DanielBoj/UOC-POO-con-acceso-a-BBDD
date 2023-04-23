@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="" />
+    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/testdataloader/LoadDataImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/testdataloader/LoadDataImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/DireccionRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/DireccionRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/testdataloader/LoadDataImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/testdataloader/LoadDataImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/MenuPrincipal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/MenuPrincipal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,17 +85,6 @@
   </component>
   <component name="RunManager">
     <configuration name="OnlineStore" type="Application" factoryName="Application" nameIsGenerated="true">
-      <envs>
-        <env name="DB_LOCAL_NAME" value="onlinestore_db" />
-        <env name="DB_LOCAL_PASS" value="batty" />
-        <env name="DB_LOCAL_URL" value="localhost:3306" />
-        <env name="DB_LOCAL_USER" value="root" />
-        <env name="DB_PROD_NAME" value="onlinestore_db" />
-        <env name="DB_PROD_PASS" value="ciricefp" />
-        <env name="DB_PROD_URL" value="uoc-ciricefp-db.c3jhdyiljohu.eu-west-3.rds.amazonaws.com" />
-        <env name="DB_PROD_USER" value="admin" />
-        <env name="ENV" value="dev" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="ciricefp.controlador.OnlineStore" />
       <module name="CiriceFP-OnlineStore" />
       <extension name="coverage">

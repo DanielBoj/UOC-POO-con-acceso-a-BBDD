@@ -4,6 +4,7 @@ import ciricefp.modelo.*;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -21,6 +22,9 @@ import java.util.Objects;
  */
 public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
+    // Añadimos un atributo para capturar las variables de entorno del archivo .env.
+    private static final Dotenv dotenv = Dotenv.load();
+
     // Comenzamos por usar un método para crear la conexión a la BBDD.
     private Connection getConnection(String tipo) {
         return Conexion.getInstance(tipo);
@@ -35,7 +39,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         String sql = "CALL get_clientes()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql);
              ResultSet res = stmt.executeQuery()) {
 
             // Reseteamos el número de clientes.
@@ -73,7 +77,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setLong(1, id);
@@ -107,7 +111,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setString(1, key);
@@ -158,7 +162,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             // Empezamos por la tabla padre.
             sql = "call update_cliente(?, ?, ?, ?, ?, ?)";
 
-            try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
                 // Preparamos el parámetro de salida.
                 stmt.registerOutParameter(1, Types.BIGINT);
@@ -188,7 +192,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
                     sql = "call update_cliente_premium(?, ?, ?, ?)";
 
                     // Generamos la consulta con autoclose.
-                    try (CallableStatement stmtPremium = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                    try (CallableStatement stmtPremium = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
                         // Preparamos el parámetro de salida.
                         stmt.registerOutParameter(1, Types.BIGINT);
@@ -217,7 +221,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             sql = "call add_cliente(?, ?, ?, ?, ?)";
 
             // Generamos la consulta con autoclose.
-            try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+            try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
                 // Preparamos el parámetro de salida.
                 stmt.registerOutParameter(1, Types.NUMERIC);
 
@@ -259,7 +263,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
                         sql = "call add_cliente_estandard(?, ?)";
 
                         // Generamos la consulta con autoclose.
-                        try (CallableStatement stmtEstandard = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                        try (CallableStatement stmtEstandard = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
                             // Preparamos el parámetro de salida.
                             stmt.registerOutParameter(1, Types.NUMERIC);
 
@@ -280,7 +284,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
                         sql = "call add_cliente_premium(?, ?, ?, ?, ?)";
 
                         // Generamos la consulta con autoclose.
-                        try (CallableStatement stmtPremium = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+                        try (CallableStatement stmtPremium = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
                             // Preparamos el parámetro de salida.
                             stmt.registerOutParameter(1, Types.NUMERIC);
 
@@ -326,7 +330,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Preparamos el parámetro de salida.
             stmt.registerOutParameter(1, Types.NUMERIC);
 
@@ -372,7 +376,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
              ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al total.
@@ -399,7 +403,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
             ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al cliente.
@@ -424,7 +428,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un CallableStatement.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)){
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)){
             // Ejecutamos el procedimiento.
             stmt.execute();
             return true;

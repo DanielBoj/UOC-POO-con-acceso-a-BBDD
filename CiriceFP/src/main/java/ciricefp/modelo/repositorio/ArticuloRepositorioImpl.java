@@ -4,6 +4,7 @@ import ciricefp.modelo.Articulo;
 import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -18,6 +19,9 @@ import java.sql.*;
  * @since 04-2023
  */
 public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
+
+    // Añadimos el atributo para importar los valores del archivo .env
+    private static final Dotenv dotenv = Dotenv.load();
 
     // Comenzamos por usar un método para crear la conexión a la BBDD.
     private Connection getConnection(String tipo) {
@@ -34,7 +38,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         String sql = "CALL get_articulos()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql);
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql);
              ResultSet res = stmt.executeQuery()) {
 
             // Reseteamos el contador de artículos.
@@ -73,7 +77,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setLong(1, id);
@@ -107,7 +111,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Asignamos el parámetro a la consulta. La elección del parámetro se hace por su posición.
             stmt.setString(1, key);
@@ -152,7 +156,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
 
             // Mapeamos el statement a partir del artículo que recibimos por parámetro.
             getStatement(articulo, stmt);
@@ -192,7 +196,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(System.getenv("ENV")).prepareCall(sql)) {
+        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
             // Preparamos el parámetro de salida.
             stmt.registerOutParameter(1, Types.NUMERIC);
 
@@ -225,7 +229,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
             ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al total.
@@ -249,7 +253,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
         // Creamos la consulta a la BD mediante un Satetment ya que no recibimos parámetros.
-        try (PreparedStatement stmt = getConnection(System.getenv("ENV")).prepareStatement(sql);
+        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
             ResultSet res = stmt.executeQuery(sql)) {
 
             // Recibimos la respuesta y la asignamos al artículo.
