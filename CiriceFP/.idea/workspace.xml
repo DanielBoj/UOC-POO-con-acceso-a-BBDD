@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="" />
+    <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/.env" beforeDir="false" afterPath="$PROJECT_DIR$/target/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/ClienteRepositorioImpl.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,8 +22,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -24,7 +33,14 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2NKwgD7pU0PBbChUcPotyO7GN7r" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2OJmztQV06w4yhCF8M4vrmNHvab" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -32,31 +48,124 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;Y:/DAM/III Semestre/11 - POO con Acceso a BBDD/DAM UOC - POO con acceso a BBDD/CiriceFP/src/ciricefp/modelo&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "E:/VM/Shared/workspace/UOC/UOC-POO-con-acceso-a-BBDD/CiriceFP",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="Y:\DAM\III Semestre\11 - POO con Acceso a BBDD\DAM UOC - POO con acceso a BBDD\CiriceFP\src\ciricefp\modelo" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP" />
+      <recent name="C:\VirtualMachines\workspace\CiriceFP\src\test\java" />
+      <recent name="C:\VirtualMachines\workspace\CiriceFP\src\main\java" />
     </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="ciricefp.modelo" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP\target" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP" />
+      <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP\src\main\java\ciricefp" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="OnlineStore" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <envs>
+        <env name="DB_LOCAL_NAME" value="onlinestore_db" />
+        <env name="DB_LOCAL_URL" value="localhost:3306" />
+        <env name="DB_LOCAL_USER" value="root" />
+        <env name="DB_PROD_NAME" value="onlinestore_db" />
+        <env name="DB_PROD_PASS" value="ciricefp" />
+        <env name="DB_PROD_URL" value="uoc-ciricefp-db.c3jhdyiljohu.eu-west-3.rds.amazonaws.com" />
+        <env name="DB_PROD_USER" value="admin" />
+        <env name="ENV" value="dev" />
+        <env name="DB_LOCAL_PASS" value="root" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="ciricefp.controlador.OnlineStore" />
+      <module name="CiriceFP-OnlineStore" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ciricefp.controlador.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="true" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="true" PATH="src/main/java/ciricefp/.env" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="98567d4a-2258-410e-a9d2-702787ec07a3" name="Changes" comment="" />
-      <created>1679426190997</created>
+      <changelist id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="" />
+      <created>1681287326415</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679426190997</updated>
+      <updated>1681287326415</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java</url>
+          <line>47</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CiriceFP$OnlineStore.ic" NAME="OnlineStore Coverage Results" MODIFIED="1682355257105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>ciricefp.controlador.*</FILTER>
+    </SUITE>
   </component>
 </project>
