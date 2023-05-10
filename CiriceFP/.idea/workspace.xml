@@ -5,21 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/ConexionJpa.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Cliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClienteEstandard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClienteEstandard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Direccion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Pedido.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/ConexionJpa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/ConexionJpa.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,11 +37,6 @@
         <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="workspaceImportEnabled" value="true" />
-      </MavenImportingSettings>
-    </option>
   </component>
   <component name="ProjectId" id="2OJmztQV06w4yhCF8M4vrmNHvab" />
   <component name="ProjectLevelVcsManager">
@@ -60,16 +46,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/VM/Shared/workspace/UOC/UOC-POO-con-acceso-a-BBDD/CiriceFP&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "daniel",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/wsl/UOC-POO-con-acceso-a-BBDD/CiriceFP",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\VM\Shared\workspace\UOC\UOC-POO-con-acceso-a-BBDD\CiriceFP" />

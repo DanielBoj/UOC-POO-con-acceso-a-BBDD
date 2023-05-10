@@ -42,7 +42,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         // Creamos la lista de direcciones.
         Listas<Direccion> direcciones = new Listas<>();
 
-        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
         // Creamos la conexión
         EntityManager em = getEntityManager();
 
@@ -93,7 +93,23 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         // Creamos el objeto que recibirá los datos de la BD.
         Direccion direccion = null;
 
-        // Creamos la sentencia SQL para realizar al consulta.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la sentencia para la consulta, usar el método find() es más eficiente que crear una consulta.
+        try {
+            direccion = em.find(Direccion.class, id);
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("Error al obtener la direccion con id {0}", id));
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+
+        /*// Creamos la sentencia SQL para realizar al consulta.
         String sql = "CALL get_direccion_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -116,7 +132,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         } catch (SQLException e) {
             System.out.println(MessageFormat.format("Error al obtener la direccion con id {0}", id));
             e.printStackTrace();
-        }
+        }*/
 
         return direccion;
     }
@@ -131,10 +147,76 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
     @Override
     public boolean save(Direccion direccion) {
+
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
         // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si la dirección tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
-        String sql = null;
+        if (direccion.getId() != null && direccion.getId() > 0) {
+            // Si el id no es nulo, significa que la dirección ya existe en la BD.
+            // Por lo tanto, deberemos lanzar una sentencia update.
+            try {
+                // Al tratarse de una acción de escritura en BD, debemos iniciar una transacción.
+                em.getTransaction().begin();
+
+                // Ejecutamos la consulta.
+                em.merge(direccion);
+
+                // Hacemos commit para guardar los cambios.
+                em.getTransaction().commit();
+
+                // Devolvemos true para indicar que la operación se realizó correctamente.
+                return true;
+            } catch (Exception e) {
+                System.out.println(MessageFormat.format("Error al actualizar la dirección con id {0}", direccion.getId()));
+
+                // Realizamos un rollback
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+
+                e.printStackTrace();
+            } finally {
+                // Cerramos la conexión.
+                em.close();
+            }
+        } else {
+            // Si el id es nulo, significa que la dirección no existe en la BD y debemos crearla.
+            try {
+                // Iniciamos la transacción para la escritura en BD.
+                em.getTransaction().begin();
+
+                // Ejecutamos la creación de la dirección.
+                em.persist(direccion);
+
+                // Hacemos commit para guardar los cambios.
+                em.getTransaction().commit();
+
+                // Devolvemos true para indicar que la operación se realizó correctamente.
+                return true;
+            } catch (Exception e) {
+                System.out.println(MessageFormat.format("Error al crear la dirección con id {0}", direccion.getId()));
+
+                // Realizamos un rollback
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+
+                e.printStackTrace();
+            } finally {
+                // Cerramos la conexión.
+                em.close();
+            }
+        }
+
+        // Si ha habido algún error, devolvemos false.
+        return false;
+
+
+        /*String sql = null;
 
         if (direccion.getId() != null) {
             // Si el id no es nulo, significa que la dirección ya existe en la BD.
@@ -168,13 +250,48 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         }
 
         // Si la consulta no se ha ejecutado correctamente, devolvemos false.
-        return false;
+        return false;*/
     }
 
     @Override
     public boolean delete(Long id) {
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso usaremos el método remove de EntityManager.
+        // También tenemos que buscar el objeto por su Id ya que este método solo recibe un objeto.
+        try {
+            // Iniciamos la transacción para la escritura en BD.
+            em.getTransaction().begin();
+
+            // Realizamos la consulta de borrado
+            em.remove(em.find(Direccion.class, id));
+
+            // Hacemos commit para guardar los cambios.
+            em.getTransaction().commit();
+
+            // Devolvemos true para indicar que la operación se realizó correctamente.
+            return true;
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("Error al eliminar la dirección con id {0}", id));
+
+            // Realizamos un rollback
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        // Si ha habido algún error, devolvemos false.
+        return false;
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "call delete_direccion(?, ?)";
 
         // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
@@ -195,13 +312,38 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         }
 
         // Si la consulta no se ha ejecutado correctamente, devolvemos false.
-        return false;
+        return false;*/
     }
 
     @Override
     public int count() {
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos un valor de retorno por defecto por si falla la consulta.
+        int defaultValue = 0;
+
+        // Creamos la consulta, en este caso usaremos el método createQuery de EntityManager.
+        try {
+            return em.createQuery("select count(d) from Direccion d", Long.class)
+                    // Obtenemos el resultado de la consulta.
+                    .getSingleResult()
+                    // Convertimos el resultado a int.
+                    .intValue();
+        } catch (Exception e) {
+            System.out.println("Error al intentar obtener el número de direcciones en la base de datos.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        // Si ha habido algún error, devolvemos el valor por defecto.
+        return defaultValue;
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "SELECT COUNT(_id) AS total FROM direcciones";
 
         // Creamos la variable que recibirá el resultado.
@@ -220,13 +362,38 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
             e.printStackTrace();
         }
 
-        return total;
+        return total;*/
     }
 
     @Override
     public Direccion getLast() {
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso usaremos el método createQuery de EntityManager.
+        // También tenemos que ordenar los resultados por id de forma descendente y limitar el resultado a 1.
+        try {
+            // Ejecutamos una búsqueda de todas las direcciones ordenadas por id de forma descendente y limitamos
+            // el resultado a 1.
+            return em.createQuery("select d from Direccion d order by d.id desc", Direccion.class)
+                    // Limitamos el resultado a 1.
+                    .setMaxResults(1)
+                    // Devolvemos el resultado.
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Error al intentar obtener la última dirección de la base de datos.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        // Si ha habido algún error, devolvemos null.
+        return null;
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
 
         // Ejecutamos el Statement como autoclose y obtenemos el resultado.
@@ -240,7 +407,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
             e.printStackTrace();
         }
 
-        return null;
+        return null;*/
     }
 
     @Override
@@ -250,6 +417,42 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
     @Override
     public boolean resetId() {
+
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Ejecutamos la consulta mediante la llamada a un procedimiento almacenado.
+        try {
+            // Como es una acción de escritura, tenemos que iniciar una transacción.
+            em.getTransaction().begin();
+
+            // Ejecutamos el procedimiento almacenado.
+            em.createStoredProcedureQuery("reset_id_direcciones")
+                    .execute();
+
+            // Hacemos commit de la transacción.
+            em.getTransaction().commit();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+
+            // Realizamos un rollback de la transacción.
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        // Si ha habido algún error, devolvemos false.
+        return false;
+
+        /*
         // Creamos la sentencia para realizar la consulta.
         String sql = "call reset_id_direcciones()";
 
@@ -264,11 +467,50 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
             e.printStackTrace();
         }
 
-        return false;
+        return false;*/
     }
 
     public boolean deleteAll() {
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso usaremos una consulta en HQL.
+        try {
+            // Como se trata de una acción de escritura, tenemos que iniciar una transacción.
+            em.getTransaction().begin();
+
+            // Ejecutamos la consulta, usaremos el método createQuery de EntityManager y
+            // executeUpdate(). Tenemos que asegurarnos de no romper la integridad referencial,
+            // usamos un Truncate porque tiene mayor eficiencia en tiempo de ejecución.
+            int res = em.createNativeQuery("truncate table direcciones")
+                    // Ejecutamos la consulta.
+                    .executeUpdate();
+
+            // Hacemos commit de la transacción.
+            em.getTransaction().commit();
+
+            // Devolvemos el resultado.
+            return res > 0;
+        } catch (Exception e) {
+            System.out.println("Error al intentar eliminar todas las direcciones de la base de datos.");
+
+            // Realizamos un rollback de la transacción.
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        // Si ha habido algún error, devolvemos false.
+        return false;
+
+
+       /* // Creamos la sentencia SQL para la consulta.
         String sql = "CALL delete_direcciones(?)";
 
         // Manejamos el autoclose con el try-with-resources.
@@ -288,12 +530,13 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
             e.printStackTrace();
         }
 
-        return false;
+        return false;*/
     }
 
+    /* Producto 4 ≥ Como estamos usando Hibernate ya no es necesario mapear los objetos. */
     // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
-    private static Direccion getDireccion(ResultSet res) throws SQLException {
+    /*private static Direccion getDireccion(ResultSet res) throws SQLException {
 
         // Creamos la dirección y obtenemos los datos del ResultSet.
         Direccion direccion = new Direccion();
@@ -319,5 +562,5 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         stmt.setString(4, direccion.getProvincia());
         stmt.setString(5, direccion.getCodigoPostal());
         stmt.setString(6, direccion.getPais());
-    }
+    }*/
 }

@@ -53,6 +53,9 @@ public class ConexionJpa {
         // Añadimos las clases
         properties.put("jakarta.persistence.mapping.resources", "ciricefp.modelo.Articulo, ciricefp.modelo.Cliente, ciricefp.modelo.ClienteEstandard, ciricefp.modelo.ClientePremium, ciricefp.modelo.Direccion, ciricefp.modelo.Pedido");
 
+        // Excluimos las clases no listadas, es una forma estricta de evitar conflictos entre clases que queremos mapear y las que no.
+        properties.put("jakarta.persistence.excludeUnlistedClasses", "true");
+
         return properties;
     }
 

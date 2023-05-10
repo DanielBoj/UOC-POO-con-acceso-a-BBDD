@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,11 +100,22 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
     @Override
     public Articulo findById(Long id) {
+        // Producto 4 -> Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
 
-        // Creamos el objeto que recibirá el objeto de la BD.
-        Articulo articulo = null;
+        // Creamos la consulta, el método find() nos devuelve un objeto de la clase Articulo buscándolo por su id.
+        try {
+            return em.find(Articulo.class, id);
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("No es posible obtener el artículo con id {0}", id));
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
 
-        // Creamos la sentencia SQL para la consulta.
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "CALL get_articulo_by_id(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -127,17 +139,39 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener el artículo con id " + id);
             e.printStackTrace();
-        }
+        }*/
 
-        return articulo;
+        return null;
     }
 
     @Override
     public Articulo findOne(String key) {
-        // Creamos el objeto que recibirá el objeto de la BD.
-        Articulo articulo = null;
+        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
 
-        // Creamos la sentencia SQL para la consulta.
+        // Creamos la consulta, en este caso queremos buscar un artículo por su código, no por su Id.
+        // Solo podemos usar el método getSingleResult() si estamos seguros de que solo recibiremos un resultado.
+        try {
+            // Creamos una query personalizada para buscar el artículo por su código.
+            return em.createQuery("select a from Articulo a where a.codigo = :codigo", Articulo.class)
+                    // Asignamos el parámetro a la consulta.
+                    .setParameter("codigo", key)
+                    // Limitamos el resultado a un solo objeto.
+                    .setMaxResults(1)
+                    // Ejecutamos la consulta.
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("No es posible obtener el artículo con código {0}", key));
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+
+
+
+       /* // Creamos la sentencia SQL para la consulta.
         String sql = "CALL get_articulo_by_cod(?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -161,20 +195,82 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener el artículo con código " + key);
             e.printStackTrace();
-        }
+        }*/
 
-        return articulo;
+        return null;
     }
 
     @Override
     public boolean save(Articulo articulo) {
 
+        // Producto 4 -> Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
         // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
-        String sql = null;
+        // Evaluamos si el id es mayor que 0 ya que en otro caso podría ser tanto 0 como null.
+        if (articulo.getId() != null && articulo.getId() > 0) {
+            // Si el id es mayor que 0, significa que ya existe en la BD.
+            // Por lo tanto, ejecutaremos un Update.
 
-        // Evaluamos primero si el id es mayor que 0 ya que en otro caso podría ser tanto 0 como null.
+            try {
+                // Como se trata de una query que escribe en nuestra BD, debemos iniciar una transacción.
+                em.getTransaction().begin();
+
+                // Ejecutamos el Update.
+                Articulo updatedArt = em.merge(articulo);
+
+                // Commit
+                em.getTransaction().commit();
+
+                // Devolvemos el resultado de la operación.
+                return updatedArt != null;
+            } catch (Exception e) {
+                System.out.println(MessageFormat.format("No es posible actualizar el artículo con id {0}", articulo.getId()));
+
+                // Rollback
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+
+                e.printStackTrace();
+            } finally {
+                // Cerramos la conexión
+                em.close();
+            }
+        } else {
+            // Si el id es 0, significa que no existe en la BD.
+            // Por lo tanto, ejecutaremos un Create.
+            try {
+                // Iniciamos la transacción.
+                em.getTransaction().begin();
+
+                em.persist(articulo);
+
+                // Finalizamos la transacción.
+                em.getTransaction().commit();
+
+                return true;
+            } catch (Exception e) {
+                System.out.println(MessageFormat.format("No es posible crear el artículo con código {0}", articulo.getCodArticulo()));
+
+                // Rollback
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+
+                e.printStackTrace();
+            } finally {
+                // Cerramos la conexión
+                em.close();
+            }
+        }
+
+//        String sql = null;
+
+        /*// Evaluamos primero si el id es mayor que 0 ya que en otro caso podría ser tanto 0 como null.
         if (articulo.getId() != null) {
             // Si el id es mayor que 0, significa que ya existe en la BD.
             // Por lo tanto, ejecutaremos un Update.
@@ -205,7 +301,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible guardar el artículo.");
             e.printStackTrace();
-        }
+        }*/
 
         // Si algo falla, devolvemos false.
         return false;
@@ -222,7 +318,31 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
             return false;
         }
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso queremos eliminar un artículo por su Id.
+        // Para ello usaremos el método remove() de la clase EntityManager.
+        // Tenemos que bsucar el artículo por su Id, por lo que usaremos el método find() de la clase EntityManager.
+        // Una vez localizado, eliminaremos el elemento.
+        try {
+            em.remove(em.find(Articulo.class, id));
+
+            // Retrocedemos el contador de artículos.
+            Articulo.retrocederContador();
+
+            // Si todo ha ido bien, devolvemos true.
+            return true;
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("No es posible eliminar el artículo con id {0}", id));
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "call delete_articulo(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -245,14 +365,38 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible eliminar el artículo con id " + id);
             e.printStackTrace();
-        }
+        }*/
         return false;
     }
 
     @Override
     public int count() {
 
-        // Creamos la sentencia para realizar la consulta.
+        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // variable de resultado, la definimos primero para poder devolver 0 en caso de producirse un error.
+        int defaultValue = 0;
+
+        // Creamos la consulta, en este caso queremos obtener el número de artículos.
+        // Para ello usaremos un query en JPQL de la clase EntityManager.
+        try {
+            return  em.createQuery("select count(a) from Articulo a", Long.class)
+                    // retornamos un único valor.
+                    .getSingleResult()
+                    // convertimos el resultado a int.
+                    .intValue();
+        } catch (Exception e) {
+            System.out.println("No es posible obtener el número de registros de la tabla.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+
+
+        /*// Creamos la sentencia para realizar la consulta.
         String sql = "SELECT COUNT(_id) AS total FROM articulos";
 
         // Creamos la variable que recibirá el resultado.
@@ -270,15 +414,38 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener el número de registros de la tabla.");
             e.printStackTrace();
-        }
+        }*/
 
-        return total;
+        // Si ha habido algún error, devolvemos 0.
+        return defaultValue;
     }
 
 
     @Override
     public Articulo getLast() {
 
+        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso queremos obtener el último artículo.
+        // Para ello usaremos un query en JPQL de la clase EntityManager que retorna el primer registro de la tabla
+        // ordenada de forma descendente por el campo _id.
+        try {
+            // Devolveremos directamente el resultado.
+            return em.createQuery("select a from Articulo a order by a.id desc", Articulo.class)
+                    // retornamos un único valor.
+                    .setMaxResults(1)
+                    // obtenemos el resultado.
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.out.println("No es posible obtener el último registro de la tabla.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+/*
         // Creamos la sentencia para realizar la consulta.
         String sql = "SELECT * FROM articulos ORDER BY _id DESC LIMIT 1";
 
@@ -293,7 +460,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener el último registro de la tabla.");
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 
@@ -305,7 +472,40 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
     @Override
     public boolean resetId() {
 
-        // Creamos la sentencia para realizar la consulta.
+        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta, en este caso queremos resetear el contador de la tabla.
+        // Para ello usaremos una llamada a un procedimiento almacenado de la clase EntityManager.
+        try {
+            // Como es una acción de escritura, iniciamos una transacción.
+            em.getTransaction().begin();
+
+            // Ejecutamos el procedimiento.
+            em.createStoredProcedureQuery("reset_id_articulos")
+                    .execute();
+
+            // Confirmamos la transacción.
+            em.getTransaction().commit();
+
+            // Devolvemos true.
+            return true;
+        } catch (Exception e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+
+            // Realizamos un rollback en caso de error.
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+
+        /*// Creamos la sentencia para realizar la consulta.
         String sql = "call reset_id_articulos()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -317,12 +517,14 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible resetear el contador de la tabla.");
             e.printStackTrace();
-        }
-
+        }*/
+        // En caso de error retornamos false.
         return false;
     }
 
-    // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
+    /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas. */
+
+    /*// Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
     @NotNull
     private static Articulo getArticulo(ResultSet res) throws SQLException {
@@ -353,5 +555,5 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         stmt.setDouble(4, articulo.getPvp());
         stmt.setDouble(5, articulo.getGastosEnvio());
         stmt.setInt(6, articulo.getTiempoPreparacion());
-    }
+    }*/
 }
