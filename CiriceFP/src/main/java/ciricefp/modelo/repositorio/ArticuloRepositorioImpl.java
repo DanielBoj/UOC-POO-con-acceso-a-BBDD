@@ -4,10 +4,14 @@ import ciricefp.modelo.Articulo;
 import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Esta clase implementa la interfaz Repositorio para nuestra entidad Articulo.
@@ -23,18 +27,45 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
     // Añadimos el atributo para importar los valores del archivo .env
     private static final Dotenv dotenv = Dotenv.load();
 
-    // Comenzamos por usar un método para crear la conexión a la BBDD.
-    private Connection getConnection(String tipo) {
-        return Conexion.getInstance(tipo);
+//    // Comenzamos por usar un método para crear la conexión a la BBDD.
+//    private Connection getConnection(String tipo) {
+//        return Conexion.getInstance(tipo);
+//    }
+
+    // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
+    private EntityManager getEntityManager() {
+        return ConexionJpa.getEntityManagerFactory();
     }
 
+    // Obtenemos un listado de todos los artículos
     @Override
     public Listas<Articulo> findAll() {
 
         // Creamos la lista de Articulos que recibiremos de la BD.
         Listas<Articulo> articulos = new Listas<>();
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la consulta. Retornamos un Stream de Articulos ya que nuestra clase List está personalizada
+        // y no podemos usar directamente el método getResultList().
+        try {
+            em.createQuery("Select a from Articulo a", Articulo.class).getResultStream().forEach(
+                    // Pasamos el resultado a la lista de Articulos.
+                    articulos::add
+            );
+        } catch (Exception e) {
+            System.out.println("No es posible obtener la lista de artículos.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
+
+
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "CALL get_articulos()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -60,7 +91,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener la lista de artículos.");
             e.printStackTrace();
-        }
+        }*/
 
         // Devolvemos la lista de artículos.
         return articulos;

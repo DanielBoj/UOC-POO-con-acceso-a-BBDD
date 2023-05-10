@@ -4,7 +4,9 @@ import ciricefp.modelo.*;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -25,9 +27,14 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
     // Añadimos un atributo para capturar las variables de entorno del archivo .env.
     private static final Dotenv dotenv = Dotenv.load();
 
-    // Comenzamos por usar un método para crear la conexión a la BBDD.
+    /*// Comenzamos por usar un método para crear la conexión a la BBDD.
     private Connection getConnection(String tipo) {
         return Conexion.getInstance(tipo);
+    }*/
+
+    // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
+    private EntityManager getEntityManager() {
+        return ConexionJpa.getEntityManagerFactory();
     }
 
     @Override
@@ -35,7 +42,26 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         // Creamos la lista de Clientes que recibiremos de la BD.
         Listas<Cliente> clientes = new Listas<>();
 
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
         // Creamos la sentencia SQL para la consulta.
+        // Como usamos listas personalizadas, no podemos usar getResultList() y debemos usar getResultStream().
+        try {
+            em.createQuery("call get_clientes()").getResultStream().forEach(
+                    // Pasamos el resultado a la lista de clientes.
+                    clientes::add
+            );
+        } catch (Exception e) {
+            System.out.println("No es posible obtener la lista de clientes.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        /*// Creamos la sentencia SQL para la consulta.
         String sql = "CALL get_clientes()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -61,7 +87,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener la lista de artículos.");
             e.printStackTrace();
-        }
+        }*/
 
         // Devolvemos la lista de artículos.
         return clientes;

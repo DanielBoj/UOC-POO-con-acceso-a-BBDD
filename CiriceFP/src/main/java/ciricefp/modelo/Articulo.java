@@ -5,21 +5,31 @@ import ciricefp.modelo.interfaces.IArticulo;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.*;
+
 /**
  * Esta clase implementa la lógica de negocio de un artículo que se puede comprar en la tienda.
  *
  * @author Cirice
  */
+@Entity
+@Table(name = "articulos")
 public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
 
     // Atributos de la clase.
 
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "_id")
     private Long id;
+    @Column(name = "cod_articulo", unique = true)
     private String codArticulo;
     private String descripcion;
     private double pvp;
+    @Column(name = "gastos_envio")
     private double gastosEnvio;
+    @Column(name = "tiempo_preparacion")
     private int tiempoPreparacion; // En días
     private static int totalArticulos = 0;
 

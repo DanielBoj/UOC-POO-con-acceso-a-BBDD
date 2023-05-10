@@ -2,6 +2,7 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.ICliente;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
+import jakarta.persistence.*;
 
 /**
  * Esta clase implementa la lógica de negocio de un cliente que puede comprar en la tienda.
@@ -9,12 +10,19 @@ import ciricefp.modelo.interfaces.factory.IClienteFactory;
  *
  * @author Cirice
  */
+@Entity
+@Table(name = "clientes")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Cliente implements Comparable<Cliente>, ICliente, IClienteFactory {
 
     // Atributos de la clase.
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "_id")
     private Long id;
     private String nombre;
+    @OneToOne
     private Direccion domicilio;
     private String nif;
     private String email;

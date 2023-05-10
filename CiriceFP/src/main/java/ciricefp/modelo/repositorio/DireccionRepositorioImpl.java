@@ -5,7 +5,9 @@ import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Direccion;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -24,9 +26,14 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
     // Añadimos un atributo para obtener los valores del archivo .env.
     private static final Dotenv dotenv = Dotenv.load();
 
-    // Comenzamos por usar un método para crear la conexión a la BBDD.
+    /*// Comenzamos por usar un método para crear la conexión a la BBDD.
     private static Connection getConnection(String tipo) {
         return Conexion.getInstance(tipo);
+    }*/
+
+    // Producto 4 -> Cambiamos el método para que use el Entity Manager.
+    private EntityManager getEntityManager() {
+        return ConexionJpa.getEntityManagerFactory();
     }
 
     @Override
@@ -35,7 +42,26 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         // Creamos la lista de direcciones.
         Listas<Direccion> direcciones = new Listas<>();
 
-        // Creamos la sentencia SQL para realizar al consulta.
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Creamos la conexión
+        EntityManager em = getEntityManager();
+
+        // Creamos la sentencia SQL para la consulta.
+        // Como usamos listas personalizadas, no podemos usar getResultList() y debemos usar getResultStream().
+        try {
+            em.createQuery("select d from Direccion d", Direccion.class).getResultStream().forEach(
+                    // Pasamos el resultado a la lista de clientes.
+                    direcciones::add
+            );
+        } catch (Exception e) {
+            System.out.println("No es posible obtener la lista de direcciones.");
+            e.printStackTrace();
+        } finally {
+            // Cerramos la conexión.
+            em.close();
+        }
+
+        /*// Creamos la sentencia SQL para realizar al consulta.
         String sql = "CALL get_direcciones()";
 
         // Colocamos los recursos como argumentos del try-with-resources.
@@ -55,7 +81,7 @@ public class DireccionRepositorioImpl implements Repositorio<Direccion> {
         } catch (SQLException e) {
             System.out.println("Error al obtener la lista de direcciones.");
             e.printStackTrace();
-        }
+        }*/
 
         // Devolvemos la lista de direcciones.
         return direcciones;

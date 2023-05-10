@@ -2,12 +2,14 @@ package ciricefp.controlador;
 
 import ciricefp.modelo.*;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
 import ciricefp.vista.MenuPrincipal;
 
 import java.sql.Connection;
 
 // Librería para trabajar con archivos .env
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
 
 /**
  * Esta clase implementa el main de la tienda.
@@ -35,7 +37,10 @@ public class OnlineStore {
         OnlineStore prg = new OnlineStore();
 
         // Instanciamos una nueva conexión a la BD siguiendo el patrón Singleton.
-        Connection db = Conexion.getInstance(dotenv.get("ENV"));
+        // Connection db = Conexion.getInstance(dotenv.get("ENV"));
+
+        // Producto 4 -> Instanciamos el Entity Manager para poder conectarnos a la BD.
+        EntityManager em = ConexionJpa.getEntityManagerFactory();
 
         // Instanciamos los controladores.
         prg.datos = new Datos();
@@ -84,7 +89,7 @@ public class OnlineStore {
 
             /* IMPORTANTE -> Cerramos la conexión a la BD */
             // Si no ha habido ningún error, devolvemos un valor de éxito.
-            exitValue = Conexion.closeConnection() > 0 ? (exitValue * 10 + 4) : 0;
+            exitValue = ConexionJpa.close() > 0 ? (exitValue * 10 + 4) : 0;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 

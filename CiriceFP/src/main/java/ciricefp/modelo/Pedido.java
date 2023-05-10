@@ -2,6 +2,7 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.IPedido;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -10,16 +11,26 @@ import java.time.LocalDate;
  *
  * @author Cirice
  */
+@Entity
+@Table(name = "pedidos")
 public class Pedido implements Comparable<Pedido>, IPedido {
 
     // Atributos de la clase.
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "_id")
     private Long id;
+    @Column(name = "numero_pedido", unique = true)
     private int numeroPedido;
+    @OneToMany
     private Cliente cliente;
+    @OneToMany
     private Articulo articulo;
     private int unidades;
+    @Column(name = "fecha_pedido")
     private LocalDate fechaPedido;
+    @Column(name = "es_enviado")
     private boolean esEnviado;
     private static int totalPedidos = 0;
 

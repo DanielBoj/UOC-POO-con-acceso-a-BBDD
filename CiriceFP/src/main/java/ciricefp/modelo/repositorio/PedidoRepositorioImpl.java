@@ -5,7 +5,9 @@ import ciricefp.modelo.Cliente;
 import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -29,6 +31,11 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         return Conexion.getInstance(tipo);
     }
 
+    // Producto 4 -> Método para obtener el Entity Manager.
+    private EntityManager getEntityManager() {
+        return ConexionJpa.getEntityManagerFactory();
+    }
+
     /* MÉTODOS DE LECTURA
     * Como la entidad Pedido, por sus relaciones/asociaciones con otras entidades, presenta
     * una estructura compleja, debemos crear métodos auxiliares para la lectura de los datos que
@@ -48,6 +55,20 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
 
         // Creamos la lista que contendrá los pedidos.
         Listas<Pedido> pedidos = new Listas<>();
+
+        // Producto 4 -> Obtenemos el Entity Manager.
+        EntityManager em = getEntityManager();
+
+        // Creamos la sentencia SQL parar la consulta, en este caso manejaremos la complejidad de la
+        // entidad apoyándonos en la lógica implementada en el módulo Repositorio.
+        try {
+            em.createQuery("SELECT p FROM Pedido p", Pedido.class).getResultList().forEach(pedidos::add);
+        } catch (Exception e) {
+            System.out.println("No ha sido posible obtener la lista de pedidos.");
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
 
         // Creamos la sentencia SQL parar la consulta, en este caso manejaremos la complejidad de la
         // entidad apoyándonos en la lógica implementada en el módulo Repositorio.
