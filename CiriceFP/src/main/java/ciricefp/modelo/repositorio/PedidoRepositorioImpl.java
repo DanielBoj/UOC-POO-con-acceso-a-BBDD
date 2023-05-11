@@ -8,6 +8,7 @@ import ciricefp.modelo.utils.Conexion;
 import ciricefp.modelo.utils.ConexionJpa;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -23,18 +24,19 @@ import java.text.MessageFormat;
  */
 public class PedidoRepositorioImpl implements Repositorio<Pedido> {
 
-    // Añadimos un atributo para obtener los valores del archivo .env.
-    private final static Dotenv dotenv = Dotenv.load();
+    // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
+    // Creamos el atributo para nuestro Entity Manager.
+    private final EntityManager em;
 
-    // Comenzamos por usar un método para crear la conexión a la BBDD.
-    private Connection getConnection(String tipo) {
-        return Conexion.getInstance(tipo);
+    // Seteamos nuestro Entity Manager a través del constructor.
+    public PedidoRepositorioImpl(EntityManager em) {
+        this.em = em;
     }
 
-    // Producto 4 -> Método para obtener el Entity Manager.
-    private EntityManager getEntityManager() {
-        return ConexionJpa.getEntityManagerFactory();
-    }
+    /* Producto 4 ≥ Refactoriazamos la clase para trabajar con Hibernate */
+
+    /* Simplificamos al máximo la implementación de nuestro contrato con la interfaz ya que trasladaremos
+     * toda la lógica a un servicio, para cumplir con las buenas prácticas. */
 
     /* MÉTODOS DE LECTURA
     * Como la entidad Pedido, por sus relaciones/asociaciones con otras entidades, presenta
@@ -56,7 +58,13 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         // Creamos la lista que contendrá los pedidos.
         Listas<Pedido> pedidos = new Listas<>();
 
-        // Producto 4 -> Obtenemos el Entity Manager.
+        // Producto 4 -> Realizamos la consulta a través de JPA.
+        em.createQuery("select p from Pedido p", Pedido.class).getResultList().forEach(pedidos::add);
+
+        // Devolvemos la lista de pedidos.
+        return pedidos;
+
+        /*// Producto 4 -> Obtenemos el Entity Manager.
         EntityManager em = getEntityManager();
 
         // Creamos la sentencia SQL parar la consulta, en este caso manejaremos la complejidad de la
@@ -98,13 +106,15 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         }
 
         // Devolvemos la lista de pedidos.
-        return pedidos;
+        return pedidos;*/
     }
 
     @Override
     public Pedido findById(Long id) {
+        // Producto 4 -> Realizamos la consulta a través de un método de JPA.
+        return em.find(Pedido.class, id);
 
-        // Creamos el objeto que contendrá el pedido.
+        /*// Creamos el objeto que contendrá el pedido.
         Pedido pedido = null;
 
         // Creamos la sentencia SQL que obtendrá el pedido por su id.
@@ -130,13 +140,18 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             System.out.println(MessageFormat.format("No ha sido posible obtener el pedido con id {0}", id));
             e.printStackTrace();
         }
-        return pedido;
+        return pedido;*/
     }
 
     @Override
     public Pedido findOne(String key) {
+        // Producto 4 -> Realizamos la consulta a través de un query HQL/JPQL.
+        // Llamamos a un procedimiento almacenado para obtener el pedido por su número de pedido que nos devuelve el pedido.
+        return (Pedido) em.createStoredProcedureQuery("get_pedido_by_numero_pedido", Pedido.class)
+                .setParameter("_numero_pedido", Integer.parseInt(key))
+                .getSingleResult();
 
-        // Creamos el objeto que contendrá el pedido.
+        /*// Creamos el objeto que contendrá el pedido.
         Pedido pedido = null;
 
         // Creamos la sentencia SQL que obtendrá el pedido por su id.
@@ -162,14 +177,51 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             System.out.println(MessageFormat.format("No ha sido posible obtener el pedido con el número {0}", key));
             e.printStackTrace();
         }
-        return pedido;
+        return pedido;*/
     }
 
     @Override
-    public boolean save(Pedido pedido) {
+    public void save(Pedido pedido) {
+        // Producto 4 -> Manejamos la petición con Entity Manager.
         // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
+        if (pedido.getId() != null && pedido.getId() > 0) {
+            // Si es así, actualizamos el pedido.
+            // Para este ejemplo usaremos el procedimiento almacenado para demostrar cómo se hace.
+            // En la práctica, se recomienda usar un método HQL/JPQL a no ser que necesitemos restringir la seguridad
+            // de forma explícita a usuarios que solo puedan ejecutar procedimientos.
+            // Cómo el primer parámetro del procedimiento es de salida, tenemos que registrarlo.
+            em.createStoredProcedureQuery("update_pedido")
+                    .registerStoredProcedureParameter("result", Integer.class, ParameterMode.OUT)
+                    .setParameter("numero_pedido", pedido.getNumeroPedido())
+                    .setParameter("cliente_id", pedido.getCliente().getId())
+                    .setParameter("articulo_id", pedido.getArticulo().getId())
+                    .setParameter("unidades", pedido.getUnidades())
+                    .setParameter("fecha_pedido", pedido.getFechaPedido())
+                    // Realizamos el cast automáticamente a un tiny int para replicar un booleano.
+                    .setParameter("es_enviado", pedido.getEsEnviado() ? 1 : 0)
+                    .setParameter("id", pedido.getId())
+                    .execute();
+
+            // em.merge(pedido);
+        } else {
+            // Si no, creamos un nuevo pedido.
+            em.createStoredProcedureQuery("add_pedido")
+                    .registerStoredProcedureParameter("idout", Integer.class, ParameterMode.OUT)
+                    .setParameter("numero_pedido", pedido.getNumeroPedido())
+                    .setParameter("cliente_id", pedido.getCliente().getId())
+                    .setParameter("articulo_id", pedido.getArticulo().getId())
+                    .setParameter("unidades", pedido.getUnidades())
+                    .setParameter("fecha_pedido", pedido.getFechaPedido())
+                    // Realizamos el cast automáticamente a un tiny int para replicar un booleano.
+                    .setParameter("es_enviado", pedido.getEsEnviado() ? 1 : 0)
+                    .execute();
+
+            //em.persist(pedido);
+        }
+/*
+
         String sql = null;
 
         // Evaluamos si existe ID para el pedido.
@@ -204,13 +256,17 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         }
 
         // Si ha habido excepciones, devolvemos false.
-        return false;
+        return false;*/
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
+        // Producto 4 ≥ Manejamos la petición con Entity Manager.
+        // Buscamos el pedido en la misma llamada a la función ya que hemos de pasar un objeto al método remove.
+        em.remove(em.find(Pedido.class, id));
 
-        // Creamos la sentencia SQL para eliminar el pedido.
+
+        /*// Creamos la sentencia SQL para eliminar el pedido.
         String sql = "call delete_pedido(?, ?)";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -238,13 +294,20 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         }
 
         // Si ha habido excepciones, devolvemos false.
-        return false;
+        return false;*/
     }
 
     @Override
     public int count() {
+        // Producto 4 ≥ Manejamos la petición con Entity Manager.
+        // Creamos la consulta usando lenguaje HQL/JPQL. Si no hay ningún artículo nos devolverá 0.
+        return em.createQuery("select count(p) from Pedido p", Long.class)
+                // retornamos un único valor.
+                .getSingleResult()
+                // convertimos el resultado a int.
+                .intValue();
 
-        // Creamos la sentencia SQL para obtener el número de pedidos.
+        /*// Creamos la sentencia SQL para obtener el número de pedidos.
         String sql = "SELECT COUNT(_id) AS total FROM pedidos";
 
         // Creamos la variable que contendrá el total de pedidos.
@@ -264,12 +327,23 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             e.printStackTrace();
         }
 
-        return total;
+        return total;*/
     }
 
     @Override
     public Pedido getLast() {
+        // Producto 4 ≥ Manejamos la petición con Entity Manager.
+        // Creamos la consulta usando lenguaje HQL/JPQL.
+        // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
+        // ordenada de forma descendente por el id.
+        return em.createQuery("select p from Pedido p order by p._id desc", Pedido.class)
+                // retornamos un único valor.
+                .setMaxResults(1)
+                // obtenemos el resultado.
+                .getSingleResult();
 
+
+/*
         // Creamos la sentencia SQL para obtener el último pedido.
         String sql = "SELECT * FROM pedidos ORDER BY _id DESC LIMIT 1";
 
@@ -284,18 +358,18 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             System.out.println("No ha sido posible obtener el último pedido.");
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return count() == 0;
+        return null;*/
     }
 
     @Override
     public boolean resetId() {
+        // Producto 4 ≥ Manejamos la petición con Entity Manager.
+        // Creamos la consulta usando el método de Hibernate JPA para llamar a un procedimiento almacenado.
+        // Si el procedimiento se ejecuta correctamente, nos devolverá true.
+        return em.createStoredProcedureQuery("reset_id_pedidos")
+                .execute();
 
-        // Creamos la sentencia para realizar la consulta.
+        /*// Creamos la sentencia para realizar la consulta.
         String sql = "call reset_id_articulos()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -309,10 +383,13 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             e.printStackTrace();
         }
 
-        return false;
+        return false;*/
     }
 
-    // Creamos un método para mapear un objeto Pedido a través de los resultador de una query.
+     /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas porque lo
+    realiza automáticamente el framework. */
+
+    /*// Creamos un método para mapear un objeto Pedido a través de los resultador de una query.
     public Pedido getPedido(ResultSet res) throws SQLException {
 
         // Creamos el objeto principal que recibirá los datos de la BD.
@@ -365,5 +442,5 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
         // Tenemos que convertir el tipo de datos de LocalDate a Date para poder insertarlo en la BD.
         stmt.setDate(6, Date.valueOf(pedido.getFechaPedido()));
         stmt.setBoolean(7, pedido.getEsEnviado());
-    }
+    }*/
 }

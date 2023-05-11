@@ -9,6 +9,8 @@ import jakarta.persistence.*;
  * Es una superclase que heredan las clases ClienteEstandard y ClientePremium.
  *
  * @author Cirice
+ * @version 1.0
+ * @since 03-2021
  */
 @Entity
 @Table(name = "clientes")
@@ -22,7 +24,8 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente, ICliente
     @Column(name = "_id")
     private Long id;
     private String nombre;
-    @OneToOne
+    // Un cliente tiene una dirección, una dirección podría tener varios clientes.
+    @ManyToOne(cascade = CascadeType.ALL)
     private Direccion domicilio;
     private String nif;
     private String email;

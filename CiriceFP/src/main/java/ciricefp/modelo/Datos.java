@@ -156,7 +156,7 @@ public class Datos {
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
         // El método nos devuelve un objeto, con lo que podemos asignarlo directamente a un artículo.
-        return service.findById(id);
+        return !service.isEmpty()? service.findById(id) : Optional.empty();
     }
 
     // Producto 3 --> Cambiamos el método para obtener un artículo de la BD a través de su código.
@@ -165,7 +165,7 @@ public class Datos {
         ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Comprobamos que haya artículos en la BD y lo devolvemos.
-        return !service.isEmpty() ? service.findOne(codigo) : null;
+        return !service.isEmpty() ? service.findOne(codigo) : Optional.empty();
     }
 
     // TODO -> Como extra podemos crear métodos para eliminar y modificar artículos

@@ -23,9 +23,11 @@ public class Pedido implements Comparable<Pedido>, IPedido {
     private Long id;
     @Column(name = "numero_pedido", unique = true)
     private int numeroPedido;
-    @OneToMany
+    // Un pedido solo puede tener un cliente, pero un cliente puede tener varios pedidos.
+    @ManyToOne
     private Cliente cliente;
-    @OneToMany
+    // Un pedido solo puede tener un artículo, pero un artículo puede estar en muchos pedidos.
+    @ManyToOne
     private Articulo articulo;
     private int unidades;
     @Column(name = "fecha_pedido")

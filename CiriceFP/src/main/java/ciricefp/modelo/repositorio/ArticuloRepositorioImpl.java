@@ -118,7 +118,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         // Creamos la consulta usando lenguaje HQL/JPQL.
         // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
         // ordenada de forma descendente por el id.
-        return em.createQuery("select a from Articulo a order by a.id desc", Articulo.class)
+        return em.createQuery("select a from Articulo a order by a._id desc", Articulo.class)
                 // retornamos un único valor.
                 .setMaxResults(1)
                 // obtenemos el resultado.
