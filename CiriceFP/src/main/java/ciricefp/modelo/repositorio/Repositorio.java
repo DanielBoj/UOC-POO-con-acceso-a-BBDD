@@ -44,5 +44,5 @@ public interface Repositorio<T> {
     T getLast();
 
     // Creamos un método estático para resetear los contadores de las tablas.
-    void resetId();
+    boolean resetId();
 }

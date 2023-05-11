@@ -1,10 +1,10 @@
 package ciricefp.modelo.services;
 
-import ciricefp.modelo.Articulo;
+import ciricefp.modelo.Direccion;
 import ciricefp.modelo.listas.Listas;
-import ciricefp.modelo.repositorio.ArticuloRepositorioImpl;
+import ciricefp.modelo.repositorio.DireccionRepositorioImpl;
 import ciricefp.modelo.repositorio.Repositorio;
-import ciricefp.modelo.services.interfaces.ArticuloService;
+import ciricefp.modelo.services.interfaces.DireccionService;
 import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,24 +20,25 @@ import java.util.Optional;
  * @version 1.0
  * @since 05-2023
  */
-public class ArticuloServiceImpl implements ArticuloService {
+public class DireccionServiceImpl implements DireccionService {
+
     // Empezamos por realizar la conexión con el repositorio para poder realizar las acciones sobre la capa de datos.
     // Necesitamos acceso al entity manejar para poder manejar las transacciones con la BBDD.
     private final EntityManager em;
     // Creamos el repositorio para poder realizar el manejo de los datos y le pasamos el entity manager.
-    private final Repositorio<Articulo> repositorio;
+    private final Repositorio<Direccion> repositorio;
 
     // Constructor
-    public ArticuloServiceImpl(EntityManager em) {
+    public DireccionServiceImpl(EntityManager em) {
         this.em = em;
 
         // Aquí tenemos que concretar la implementación de Repositorio que vamos a usar.
-        this.repositorio = new ArticuloRepositorioImpl(em);
+        this.repositorio = new DireccionRepositorioImpl(em);
     }
 
     /* Implementamos los métodos de la interface de servicios. */
     @Override
-    public Listas<Articulo> findAll() {
+    public Listas<Direccion> findAll() {
         // Listar no requiere transacción
         try {
             return repositorio.findAll();
@@ -48,22 +49,20 @@ public class ArticuloServiceImpl implements ArticuloService {
     }
 
     @Override
-    public Optional<Articulo> findById(Long id) {
+    public Optional<Direccion> findById(Long id) {
         // Como es un método GET, no requieren transacción.
         // Manejamos la excepción con Optional.
         return Optional.ofNullable(repositorio.findById(id));
     }
 
     @Override
-    public Optional<Articulo> findOne(@NotNull  String key) {
-        // Los métodos GET no necesitan transacción, pero en este caso, hay que manejar el retorno opcional.
-        // Manejamos la excepción directamente con Optional.
-        return Optional.ofNullable(repositorio.findOne(key));
-
+    public Optional<Direccion> findOne(@NotNull String key) {
+        // Como dirección no tiene ningún valor único además del id, no implementamos este método.
+        return Optional.empty();
     }
 
     @Override
-    public boolean save(@NotNull Articulo articulo) {
+    public boolean save(@NotNull Direccion direccion) {
         // Los métodos de escritura requieren transacción.
         // Creamos la consulta.
         try {
@@ -71,14 +70,14 @@ public class ArticuloServiceImpl implements ArticuloService {
             em.getTransaction().begin();
 
             // Guardamos el artículo
-            repositorio.save(articulo);
+            repositorio.save(direccion);
 
             // Salvamos los cambios mediante el commit
             em.getTransaction().commit();
 
             return true;
         } catch (Exception e) {
-            System.out.println(MessageFormat.format("Error al guardar el artículo {0}", articulo.getDescripcion()));
+            System.out.println(MessageFormat.format("Error al guardar la dirección {0}", direccion.toString()));
             // Realizamos el rollback
             em.getTransaction().rollback();
 
@@ -91,10 +90,9 @@ public class ArticuloServiceImpl implements ArticuloService {
 
     @Override
     public boolean delete(Long id) {
-        // Si el artículo aparece en algún pedido, no podrá borrarse.
-        // TODO: Buscar el pedido en el repositorio de pedidos
+        // Comprobamos que la dirección no aparezca en ningún cliente.
 
-        // Llamamos al método del DAO, en este caso queremos eliminar un artículo por su Id.
+        // Llamamos al método del DAO, en este caso queremos eliminar una dirección por su Id.
         // Para ello usaremos el método remove() de la clase EntityManager.
         try {
             // Como es una acción de escritura, iniciamos una transacción.
@@ -102,9 +100,6 @@ public class ArticuloServiceImpl implements ArticuloService {
 
             // Eliminamos el artículo.
             repositorio.delete(id);
-
-            // Retrocedemos el contador de artículos.
-            Articulo.retrocederContador();
 
             // Confirmamos la transacción.
             em.getTransaction().commit();
@@ -136,20 +131,20 @@ public class ArticuloServiceImpl implements ArticuloService {
             // Llamamos al método del repositorio, es un método de lectura así que no necesitamos transacción.
             return repositorio.count();
         } catch (Exception e) {
-            System.out.println("No existen artículos en la Base de Datos.");
+            System.out.println("No existen direcciones en la Base de Datos.");
             e.printStackTrace();
         }
         return defaultValue;
     }
 
     @Override
-    public Optional<Articulo> getLast() {
+    public Optional<Direccion> getLast() {
         // Como es un método GET, no requieren transacción.
         // Manejamos las excepciones mediante Optional.
         return Optional.ofNullable(repositorio.getLast());
     }
 
-    // Podemos llamar directament al método.
+    // Podemos llamar directamente al método
     @Override
     public boolean isEmpty() { return count() == 0; }
 
@@ -162,7 +157,7 @@ public class ArticuloServiceImpl implements ArticuloService {
             // Como es una acción de escritura, iniciamos una transacción.
             em.getTransaction().begin();
 
-            // Ejecutamos el procedimiento y aseginamos el resultado a un flag.
+            // Ejecutamos el procedimiento y asignamos el resultado a un flag.
             boolean res = repositorio.resetId();
 
             // Confirmamos la transacción.

@@ -49,6 +49,8 @@ build/
 *.iws
 .idea/
 *.idea/
+.idea/workspace
+*.idea/workspace
 
 # NetBeans
 nbproject/private/

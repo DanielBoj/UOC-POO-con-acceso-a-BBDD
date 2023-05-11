@@ -23,514 +23,121 @@ import java.text.MessageFormat;
  */
 public class DireccionRepositorioImpl implements Repositorio<Direccion> {
 
-    // Añadimos un atributo para obtener los valores del archivo .env.
-    private static final Dotenv dotenv = Dotenv.load();
+    // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
+    // Creamos el atributo para nuestro Entity Manager.
+    private EntityManager em;
 
-    /*// Comenzamos por usar un método para crear la conexión a la BBDD.
-    private static Connection getConnection(String tipo) {
-        return Conexion.getInstance(tipo);
-    }*/
-
-    // Producto 4 -> Cambiamos el método para que use el Entity Manager.
-    private EntityManager getEntityManager() {
-        return ConexionJpa.getEntityManagerFactory();
+    // Seteamos nuestro Entity Manager a través del constructor.
+    public DireccionRepositorioImpl(EntityManager em) {
+        this.em = em;
     }
+
+    /* Producto 4 ≥ Refactoriazamos la clase para trabajar con Hibernate */
+
+    /* Simplificamos al máximo la implementación de nuestro contrato con la interfaz ya que trasladaremos
+     * toda la lógica a un servicio, para cumplir con las buenas prácticas. */
 
     @Override
     public Listas<Direccion> findAll() {
 
-        // Creamos la lista de direcciones.
+        // Creamos la lista de Direcciones que recibiremos de la BD.
         Listas<Direccion> direcciones = new Listas<>();
 
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
+        // Creamos la query usando el lenguaje de consultas de JPA.
+        em.createQuery("Select d from Direccion d", Direccion.class)
+                // Obtenemos el resultado de la consulta y lo convertimos en un stream.
+                .getResultStream().forEach(
+                        // Pasamos el resultado a la lista de Direcciones.
+                        direcciones::add
+                );
 
-        // Creamos la sentencia SQL para la consulta.
-        // Como usamos listas personalizadas, no podemos usar getResultList() y debemos usar getResultStream().
-        try {
-            em.createQuery("select d from Direccion d", Direccion.class).getResultStream().forEach(
-                    // Pasamos el resultado a la lista de clientes.
-                    direcciones::add
-            );
-        } catch (Exception e) {
-            System.out.println("No es posible obtener la lista de direcciones.");
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        /*// Creamos la sentencia SQL para realizar al consulta.
-        String sql = "CALL get_direcciones()";
-
-        // Colocamos los recursos como argumentos del try-with-resources.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql);
-             ResultSet res = stmt.executeQuery()) {
-
-            // Recibimos la respuesta y la iteramos. Cada objeto que recibamos, lo convertiremos en una dirección y
-            // lo añadiremos a la lista.
-            while (res.next()) {
-
-                // Obtenemos la dirección mediante la función de mapeado.
-                Direccion direccion = getDireccion(res);
-
-                // Añadimos la dirección a la lista.
-                direcciones.add(direccion);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al obtener la lista de direcciones.");
-            e.printStackTrace();
-        }*/
-
-        // Devolvemos la lista de direcciones.
+        // Retornamos la lista de Articulos.
         return direcciones;
     }
 
     @Override
     public Direccion findById(Long id) {
-
-        // Creamos el objeto que recibirá los datos de la BD.
-        Direccion direccion = null;
-
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Creamos la sentencia para la consulta, usar el método find() es más eficiente que crear una consulta.
-        try {
-            direccion = em.find(Direccion.class, id);
-        } catch (Exception e) {
-            System.out.println(MessageFormat.format("Error al obtener la direccion con id {0}", id));
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-
-        /*// Creamos la sentencia SQL para realizar al consulta.
-        String sql = "CALL get_direccion_by_id(?)";
-
-        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-
-            // Asignamos el parámetro a la consulta.
-            stmt.setLong(1, id);
-
-            // Ejecutamos la consulta y obtenemos el resultado. Manejamos el autoclose con el try-with-resources.
-            try (ResultSet res = stmt.executeQuery()) {
-
-                // Recibimos la respuesta y la asignamos a la dirección.
-                // Como solo hay un objeto, no es necesario iterar sino que usamos un bloque condicional.
-                if (res.next()) {
-                    // Usamos la función de mapeado para obtener la dirección.
-                    direccion = getDireccion(res);
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println(MessageFormat.format("Error al obtener la direccion con id {0}", id));
-            e.printStackTrace();
-        }*/
-
-        return direccion;
+        // Creamos la consulta con los métodos de Hibernate JPA.
+        return em.find(Direccion.class, id);
     }
 
     // Direcciones no tiene ningún identificador único además de la llave, así que no será posible
     // implementar este método.
     @Override
-    public Direccion findOne(String key) {
-
-        return null;
-    }
+    public Direccion findOne(String key) { return null; }
 
     @Override
-    public boolean save(Direccion direccion) {
-
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
-        // Para ello, comprobaremos si la dirección tiene un id asignado que funcionará como un flag.
-        // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
+    public void save(Direccion direccion) {
+        // Comenzamos por discriminar si se trata de un Create o un Update.
+        // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         if (direccion.getId() != null && direccion.getId() > 0) {
-            // Si el id no es nulo, significa que la dirección ya existe en la BD.
-            // Por lo tanto, deberemos lanzar una sentencia update.
-            try {
-                // Al tratarse de una acción de escritura en BD, debemos iniciar una transacción.
-                em.getTransaction().begin();
-
-                // Ejecutamos la consulta.
-                em.merge(direccion);
-
-                // Hacemos commit para guardar los cambios.
-                em.getTransaction().commit();
-
-                // Devolvemos true para indicar que la operación se realizó correctamente.
-                return true;
-            } catch (Exception e) {
-                System.out.println(MessageFormat.format("Error al actualizar la dirección con id {0}", direccion.getId()));
-
-                // Realizamos un rollback
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
-
-                e.printStackTrace();
-            } finally {
-                // Cerramos la conexión.
-                em.close();
-            }
+            // Si el id es mayor que 0, significa que ya existe en la BD.
+            // Por lo tanto, ejecutaremos un Update.
+            em.merge(direccion);
         } else {
-            // Si el id es nulo, significa que la dirección no existe en la BD y debemos crearla.
-            try {
-                // Iniciamos la transacción para la escritura en BD.
-                em.getTransaction().begin();
-
-                // Ejecutamos la creación de la dirección.
-                em.persist(direccion);
-
-                // Hacemos commit para guardar los cambios.
-                em.getTransaction().commit();
-
-                // Devolvemos true para indicar que la operación se realizó correctamente.
-                return true;
-            } catch (Exception e) {
-                System.out.println(MessageFormat.format("Error al crear la dirección con id {0}", direccion.getId()));
-
-                // Realizamos un rollback
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
-
-                e.printStackTrace();
-            } finally {
-                // Cerramos la conexión.
-                em.close();
-            }
+            // Si el id es menor o igual a 0, significa que no existe en la BD.
+            // Por lo tanto, ejecutaremos un Create.
+            em.persist(direccion);
         }
-
-        // Si ha habido algún error, devolvemos false.
-        return false;
-
-
-        /*String sql = null;
-
-        if (direccion.getId() != null) {
-            // Si el id no es nulo, significa que la dirección ya existe en la BD.
-            // Creamos la sentencia para lanzar una sentencia UPDATE.
-            sql = "call update_direccion(?, ?, ?, ?, ?, ?, ?)";
-        } else {
-            // Si el id es nulo, significa que la dirección no existe en la BD y debemos crearla.
-            sql = "call add_direccion(?, ?, ?, ?, ?, ?)";
-        }
-
-        // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-            // Mapeamos el statement con los datos de la dirección.
-            getStatement(direccion, stmt);
-
-
-            // Añadimos el parámetro id si es necesario.
-            if (direccion.getId() != null) {
-                stmt.setLong(6, direccion.getId());
-            }
-
-            // Ejecutamos la consulta.
-            stmt.executeUpdate();
-
-            // Si la consulta se ha ejecutado correctamente, devulve el id de la dirección.
-            return stmt.getLong(1) > 0;
-        } catch (SQLException e) {
-            System.out.println("Error al intentar crear la dirección en la base de datos.");
-            e.printStackTrace();
-        }
-
-        // Si la consulta no se ha ejecutado correctamente, devolvemos false.
-        return false;*/
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
+        // Creamos la consulta usando métodos de Hibernate JPA.
+        // Usaremos el método remove() para eliminar el artículo que recibe como argumento el artículo que queremos eliminar.
+        // Tenemos que buscar el artículo por su Id, por lo que usaremos el método find() de la clase EntityManager.
+        // Una vez localizado, eliminaremos el elemento.
+        em.remove(em.find(Direccion.class, id));
 
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
+        // TODO -> Pasar lógica a Servicio
 
-        // Creamos la consulta, en este caso usaremos el método remove de EntityManager.
-        // También tenemos que buscar el objeto por su Id ya que este método solo recibe un objeto.
-        try {
-            // Iniciamos la transacción para la escritura en BD.
-            em.getTransaction().begin();
-
-            // Realizamos la consulta de borrado
-            em.remove(em.find(Direccion.class, id));
-
-            // Hacemos commit para guardar los cambios.
-            em.getTransaction().commit();
-
-            // Devolvemos true para indicar que la operación se realizó correctamente.
-            return true;
-        } catch (Exception e) {
-            System.out.println(MessageFormat.format("Error al eliminar la dirección con id {0}", id));
-
-            // Realizamos un rollback
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos false.
-        return false;
-
-        /*// Creamos la sentencia SQL para la consulta.
-        String sql = "call delete_direccion(?, ?)";
-
-        // Creamos la consulta a la BD mediante un PreparedStatement ya que recibimos un parámetro.
-        // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-            // Asignamos el parámetro a la consulta.
-            stmt.setLong(2, id);
-
-            // Ejecutamos la consulta.
-            stmt.executeUpdate();
-
-            // Si la consulta se ha ejecutado correctamente, devulve el id de la dirección.
-            return stmt.getLong(1) > 0;
-        } catch (SQLException e) {
-            System.out.println(MessageFormat.format("Error al intentar eliminar la dirección con id {0} " +
-                    "de la base de datos.", id));
-            e.printStackTrace();
-        }
-
-        // Si la consulta no se ha ejecutado correctamente, devolvemos false.
-        return false;*/
+        /*Repositorio<Pedido> pedidoRepo = new PedidoRepositorioImpl();
+        if (pedidoRepo.findAll().getLista().stream()
+            .anyMatch(ped -> ped.getArticulo().getId().equals((id)))) {
+            System.out.println("No es posible eliminar el artículo porque está en algún pedido.");
+            return false;
+        }*/
     }
 
     @Override
     public int count() {
-
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Creamos un valor de retorno por defecto por si falla la consulta.
-        int defaultValue = 0;
-
-        // Creamos la consulta, en este caso usaremos el método createQuery de EntityManager.
-        try {
-            return em.createQuery("select count(d) from Direccion d", Long.class)
-                    // Obtenemos el resultado de la consulta.
-                    .getSingleResult()
-                    // Convertimos el resultado a int.
-                    .intValue();
-        } catch (Exception e) {
-            System.out.println("Error al intentar obtener el número de direcciones en la base de datos.");
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos el valor por defecto.
-        return defaultValue;
-
-        /*// Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT COUNT(_id) AS total FROM direcciones";
-
-        // Creamos la variable que recibirá el resultado.
-        int total = 0;
-
-        // Creamos la consulta a la BD mediante un Statement ya que no recibimos parámetros.
-        // Manejamos el autoclose con el try-with-resources.
-        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
-             ResultSet res = stmt.executeQuery(sql)) {
-            // Recibimos el resultado y lo asignamos a la variable.
-            if (res.next()) {
-                total = res.getInt("total");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al intentar obtener el número de direcciones en la base de datos.");
-            e.printStackTrace();
-        }
-
-        return total;*/
+        // Creamos la consulta usando lenguaje HQL/JPQL. Si no hay ningún artículo nos devolverá 0.
+        return em.createQuery("select count(d) from Direccion d", Long.class)
+                // retornamos un único valor.
+                .getSingleResult()
+                // convertimos el resultado a int.
+                .intValue();
     }
 
     @Override
     public Direccion getLast() {
-
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Creamos la consulta, en este caso usaremos el método createQuery de EntityManager.
-        // También tenemos que ordenar los resultados por id de forma descendente y limitar el resultado a 1.
-        try {
-            // Ejecutamos una búsqueda de todas las direcciones ordenadas por id de forma descendente y limitamos
-            // el resultado a 1.
-            return em.createQuery("select d from Direccion d order by d.id desc", Direccion.class)
-                    // Limitamos el resultado a 1.
-                    .setMaxResults(1)
-                    // Devolvemos el resultado.
-                    .getSingleResult();
-        } catch (Exception e) {
-            System.out.println("Error al intentar obtener la última dirección de la base de datos.");
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos null.
-        return null;
-
-        /*// Creamos la sentencia SQL para la consulta.
-        String sql = "SELECT * FROM direcciones ORDER BY _id DESC LIMIT 1";
-
-        // Ejecutamos el Statement como autoclose y obtenemos el resultado.
-        try (PreparedStatement stmt = getConnection(dotenv.get("ENV")).prepareStatement(sql);
-             ResultSet res = stmt.executeQuery(sql)) {
-
-            // Si hay un resultado, lo devolvemos.
-            return res.next()? getDireccion(res) : null;
-        } catch (SQLException e) {
-            System.out.println("Error al intentar obtener la última dirección de la base de datos.");
-            e.printStackTrace();
-        }
-
-        return null;*/
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return count() == 0;
+        // Creamos la consulta usando lenguaje HQL/JPQL.
+        // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
+        // ordenada de forma descendente por el id.
+        return em.createQuery("select d from Direccin d order by d.id desc", Direccion.class)
+                // retornamos un único valor.
+                .setMaxResults(1)
+                // obtenemos el resultado.
+                .getSingleResult();
     }
 
     @Override
     public boolean resetId() {
-
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Ejecutamos la consulta mediante la llamada a un procedimiento almacenado.
-        try {
-            // Como es una acción de escritura, tenemos que iniciar una transacción.
-            em.getTransaction().begin();
-
-            // Ejecutamos el procedimiento almacenado.
-            em.createStoredProcedureQuery("reset_id_direcciones")
-                    .execute();
-
-            // Hacemos commit de la transacción.
-            em.getTransaction().commit();
-
-            return true;
-        } catch (Exception e) {
-            System.out.println("No es posible resetear el contador de la tabla.");
-
-            // Realizamos un rollback de la transacción.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos false.
-        return false;
-
-        /*
-        // Creamos la sentencia para realizar la consulta.
-        String sql = "call reset_id_direcciones()";
-
-        // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
-        // Creamos la consulta a la BD mediante un CallableStatement.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)){
-            // Ejecutamos el procedimiento.
-            stmt.execute();
-            return true;
-        } catch (SQLException e) {
-            System.out.println("No es posible resetear el contador de la tabla.");
-            e.printStackTrace();
-        }
-
-        return false;*/
+        // Creamos la consulta usando el método de Hibernate JPA para llamar a un procedimiento almacenado.
+        // Si el procedimiento se ejecuta correctamente, nos devolverá true.
+        return em.createStoredProcedureQuery("reset_id_direcciones")
+                .execute();
     }
 
     public boolean deleteAll() {
-        // Producto 4 ≥ Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
+        // Ejecutamos la consulta, usaremos el método createQuery de EntityManager y
+        // executeUpdate(). Tenemos que asegurarnos de no romper la integridad referencial,
+        // usamos un Truncate porque tiene mayor eficiencia en tiempo de ejecución.
+        int res = em.createNativeQuery("truncate table direcciones")
+                // Ejecutamos la consulta.
+                .executeUpdate();
 
-        // Creamos la consulta, en este caso usaremos una consulta en HQL.
-        try {
-            // Como se trata de una acción de escritura, tenemos que iniciar una transacción.
-            em.getTransaction().begin();
-
-            // Ejecutamos la consulta, usaremos el método createQuery de EntityManager y
-            // executeUpdate(). Tenemos que asegurarnos de no romper la integridad referencial,
-            // usamos un Truncate porque tiene mayor eficiencia en tiempo de ejecución.
-            int res = em.createNativeQuery("truncate table direcciones")
-                    // Ejecutamos la consulta.
-                    .executeUpdate();
-
-            // Hacemos commit de la transacción.
-            em.getTransaction().commit();
-
-            // Devolvemos el resultado.
-            return res > 0;
-        } catch (Exception e) {
-            System.out.println("Error al intentar eliminar todas las direcciones de la base de datos.");
-
-            // Realizamos un rollback de la transacción.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión.
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos false.
-        return false;
-
-
-       /* // Creamos la sentencia SQL para la consulta.
-        String sql = "CALL delete_direcciones(?)";
-
-        // Manejamos el autoclose con el try-with-resources.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-            // Preparamos el parámetro de salida.
-            stmt.registerOutParameter(1, Types.INTEGER);
-
-            // Ejecutamos la consulta.
-            stmt.executeUpdate();
-
-            // Capturamos la variable OUT del query.
-            if (stmt.getInt(1) > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al intentar eliminar todas las direcciones de la base de datos.");
-            e.printStackTrace();
-        }
-
-        return false;*/
+        return res > 0;
     }
 
     /* Producto 4 ≥ Como estamos usando Hibernate ya no es necesario mapear los objetos. */

@@ -1,32 +1,22 @@
 package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.Articulo;
-import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
-import ciricefp.modelo.utils.Conexion;
-import ciricefp.modelo.utils.ConexionJpa;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
-import org.jetbrains.annotations.NotNull;
 
-import java.sql.*;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Esta clase implementa la interfaz Repositorio para nuestra entidad Articulo.
  * Esta clase será la encargada de gestionar los datos de la entidad Articulo.
  * Debe implementar todos los métodos de la interfaz Repositorio.
+ * El manejo de excepciones se realizará en la clase de servicios.
  *
  * @author Cirice
  * @version 1.0
  * @since 04-2023
  */
 public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
-
-    // Añadimos el atributo para importar los valores del archivo .env
-    private static final Dotenv dotenv = Dotenv.load();
 
     // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
     // Creamos el atributo para nuestro Entity Manager.
@@ -39,8 +29,8 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
     /* Producto 4 ≥ Refactoriazamos la clase para trabajar con Hibernate */
 
-    /* Simplificamos al máximos la implementación de nuestro contrato con la interfaz ya que trasladaremos
-    * toda la lógica a un servicio, para cumplir con las buensa prácticas. */
+    /* Simplificamos al máximo la implementación de nuestro contrato con la interfaz ya que trasladaremos
+    * toda la lógica a un servicio, para cumplir con las buenas prácticas. */
 
     // Obtenemos un listado de todos los artículos
     @Override
@@ -97,87 +87,37 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
     @Override
     public void delete(Long id) {
         // Creamos la consulta usando métodos de Hibernate JPA.
+        // Usaremos el método remoce() para eliminar el artículo que recibe como argumento el artículo que queremos eliminar.
+        // Tenemos que buscar el artículo por su Id, por lo que usaremos el método find() de la clase EntityManager.
+        // Una vez localizado, eliminaremos el elemento.
         em.remove(em.find(Articulo.class, id));
 
         // TODO -> Pasar lógica a Servicio
 
-
-        // Si el articulo aparece en algún pedido, no se podrá eliminar.
-        Repositorio<Pedido> pedidoRepo = new PedidoRepositorioImpl();
+        /*Repositorio<Pedido> pedidoRepo = new PedidoRepositorioImpl();
         if (pedidoRepo.findAll().getLista().stream()
             .anyMatch(ped -> ped.getArticulo().getId().equals((id)))) {
             System.out.println("No es posible eliminar el artículo porque está en algún pedido.");
             return false;
-        }
-
-        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // Creamos la consulta, en este caso queremos eliminar un artículo por su Id.
-        // Para ello usaremos el método remove() de la clase EntityManager.
-        // Tenemos que bsucar el artículo por su Id, por lo que usaremos el método find() de la clase EntityManager.
-        // Una vez localizado, eliminaremos el elemento.
-        try {
-            em.remove(em.find(Articulo.class, id));
-
-            // Retrocedemos el contador de artículos.
-            Articulo.retrocederContador();
-
-            // Si todo ha ido bien, devolvemos true.
-            return true;
-        } catch (Exception e) {
-            System.out.println(MessageFormat.format("No es posible eliminar el artículo con id {0}", id));
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión
-            em.close();
-        }
+        }*/
     }
 
     @Override
     public int count() {
-
-        // Creamos la consulta usando lenguaje HQL/JPQL.
+        // Creamos la consulta usando lenguaje HQL/JPQL. Si no hay ningún artículo nos devolverá 0.
         return em.createQuery("select count(a) from Articulo a", Long.class)
                 // retornamos un único valor.
                 .getSingleResult()
                 // convertimos el resultado a int.
                 .intValue();
-
-
-        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-        // variable de resultado, la definimos primero para poder devolver 0 en caso de producirse un error.
-        int defaultValue = 0;
-
-        // Creamos la consulta, en este caso queremos obtener el número de artículos.
-        // Para ello usaremos un query en JPQL de la clase EntityManager.
-        try {
-            return  em.createQuery("select count(a) from Articulo a", Long.class)
-                    // retornamos un único valor.
-                    .getSingleResult()
-                    // convertimos el resultado a int.
-                    .intValue();
-        } catch (Exception e) {
-            System.out.println("No es posible obtener el número de registros de la tabla.");
-            e.printStackTrace();
-        } finally {
-            // Cerramos la conexión
-            em.close();
-        }
-
-        // Si ha habido algún error, devolvemos 0.
-        return defaultValue;
     }
 
 
     @Override
     public Articulo getLast() {
-
         // Creamos la consulta usando lenguaje HQL/JPQL.
+        // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
+        // ordenada de forma descendente por el id.
         return em.createQuery("select a from Articulo a order by a.id desc", Articulo.class)
                 // retornamos un único valor.
                 .setMaxResults(1)
@@ -187,21 +127,14 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
 
     @Override
     public boolean resetId() {
-        // Creamos la consulta usaando el método de Hibernate JPA para llamar a un procedimiento almacenado.
-        em.createStoredProcedureQuery("reset_id_articulos")
+        // Creamos la consulta usando el método de Hibernate JPA para llamar a un procedimiento almacenado.
+        // Si el procedimiento se ejecuta correctamente, nos devolverá true.
+        return em.createStoredProcedureQuery("reset_id_articulos")
                 .execute();
-
-        // Producto 4 ≥ Reimplementamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
-
-
-
-        // En caso de error retornamos false.
-        return false;
     }
 
-    /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas. */
+    /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas porque lo
+    realiza automáticamente el framework. */
 
     /*// Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.

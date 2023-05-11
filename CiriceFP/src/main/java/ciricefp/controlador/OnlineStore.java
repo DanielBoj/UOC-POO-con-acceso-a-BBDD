@@ -48,6 +48,7 @@ public class OnlineStore {
         prg.controlador = new Controlador(prg.datos, prg.ventana);
         prg.ventana.setControlador(prg.controlador);
         prg.datos.setControlador(prg.controlador);
+        prg.datos.setEm(em);
 
         int exitValue = init(prg);
 

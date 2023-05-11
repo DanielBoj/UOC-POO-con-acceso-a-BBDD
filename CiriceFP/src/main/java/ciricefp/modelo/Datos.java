@@ -7,15 +7,16 @@ import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.repositorio.*;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataImpl;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataRepositorio;
+import ciricefp.modelo.services.ArticuloServiceImpl;
+import ciricefp.modelo.services.interfaces.ArticuloService;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.ConexionJpa;
+import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.ListIterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,16 +37,18 @@ public class Datos {
     // private Listas<Cliente> clientes;
     // private Listas<Articulo> articulos;
     // private Listas<Pedido> pedidos;
-    private Conexion baseDatos;
+
+    /* Producto 4 -> Refactorizamos la clase para usar Entity Manager. */
+    private EntityManager em;
 
     // Constructor por defecto --> Inicializa las listas de clientes, artículos y pedidos.
     public Datos() {
     }
 
     // Constructor con parámetros --> Inicializa las listas de clientes, artículos y pedidos.
-    public Datos(Controlador controlador, Conexion baseDatos) {
+    public Datos(Controlador controlador, EntityManager em) {
         this.controlador = controlador;
-        this.baseDatos = baseDatos;
+        this.em = em;
     }
 
     // Producto 3 -> Al implementar el acceso a la BD ya no necesitamos este constructor.
@@ -60,158 +63,117 @@ public class Datos {
         this.controlador = controlador;
     }
 
-    public Conexion getBaseDatos() {
-        return baseDatos;
+    public EntityManager getEm() {
+        return em;
     }
 
-    public void setBaseDatos(Conexion baseDatos) {
-        this.baseDatos = baseDatos;
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     // StringBuilder nos permite implementar un patrón de diseño de string para el método toString() de una forma visual muy clara.
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Controlador interno del Modelo:\n");
-        sb.append(controlador).append("||").append(baseDatos);
+        sb.append(controlador).append("||").append(em);
 
         return sb.toString();
     }
 
-    /* Métodos de la clase */
+    /* Métodos de la clase
+    * Producto 4 -> Refactorizamos los métodos para usar Entity Manager.
+    * */
     /* Articulos */
     // Añadimos un artículo a la bd instanciándolo con los parámetros recibidos.
-    public Articulo createArticulo(String descripcion, double precio, double gastosEnvio, int preparacion) {
-
+    public Optional<Articulo> createArticulo(String descripcion, double precio, double gastosEnvio, int preparacion) {
         // Creamos el objeto artículo.
         Articulo articulo = new Articulo(descripcion, precio, gastosEnvio, preparacion);
 
-        // Producto 3 -> Manejamos la creación de un artículo a través del Repositorio.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Intentamos añadir el artículo a la BD.
         // Comprobamos si el artículo ya existe
         if (!checkArticulo(articulo)) {
             // Añadimos el artículo a la BD
-            try {
-                if (repositorio.save(articulo)) {
-                    // Aumentamos el número de artículos
-                    Articulo.avanzarContador();
+            // El manejo de excepciones se realiza desde la clase Service.
+            boolean res = service.save(articulo);
 
-                    // Recuperamos el último artículo creado.
-                    return repositorio.getLast();
-                }
-            } catch (NullPointerException e) {
-                System.out.println("Error al crear el artículo.");
-                e.printStackTrace();
+            if (res) {
+                // Aumentamos el número de artículos
+                Articulo.avanzarContador();
             }
+
+            // Devolvemos el último artículo creado o null en caso de error.
+            return res ? service.getLast() : Optional.empty();
+
         } else {
             System.out.println(MessageFormat.format("El artículo {0} ya existe", articulo.getDescripcion()));
+            return Optional.empty();
         }
-
-        // En caso de error, devolvemos null
-        return null;
     }
 
     // Añadimos un artículo a la bd recibiéndolo por parámetro
-    public Articulo createArticulo(@NotNull Articulo articulo) {
-
-        // Producto 3 -> Manejamos la creación de un artículo a través del Repositorio.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+    public Optional<Articulo> createArticulo(@NotNull Articulo articulo) {
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Intentamos añadir el artículo a la BD.
         // Comprobamos si el artículo ya existe
         if (!checkArticulo(articulo)) {
             // Añadimos el artículo a la BD
-            try {
-                if (repositorio.save(articulo)) {
-                    // Aumentamos el número de artículos
-                    Articulo.avanzarContador();
+            // El manejo de excepciones se realiza desde la clase Service.
+            boolean res = service.save(articulo);
 
-                    // Devolvemos el último artículo creado.
-                    return repositorio.getLast();
-                }
-            } catch (NullPointerException e) {
-                System.out.println("Error al crear el artículo.");
-                e.printStackTrace();
+            if (res) {
+                // Aumentamos el número de artículos
+                Articulo.avanzarContador();
             }
+
+            // Devolvemos el último artículo creado o null en caso de error.
+            return res ? service.getLast() : Optional.empty();
+
         } else {
             System.out.println(MessageFormat.format("El artículo {0} ya existe", articulo.getDescripcion()));
+            return Optional.empty();
         }
-
-        // En caso de error, devolvemos null
-        return null;
     }
 
     // Devolvemos una lista con todos los elementos de la lista de artículos, usamos una copia para mantener las funciones lo más puras posibles
     public Listas<Articulo> listArticulos() {
-
-        // Producto 3 -> Obtenemos la lista de productos de la BD a través del Repositorio.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Ejecutamos el método para listar la entidad. El método nos devuelve una Lista, con lo que
         // podemos asignarla directamente a la lista de artículos.
-        try {
-            // Comprobamos que la lista contenga elementos
-            if (!repositorio.isEmpty()) {
-                // Intentamos devolver una copia de la lista
-                return repositorio.findAll().cloneOf();
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Error al listar los artículos.");
-            e.printStackTrace();
-        }
-
-        // Si falla, devolvemos una lista vacía
-        return new Listas<>();
+        return !service.isEmpty()? service.findAll().cloneOf() : new Listas<>();
     }
 
     // Producto 3 --> Método para obtener un artículo de la BD a través de su id.
-    public Articulo getArticuloById(Long id) {
-
-        // Creamos un objeto Repositorio para la entidad Articulo.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+    public Optional<Articulo> getArticuloById(Long id) {
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
         // El método nos devuelve un objeto, con lo que podemos asignarlo directamente a un artículo.
-        try {
-            return repositorio.findById(id);
-        } catch (NullPointerException e) {
-            System.out.println("Error al buscar el artículo por ID.");
-            e.printStackTrace();
-        }
-
-        // En caso de error, devolvemos null
-        return null;
+        return service.findById(id);
     }
 
     // Producto 3 --> Cambiamos el método para obtener un artículo de la BD a través de su código.
-    public Articulo searchArticulo(@NotNull String codigo) {
+    public Optional<Articulo> searchArticulo(@NotNull String codigo) {
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
-        // Creamos un objeto para recibir la instancia.
-        Articulo articulo = null;
-
-        // Creamos un objeto Repositorio para la entidad Articulo.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
-
-        // Comprobamos que haya artículos en la BD.
-        if (!repositorio.isEmpty()) {
-            // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
-            // El método nos devuelve un objeto, con lo que podemos asignarlo directamente a un artículo.
-            try {
-                return repositorio.findOne(codigo);
-            } catch (NullPointerException e) {
-                System.out.println("Error al buscar el artículo.");
-                e.printStackTrace();
-            }
-        }
-
-        return null;
+        // Comprobamos que haya artículos en la BD y lo devolvemos.
+        return !service.isEmpty() ? service.findOne(codigo) : null;
     }
 
     // TODO -> Como extra podemos crear métodos para eliminar y modificar artículos
 
     // Eliminamos todos los elementos de la lista de artículos y devolvemos una lista con los elementos eliminados
     public ArrayList<Articulo> clearArticulos() {
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         // Creamos una lista temporal quer devolveremos en caso de éxito
         ArrayList<Articulo> articulosTemp = listArticulos().getLista();
@@ -219,20 +181,16 @@ public class Datos {
         // Flag de control
         AtomicBoolean flag = new AtomicBoolean(false);
 
-        // Producto 3 --> Limpiamos la lista de artículos de la BD.
-        // Creamos un objeto Repositorio para la entidad Articulo.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
-
         // Ejecutamos el método para eliminar todos los elementos de la entidad.
         // Vamos a usar una función lambda para simplificar el código.
         try {
-            listArticulos().forEach(articulo -> flag.set(repositorio.delete(articulo.getId())));
+            listArticulos().forEach(articulo -> flag.set(service.delete(articulo.getId())));
             if (flag.get()) {
                 // Reseteamos el contador de artículos
                 Articulo.resetContador();
 
-                // Reseteamis el contador id en la DB.
-                repositorio.resetId();
+                // Reseteamos el contador id en la DB.
+                service.resetId();
             }
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error al limpiar la lista de artículos.");
