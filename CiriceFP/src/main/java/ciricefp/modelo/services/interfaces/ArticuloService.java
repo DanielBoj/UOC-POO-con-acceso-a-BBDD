@@ -13,7 +13,7 @@ import java.util.Optional;
  * @since 05-2023
  * @see Articulo
  */
-public interface ClienteService {
+public interface ArticuloService {
 
     // Los métodos de lectura de todos los objetos de la entidad devolverán una Lista.
     Listas<Articulo> findAll();

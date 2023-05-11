@@ -2,11 +2,6 @@ package ciricefp.modelo.repositorio;
 
 import ciricefp.modelo.listas.Listas;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 /**
  * La interfaz Repositorio es la interfaz base de todos los repositorios.
  * Esta definirá el comportamiento de todas las entidades de la aplicación y
@@ -37,10 +32,10 @@ public interface Repositorio<T> {
     // Manejamos la creación y la actualización de un objeto de la entidad como un método único.
     // Si el objeto no existe, se creará, si existe, se actualizará.
     // Los métodos por separado serían create() y update().
-    boolean save(T t);
+    void save(T t);
 
     // Borrar un objeto de la entidad identificado por su id.
-    boolean delete(Long id);
+    void delete(Long id);
 
     // Contar el número de registros de la tabla.
     int count();
@@ -48,9 +43,6 @@ public interface Repositorio<T> {
     // Recuperar el último elemento de la tabla.
     T getLast();
 
-    // Comprobar si la tabla está vacía.
-    boolean isEmpty();
-
     // Creamos un método estático para resetear los contadores de las tablas.
-    boolean resetId();
+    void resetId();
 }

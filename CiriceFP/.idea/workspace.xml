@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="Update Commit. version: 1.0. Cambios: Finalizada refafactorización a Hibernate de las clases sin asociaciones.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ArticuloServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/interfaces/ArticuloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/Repositorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/Repositorio.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

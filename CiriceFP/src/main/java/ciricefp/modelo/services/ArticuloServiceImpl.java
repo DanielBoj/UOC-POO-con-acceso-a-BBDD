@@ -4,7 +4,7 @@ import ciricefp.modelo.Articulo;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.repositorio.ArticuloRepositorioImpl;
 import ciricefp.modelo.repositorio.Repositorio;
-import ciricefp.modelo.services.interfaces.ClienteService;
+import ciricefp.modelo.services.interfaces.ArticuloService;
 import jakarta.persistence.EntityManager;
 
 import java.text.MessageFormat;
@@ -18,14 +18,14 @@ import java.util.Optional;
  * @version 1.0
  * @since 05-2023
  */
-public class ClienteServiceImpl implements ClienteService {
+public class ArticuloServiceImpl implements ArticuloService {
     // Empezamos por realizar la conexión con el repositorio para poder realizar las acciones sobre la capa de datos.
     // Necesitamos acceso al entity manejar para poder manejar las transacciones con la BBDD.
     private EntityManager em;
     // Creamos el repositorio para poder realizar el manejo de los datos y le pasamos el entity manager.
     private Repositorio<Articulo> repositorio;
 
-    public ClienteServiceImpl(EntityManager em) {
+    public ArticuloServiceImpl(EntityManager em) {
         this.em = em;
 
         // Aquí tenemos que concretar la implementación de Repositorio que vamos a usar.
@@ -45,14 +45,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Articulo findById(Long id) {
+    public Optional<Articulo> findById(Long id) {
         // Como es un método GET, no requieren transacción.
-        try {
-            return repositorio.findById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        // Manejamos la excepción con Optional.
+        return Optional.ofNullable(repositorio.findById(id));
     }
 
     @Override
@@ -106,16 +102,45 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Optional<Articulo> getLast() {
-        return Optional.empty();
+        // Como es un método GET, no requieren transacción.
+        // Manejamos las excepciones mediante Optional.
+        return Optional.ofNullable(repositorio.getLast());
     }
 
+    // Podemos llamar directament al método.
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
+    public boolean isEmpty() { return count() == 0; }
 
     @Override
     public boolean resetId() {
-        return false;
+        // LLamamos al método del repositorio, es un método de escritura así que
+        // necesitamos una transacción.
+        // Creamos la consulta, en este caso queremos resetear el contador de la tabla.
+        try {
+            // Como es una acción de escritura, iniciamos una transacción.
+            em.getTransaction().begin();
+
+            // Ejecutamos el procedimiento.
+            repositorio.resetId();
+
+            // Confirmamos la transacción.
+            em.getTransaction().commit();
+
+            // Devolvemos true.
+            return true;
+        } catch (Exception e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+
+            // Realizamos un rollback en caso de error.
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Cerramos la conexión
+            em.close();
+        }
     }
 }
