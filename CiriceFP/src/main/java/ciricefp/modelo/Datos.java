@@ -7,15 +7,22 @@ import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.repositorio.*;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataImpl;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataRepositorio;
+import ciricefp.modelo.repositorio.testdataloader.LoadDataService;
+import ciricefp.modelo.repositorio.testdataloader.LoadDataServiceImpl;
 import ciricefp.modelo.services.ArticuloServiceImpl;
 import ciricefp.modelo.services.ClienteServiceImpl;
+import ciricefp.modelo.services.DireccionServiceImpl;
+import ciricefp.modelo.services.PedidoServiceImpl;
 import ciricefp.modelo.services.interfaces.ArticuloService;
 import ciricefp.modelo.services.interfaces.ClienteService;
+import ciricefp.modelo.services.interfaces.DireccionService;
+import ciricefp.modelo.services.interfaces.PedidoService;
 import ciricefp.modelo.utils.Conexion;
 import ciricefp.modelo.utils.ConexionJpa;
 import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.text.html.Option;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -53,7 +60,7 @@ public class Datos {
         this.em = em;
     }
 
-    // Producto 3 -> Al implementar el acceso a la BD ya no necesitamos este constructor.
+    // Producto 3 -/> Al implementar el acceso a la BD ya no necesitamos este constructor.
     // Constructor con parámetros --> Inicializa las listas de clientes, artículos y pedidos.
 
     /* Getters & Setters */
@@ -206,41 +213,34 @@ public class Datos {
     /* Clientes */
 
     // Añadimos un cliente generando la instancia en el método
-    public Cliente createCliente(String nombre, Direccion domicilio, String nif, String email, String tipo) {
+    public Optional<Cliente> createCliente(String nombre, Direccion domicilio, String nif, String email, String tipo) {
         // Producto 4 ≥ Usamos los servicios
         ClienteService service = new ClienteServiceImpl(this.em);
 
         // Añadimos el cliente a la BD, si se añade correctamente, devolvemos el Cliente.
-        // Aplicamos la lógica de negocio para crear el cliente, no pueden haber dos clientes con el mismo
+        // Aplicamos la lógica de negocio para crear el cliente, no puede haber dos clientes con el mismo
         // nif.
-        try {
-            // Producto 3 -> Mediante Factory podemos crear el cliente directamente.
-            Cliente cliente = (Cliente) IClienteFactory.createCliente(nombre, domicilio, nif, email, tipo);
+        Cliente cliente = (Cliente) IClienteFactory.createCliente(nombre, domicilio, nif, email, tipo);
 
-            // Comprobamos que el cliente no exista
-            if (checkCliente(cliente)) {
-                System.out.println(MessageFormat.format("El cliente {0} ya existe", cliente.getNombre()));
-                return null;
-            }
-
-            if (service.save(cliente)) {
-                // Avanzamos el contador de clientes
-                Cliente.advanceTotalClientes();
-                // Devolvemos el cliente
-                return service.getLast();
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Error al crear el cliente");
-            e.printStackTrace();
+        // Comprobamos que el cliente no exista
+        if (checkCliente(cliente)) {
+            System.out.println(MessageFormat.format("El cliente con NIF {0} ya existe", cliente.getNif()));
         }
 
-        return null;
+        if (service.save(cliente)) {
+            // Avanzamos el contador de clientes
+            Cliente.advanceTotalClientes();
+            // Devolvemos el cliente
+            return service.getLast();
+        }
+        // Si ha habido algún error devolvemos un Optional vacío.
+        return Optional.empty();
     }
 
     // Añadimos un cliente recibiendo la instancia del mismo
-    public Cliente createCliente(@NotNull Cliente cliente) {
+    public Optional<Cliente> createCliente(@NotNull Cliente cliente) {
 
-        // Producto 3 --> Manejamos la creación de un cliente a través de la BD.
+        /*// Producto 3 --> Manejamos la creación de un cliente a través de la BD.
         // Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
@@ -265,13 +265,40 @@ public class Datos {
             e.printStackTrace();
         }
 
-        return null;
+        return null;*/
+
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
+
+        // Añadimos el cliente a la BD, si se añade correctamente, devolvemos el Cliente.
+        // Aplicamos la lógica de negocio para crear el cliente, no puede haber dos clientes con el mismo
+        // nif.
+        // Comprobamos que el cliente no exista
+        if (checkCliente(cliente)) {
+            System.out.println(MessageFormat.format("El cliente con NIF {0} ya existe", cliente.getNif()));
+        }
+
+        if (service.save(cliente)) {
+            // Avanzamos el contador de clientes
+            Cliente.advanceTotalClientes();
+            // Devolvemos el cliente
+            return service.getLast();
+        }
+        // Si ha habido algún error devolvemos un Optional vacío.
+        return Optional.empty();
     }
 
     // Devolvemos una lista con todos los elementos de la lista de clientes, usamos una copia para mantener las funciones lo más puras posibles
     public Listas<Cliente> listClientes() {
+        // Prodcuto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
-        // Producto 3 -> Obtenemos la lista de clientes de la BD a través del Repositorio.
+        // Comprobamos que la lista no esté vacía, si hay elementos devolvemos la lista de clientes, si no, devolvemos
+        // una lista vacía.
+        return !service.isEmpty() ? service.findAll().cloneOf() : new Listas<>();
+
+
+        /*// Producto 3 -> Obtenemos la lista de clientes de la BD a través del Repositorio.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
         // Ejecutamos el método para listar la entidad. El método nos devuelve una Lista, con lo que
@@ -287,13 +314,18 @@ public class Datos {
         }
 
         // Si falla, devolvemos una lista vacía
-        return new Listas<>();
+        return new Listas<>();*/
     }
 
     // Producto 3 --> Método para obtener un cliente de la BD a través de su id.
-    public Cliente getClienteById(Long id) {
+    public Optional<Cliente> getClienteById(Long id) {
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
-        // Creamos un objeto Repositorio para la entidad Cliente.
+        // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
+        return !service.isEmpty() ? service.findById(id) : Optional.empty();
+
+        /*// Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
@@ -305,12 +337,40 @@ public class Datos {
             e.printStackTrace();
         }
 
-        return null;
+        return null;*/
     }
 
     public ArrayList<Cliente> filterClientesByType(@NotNull String tipo) {
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
-        // Producto 3 --> Obtenemos una lista de clientes de la BD filtrada por tipo.
+        // Creamos el tipo de cliente según el tipo recibido por parámetro.
+        switch (tipo) {
+            case "Estandard" -> tipo = "ClienteEstandard";
+            case "Premium" -> tipo = "ClientePremium";
+        }
+
+        // Creamos una lista temporal
+        ArrayList<Cliente> clientesTemp = new ArrayList<>();
+
+        // Comprobamos que la lista contenga elementos
+        if (!service.isEmpty()) {
+
+            // Recorremos cada elemento de la lista y, si es del tipo que buscamos, lo
+            // añadimos a la lista temporal.
+            String finalTipo = tipo;
+            // Obtenemos y recorremos la lista de clientes
+            service.findAll().getLista().stream()
+                    // Filtramos los clientes por tipo.
+                    .filter(cliente -> IClienteFactory.tipoCliente(cliente).equals(finalTipo))
+                    // Añadimos los clientes filtrados a la lista temporal
+                    .forEach(clientesTemp::add);
+        }
+
+        // Devolvemos la lista temporal, contendrá los clientes filtrados por tipo o estará vacía si no ha encontrado ninguno.
+        return clientesTemp;
+
+        /*// Producto 3 --> Obtenemos una lista de clientes de la BD filtrada por tipo.
         // Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
@@ -342,14 +402,19 @@ public class Datos {
         }
 
         // Devolvemos la lista temporal con los clientes del tipo buscado, si lo hay.
-        return clientesTemp;
+        return clientesTemp;*/
     }
 
     // Buscamos un cliente por su DNI
     // Producto 3 --> Refactorizamos el método para realizar la búsqueda en la BD.
-    public Cliente searchCliente(@NotNull String nif) {
+    public Optional<Cliente> searchCliente(@NotNull String nif) {
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
-        // Creamos un objeto Repositorio para la entidad Cliente.
+        // Comprobamos que la lista contenga elementos y ejecutamos el método para buscar el cliente por NIF.
+        return !service.isEmpty() ? service.findOne(nif) : Optional.empty();
+
+        /*// Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
@@ -365,13 +430,46 @@ public class Datos {
         }
 
         // Si el proceso falla o el cliente no existe, devolvemos null.
-        return null;
+        return null;*/
     }
 
     // Limpiamos la lista de clientes
     public ArrayList<Cliente> clearClientes() {
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
+        DireccionService direccionService = new DireccionServiceImpl(this.em);
 
         // Creamos una lista temporal que devolveremos en caso de éxito.
+        ArrayList<Cliente> clientesTemp = listClientes().getLista();
+
+        // Creamos un flag de control.
+        AtomicBoolean flag = new AtomicBoolean(false);
+
+        // Ejecutamos el método para eliminar todos los elementos de la tabla.
+        if (!service.isEmpty()) {
+            try {
+                // Obtenemos y recorremos la lista de clientes eliminando cada uno de ellos, Hibernate se
+                // encargará de eliminar también la dirección.
+                listClientes().forEach(cliente -> flag.set(service.delete(cliente.getId())));
+                // Comprobamos que se haya ejecutado la limpieza
+                if (flag.get()) {
+                    // Reseteamos el contador de clientes
+                    Cliente.resetTotalClientes();
+
+                    // Reseteamos el contador de la clave primaria en la BD.
+                    service.resetId();
+                    direccionService.resetId();
+                }
+            } catch (NullPointerException e) {
+                System.out.println("Error al limpiar la lista de clientes.");
+                e.printStackTrace();
+            }
+        }
+
+        // En caso de producirse un error o no haber podido ejecutar la limpieza devolvemos una lista vacía
+        return flag.get() ? clientesTemp : new ArrayList<>();
+
+        /*// Creamos una lista temporal que devolveremos en caso de éxito.
         // Producto 3 --> Obtenemos los clientes directamente de la BD y la limpiamos en la BD.
         ArrayList<Cliente> clientesTemp = listClientes().getLista();
 
@@ -411,13 +509,18 @@ public class Datos {
         }
 
         // En caso de producirse un error o no haber podido ejecutar la limpieza devolvemos una lista vacía
-        return flag.get() ? clientesTemp : new ArrayList<>();
+        return flag.get() ? clientesTemp : new ArrayList<>();*/
     }
 
-    // TODO -> Como extra podemos crear métodos para eliminar y modificar clientes, el método getCliente será útil para la futura interacción con la BBDD
-    public Cliente getCliente(@NotNull Cliente cliente) {
+    // Refactorizado --> Eliminamos un método que no usamos
+    /*public Cliente getCliente(@NotNull Cliente cliente) {
 
         // Producto 3 --> Obtenemos el cliente de la BD a través de su id.
+
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
+
+
         // Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
@@ -432,11 +535,19 @@ public class Datos {
 
         // Si falla, devolvemos null
         return null;
-    }
+    }*/
 
-    public Cliente updateCliente(Cliente cliente) {
-
+    public Cliente updateCliente(@NotNull Cliente cliente) {
         // Producto 3 --> Actualizamos el cliente en la BD.
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
+
+        // Comprobamos que existan clientes en la BD.
+        if (!service.isEmpty()) {
+            return service.save(cliente)? cliente : null;
+        }
+
+        /*// Producto 3 --> Actualizamos el cliente en la BD.
         // Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
@@ -448,7 +559,7 @@ public class Datos {
                 System.out.println("Error al actualizar el cliente");
                 e.printStackTrace();
             }
-        }
+        }*/
 
         // Si falla, devolvemos null
         return null;
@@ -457,7 +568,24 @@ public class Datos {
     public Cliente deleteCliente(@NotNull Cliente cliente) {
 
         // Producto 3 --> Eliminamos el cliente de la BD.
-        // Creamos un objeto Repositorio para la entidad Cliente.
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
+
+        // Comprobamos que existan clientes en la BD y ejecutamos el método para eliminar el cliente de la BD.
+        if (service.isEmpty()) {
+            if (service.delete(cliente.getId())) {
+                // Decrementamos el contador de clientes
+                Cliente.decreaseTotalClientes();
+
+                // Devolvemos el cliente eliminado
+                return cliente;
+            }
+        }
+
+        // Si falla, devolvemos null
+        return null;
+
+        /*// Creamos un objeto Repositorio para la entidad Cliente.
         Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
 
         // Ejecutamos el método para eliminar el cliente de la BD.
@@ -477,18 +605,46 @@ public class Datos {
         }
 
         // Si falla, devolvemos null
-        return null;
+        return null;*/
     }
 
     /* Pedidos */
     // Creamos un pedido recibiendo los parámetros necesarios
     // Producto 3 -> Refactorizando para actuar sobre la BD.
     public Pedido createPedido(@NotNull Cliente cliente, @NotNull Articulo articulo, int cantidad) {
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Creamos el pedido
         Pedido pedido = new Pedido(cliente, articulo, cantidad);
 
-        // Producto 3 -> Creamos un objeto Repositorio para la entidad Pedido.
+        // Asignamos un número de pedido a través del último número de pedido + 1.
+        // Obtenemos el último pedido de la BD que es un Optional, con lo que podemos usar el método ifPresentOrElse.
+        service.getLast().ifPresentOrElse(p -> pedido.setNumeroPedido(p.getNumeroPedido() + 1),
+                // Tenemos que crear una expresión lambda vacía para que funcione el método ifPresentOrElse.
+                () -> pedido.setNumeroPedido(1));
+
+        // Nos aseguramos de que enviado sea false:
+        pedido.setEsEnviado(false);
+
+        // Ejecutamos el método para crear el pedido en la BD, si se añade correctamente devolvemos el pedido.
+        // Comprobamos que el pedido no exista en la BD, si no existe lo añadimos.
+        if (service.findOne(String.valueOf(pedido.getNumeroPedido())).isEmpty()) {
+            if (service.save(pedido)) {
+                // Avalamos el contador de pedidos
+                Pedido.avanzarTotalPedidos();
+
+                // Devolvemos el pedido con Id y número de pedido
+                return service.getLast().orElse(null);
+            }
+        }
+
+        // Si ha habido un error, devolvemos un mensaje de error y null
+        System.out.println(MessageFormat.format("El pedido con número {0} ya existe o ha habido un error al crearlo.",
+                pedido.getNumeroPedido()));
+        return null;
+
+        /*// Producto 3 -> Creamos un objeto Repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
         // Asignamos un número de pedido a través del último número de pedido + 1.
@@ -522,14 +678,43 @@ public class Datos {
         }
 
         // Si el proceso falla o el pedido no se añade correctamente, devolvemos null.
-        return null;
+        return null;*/
     }
 
     // Añadimos un pedido recibiendo la instancia del mismo
     // Producto 3 -> Refactorizando para actuar sobre la BD.
     public Pedido createPedido(@NotNull Pedido pedido) {
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
-        // Creamos el repositorio para la entidad Pedido.
+        // Asignamos un número de pedido a través del último número de pedido + 1.
+        // Obtenemos el último pedido de la BD que es un Optional, con lo que podemos usar el método ifPresentOrElse.
+        service.getLast().ifPresentOrElse(p -> pedido.setNumeroPedido(p.getNumeroPedido() + 1),
+                // Tenemos que crear una expresión lambda vacía para que funcione el método ifPresentOrElse.
+                () -> pedido.setNumeroPedido(1));
+
+        // Nos aseguramos de que enviado sea false:
+        pedido.setEsEnviado(false);
+
+        // Ejecutamos el método para crear el pedido en la BD, si se añade correctamente devolvemos el pedido.
+        // Comprobamos que el pedido no exista en la BD, si no existe lo añadimos.
+        if (service.findOne(String.valueOf(pedido.getNumeroPedido())).isEmpty()) {
+            if (service.save(pedido)) {
+                // Avalamos el contador de pedidos
+                Pedido.avanzarTotalPedidos();
+
+                // Devolvemos el pedido con Id y número de pedido
+                return service.getLast().orElse(null);
+            }
+        }
+
+        // Si ha habido un error, devolvemos un mensaje de error y null
+        System.out.println(MessageFormat.format("El pedido con número {0} ya existe o ha habido un error al crearlo.",
+                pedido.getNumeroPedido()));
+        return null;
+
+
+       /* // Creamos el repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
         // Asignamos un número de pedido a través del último número de pedido + 1.
@@ -560,14 +745,22 @@ public class Datos {
             e.printStackTrace();
         }
 
-        return null;
+        return null;*/
     }
 
     // Devolvemos una lista con todos los elementos de la lista de pedidos, usamos una copia para mantener las funciones lo más puras posibles
     public Listas<Pedido> listPedidos() {
 
         // Producto 3 -> Obtenemos la lista de pedidos a través de la BD.
-        // Creamos un objeto Repositorio para la entidad Pedido.
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
+
+        // Comprobamos que la lista no esté vacía, si hay elementos devolvemos la lista de pedidos, si no, devolvemos
+        // una lista vacía.
+        return !service.isEmpty() ? service.findAll().cloneOf() : new Listas<>();
+
+
+        /*// Creamos un objeto Repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
         // Ejecutamos el método para listar la entidad. El método nos devuelve una Lista, con lo que
@@ -582,33 +775,70 @@ public class Datos {
         }
 
         // Si falla, devolvemos una lista vacía
-        return new Listas<>();
+        return new Listas<>();*/
     }
 
     // Producto 3 --> Creamos un método para buscar un pedido por su ID.
-    public Pedido getPedidoById(Long id) {
-
-        // Creamos un objeto Repositorio para la entidad Pedido.
-        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
+    public Optional<Pedido> getPedidoById(Long id) {
+        // Producto 3 --> Obtenemos el pedido a través de la BD.
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
-        // El método nos devuelve un objeto, con lo que podemos asignarlo directamente a un cliente.
-        try {
-            return repositorio.findById(id);
-        } catch (NullPointerException e) {
-            System.out.println("Error al buscar el pedido por ID.");
-            e.printStackTrace();
-        }
+        // El método nos devuelve un objeto Optional, con lo que podemos asignarlo directamente a un cliente.
+        return !service.isEmpty() ? service.findById(id) : Optional.empty();
 
-        // Si falla, devolvemos null
-        return null;
+
+//        // Creamos un objeto Repositorio para la entidad Pedido.
+//        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
+//
+//        // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
+//        // El método nos devuelve un objeto, con lo que podemos asignarlo directamente a un cliente.
+//        try {
+//            return repositorio.findById(id);
+//        } catch (NullPointerException e) {
+//            System.out.println("Error al buscar el pedido por ID.");
+//            e.printStackTrace();
+//        }
+//
+//        // Si falla, devolvemos null
+//        return null;
     }
 
     // Eliminamos un pedido
     public Pedido deletePedido(@NotNull Pedido pedido) {
 
         // Producto 3 --> Eliminamos el pedido de la BD.
-        // Creamos un objeto Repositorio para la entidad Pedido.
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
+
+        // Por seguridad, actualizamos y comprobamos que el pedido no está enviado.
+        actualizarEstadoPedido(pedido);
+
+        // Guardamos los cambios en la BD
+        service.save(pedido);
+
+        // Comprobamos si el pedido está enviado
+        if (!pedido.pedidoEnviado() && !service.isEmpty()) {
+                // Ejecutamos el método para eliminar el pedido de la BD.
+                if (service.delete(pedido.getId())) {
+
+                    // Decrementamos el contador de pedidos
+                    Pedido.decrementarTotalPedidos();
+
+                    // Devolvemos el pedido eliminado.
+                    return pedido;
+                }
+        }
+        // Si el pedido está enviado, mostramos un mensaje de error.
+        System.out.println("=== ERROR ===");
+        System.out.println("El pedido ya está enviado, no se puede eliminar.");
+        System.out.println("==============");
+
+        // Si ha habido un error, devolvemos null
+        return null;
+
+        /*// Creamos un objeto Repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
         // Por seguridad, actualizamos y comprobamos que el pedido no está enviado.
@@ -641,14 +871,21 @@ public class Datos {
         }
 
         // Si el proceso falla o el pedido no existe o ya está enviado, devolvemos null.
-        return null;
+        return null;*/
     }
 
     // Buscamos un pedido por su número de pedido
-    public Pedido searchPedido(int numeroPedido) {
+    public Optional<Pedido> searchPedido(int numeroPedido) {
 
         // Producto 3 --> Buscamos el pedido en la BD.
-        // Creamos un objeto Repositorio para la entidad Pedido.
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
+
+        // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
+        return !service.isEmpty() ? service.findOne(String.valueOf(numeroPedido)) : Optional.empty();
+
+
+       /* // Creamos un objeto Repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
         // Ejecutamos el método para obtener un objeto de la entidad desde la BD.
@@ -663,16 +900,37 @@ public class Datos {
         }
 
         // Si el proceso falla o el pedido no existe, devolvemos null.
-        return null;
+        return null;*/
     }
 
     // Filtramos los pedidos según el cliente a través de su nif
     public ArrayList<Pedido> filterPedidosByCliente(@NotNull String nif) {
+        // Producto 3 --> Filtramos los pedidos de la BD.
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Creamos una lista temporal donde almacenar los pedidos filtrados.
         ArrayList<Pedido> pedidosTemp = new ArrayList<>();
 
-        // Producto 3 --> Filtramos los pedidos de la BD.
+        // Comprobamos que la lista contenga elementos
+        if (!service.isEmpty()) {
+            try {
+                // Obtenemos la lista de pedidos de la BD y la iteramos, usamos programación funcional
+                // así que explicaremos el método paso a paso.
+                // Primero obtenemos la lista de la base de datos y la convertimos en un stream.
+                service.findAll().getLista().stream()
+                        // Filtramos los pedidos que coincidan con el nif recibido, mapeando cada uno de los
+                        // pedidos a su cliente.
+                        .filter(pedido -> pedido.getCliente().getNif().equals(nif))
+                        // Finalizamos iterando sobre la lista y añadiendo los pedidos a la lista temporal.
+                        .forEach(pedidosTemp::add);
+            } catch (NullPointerException e) {
+                System.out.println("Error al filtrar los pedidos por cliente.");
+                e.printStackTrace();
+            }
+        }
+
+        /*// Producto 3 --> Filtramos los pedidos de la BD.
         // Creamos un objeto Repositorio para la entidad Pedido.
         Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
 
@@ -693,7 +951,7 @@ public class Datos {
                 System.out.println("Error al filtrar los pedidos por cliente.");
                 e.printStackTrace();
             }
-        }
+        }*/
 
         // Devolvemos la lista temporal, si se ha producido un error o no existen pedidos para el nif devolvemos una lista vacía
         return pedidosTemp;
@@ -714,11 +972,11 @@ public class Datos {
         ArrayList<Pedido> pedidosTemp = new ArrayList<>();
 
         // Producto 3 --> Filtramos los pedidos de la BD.
-        // Creamos un objeto Repositorio para la entidad Pedido.
-        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Comprobamos que haya elementos en la lista
-        if (!repositorio.isEmpty()) {
+        if (!service.isEmpty()) {
             try {
                 // Actualizamos el estado de los pedidos
                 actualizarEstadoPedidos();
@@ -734,18 +992,18 @@ public class Datos {
                     // Obtenemos la lista de pedidos de la BD y la iteramos, usamos programación funcional
                     // así que explicaremos el método paso a paso.
                     // Primero obtenemos la lista de la base de datos y la convertimos en un stream.
-                    case "enviado" -> repositorio.findAll().getLista().stream()
+                    case "enviado" -> service.findAll().getLista().stream()
                             // Filtramos los pedidos que estén enviados
                             .filter(Pedido::getEsEnviado)
                             // Ordenamos los pedidos por fecha de envío
                             .sorted(Comparator.comparing(Pedido::getFechaEnvio))
                             // Finalizamos iterando sobre la lista y añadiendo los pedidos a la lista temporal.
                             .forEach(pedidosTemp::add);
-                    case "pendiente" -> repositorio.findAll().getLista().stream()
+                    case "pendiente" -> service.findAll().getLista().stream()
                             .filter(pedido -> !pedido.getEsEnviado())
                             .sorted(Comparator.comparing(Pedido::getFechaEnvio))
                             .forEach(pedidosTemp::add);
-                    default -> pedidosTemp.addAll(repositorio.findAll().getLista());
+                    default -> pedidosTemp.addAll(service.findAll().getLista());
                 }
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Error al filtrar los pedidos.");
@@ -764,11 +1022,11 @@ public class Datos {
         ArrayList<Pedido> pedidosTemp = new ArrayList<>();
 
         // Producto 3 --> Filtramos los pedidos de la BD.
-        // Creamos un objeto Repositorio para la entidad Pedido.
-        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Comprobamos que haya elementos en la lista
-        if (!repositorio.isEmpty()) {
+        if (!service.isEmpty()) {
             try {
                 // Actualizamos el estado de los pedidos
                 actualizarEstadoPedidos();
@@ -776,7 +1034,7 @@ public class Datos {
                 // Obtenemos la lista de pedidos de la BD y la iteramos, usamos programación funcional
                 // así que explicaremos el método paso a paso.
                 // Primero obtenemos la lista de la base de datos y la convertimos en un stream.
-                repositorio.findAll().getLista().stream()
+                service.findAll().getLista().stream()
                     // Filtramos los pedidos que estén enviados y que su fecha de pedido
                     // coincida con la fecha recibida
                     .filter(pedido -> pedido.getEsEnviado() && pedido.getFechaPedido().equals(fecha))
@@ -796,25 +1054,25 @@ public class Datos {
     public ArrayList<Pedido> clearPedidos() {
 
         // Producto3 -> Implementamos el método para ejecutarse en la BD.
+        // Producto4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
+
         // Creamos una lista temporal
         ArrayList<Pedido> pedidosTemp = listPedidos().getLista();
 
         // Creamos un flag de control
         AtomicBoolean flag = new AtomicBoolean(false);
 
-        // Creamos un Repositorio de Pedidos
-        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
-
         // Iteramos por toda la tabla de la BD eliminando los pedidos.
-        if (!repositorio.isEmpty()) {
+        if (!service.isEmpty()) {
             try {
-                listPedidos().forEach(pedido -> flag.set(repositorio.delete(pedido.getId())));
+                listPedidos().forEach(pedido -> flag.set(service.delete(pedido.getId())));
                 if (flag.get()) {
                     // Actualizamos el contador
                     Pedido.resetTotalPedidos();
 
                     // Actualizamos el contador de la BD
-                    repositorio.resetId();
+                    service.resetId();
                 }
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Error al eliminar los pedidos de la BD");
@@ -829,18 +1087,20 @@ public class Datos {
 
     // Actualizamos el estado de los pedidos de la lista
     public int actualizarEstadoPedidos() {
-
-        // Creamos un repositorio para ejecutar acciones sobre la lista de pedidos de la BD.
-        Repositorio<Pedido> repositorio = new PedidoRepositorioImpl();
+        // Producto3 --> Implementamos el método para ejecutarse en la BD.
+        // Producto4 ≥ Usamos los servicios
+        PedidoService service = new PedidoServiceImpl(this.em);
 
         // Declaramos un contador que podamos usar en la función lambda
         AtomicInteger contPedidos = new AtomicInteger();
+        // Inicializamos el contador
+        contPedidos.set(0);
 
         // Obtendremos la lista de pedidos de forma asíncrona en la BD. Por cada pedido
         // obtenido comprobaremos si está enviado y, de ser así, lo actualizaremos en la BD.
 
         // Comprobamos que existan elementos en la lista.
-        if (!repositorio.isEmpty()) {
+        if (!service.isEmpty()) {
             try {
                 // Obtenemos la lista de pedidos de la BD y usamos progración funcional
                 // para filtrarla e iterarla.
@@ -854,7 +1114,7 @@ public class Datos {
                                 pedido.setEsEnviado(true);
 
                                 // Actualizamos el pedido en la BD.
-                                repositorio.save(pedido);
+                                service.save(pedido);
 
                                 // Incrementamos el contador
                                 contPedidos.getAndIncrement();
@@ -916,15 +1176,16 @@ public class Datos {
 
     // Actualizamos las listas.
     public int actualizarContadores() {
-        // Creamos los repositorios para consultar la BD.
-        Repositorio<Articulo> repositorioArticulo = new ArticuloRepositorioImpl();
-        Repositorio<Cliente> repositorioCliente = new ClienteRepositorioImpl();
-        Repositorio<Pedido> repositorioPedido = new PedidoRepositorioImpl();
+        // Producto3 --> Implementamos el método para ejecutarse en la BD.
+        // Producto4 ≥ Usamos los servicios
+        ArticuloService articuloService = new ArticuloServiceImpl(this.em);
+        ClienteService clienteService = new ClienteServiceImpl(this.em);
+        PedidoService pedidoService = new PedidoServiceImpl(this.em);
 
         try {
-            Articulo.setTotalArticulos(repositorioArticulo.count());
-            Cliente.setTotalClientes(repositorioCliente.count());
-            Pedido.setTotalPedidos(repositorioPedido.count());
+            Articulo.setTotalArticulos(articuloService.count());
+            Cliente.setTotalClientes(clienteService.count());
+            Pedido.setTotalPedidos(pedidoService.count());
 
             // Devolvemos 1 si se han actualizado los contadores
             return 1;
@@ -938,27 +1199,31 @@ public class Datos {
     }
 
     public int actualizarCodigos() {
+        // Producto3 --> Implementamos el método para ejecutarse en la BD.
+        // Producto4 ≥ Usamos los servicios
+        ArticuloService articuloService = new ArticuloServiceImpl(this.em);
+        ClienteService clienteService = new ClienteServiceImpl(this.em);
+
         // Usaremos una única variable temporal para almacenar los códigos.
         ArrayList<String> codigosTemp = new ArrayList<>();
-
-        // Creamos los repositorios para consultar la BD.
-        Repositorio<Articulo> repositorioArticulo = new ArticuloRepositorioImpl();
-        Repositorio<Cliente> repositorioCliente = new ClienteRepositorioImpl();
 
         // Obtenemos los codigos de articulos.
         try {
             // Primero obtenemos la lista de todos los artículos de la BD.
-            repositorioArticulo.findAll()
+            articuloService.findAll()
                     // Iteramos por la lista y añadimos los códigos a la lista temporal.
                     .forEach(articulo -> codigosTemp.add(articulo.getCodArticulo()));
 
             // Seteamos la nueva lista de códigos en la clase Articulo.
             Articulo.setCodigos(codigosTemp);
+
+            // Limpiamos la lista temporal.
             codigosTemp.clear();
-            // Repetimos el proceso para los clientes, pero en este caso hemso de filtrar
+
+            // Repetimos el proceso para los clientes, pero en este caso hemos de filtrar
             // los clientes del tipo Premium.
             // Obtenemos la lista de clientes y la convertimos y la mapeamos.
-            repositorioCliente.findAll().getLista().stream()
+            clienteService.findAll().getLista().stream()
                     // Filtramos los clientes del tipo Premium mediante el método instanceof.
                     .filter(cliente -> cliente instanceof ClientePremium)
                     // Iteramos por la lista y añadimos los códigos a la lista temporal.
@@ -966,59 +1231,71 @@ public class Datos {
 
             // Seteamos la nueva lista de códigos en la clase ClientePremium.
             ClientePremium.setCodigos(codigosTemp);
+
+            // Limpiamos la lista temporal.
             codigosTemp.clear();
+
             // Devolvemos una sálida de éxito.
             return 1;
 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error al actualizar los códigos de los artículos y clientes.");
             e.printStackTrace();
-        }
 
-        // Devolvemos una salida de error.
-        return 0;
+            // Devolvemos una salida de error.
+            return 0;
+        }
     }
 
     /* Métodos de comprobación de existencia de artículos y clientes en la BD. */
     // Comprobamos si ya existe un artículo en la BD.
     public boolean checkArticulo(Articulo src) {
-        // Creamos un repositorio para ejecutar acciones sobre la lista de artículos de la BD.
-        Repositorio<Articulo> repositorio = new ArticuloRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        ArticuloService service = new ArticuloServiceImpl(this.em);
 
         assert Objects.requireNonNull(src).getDescripcion() != null;
         // Comprobamos si existe el artículo en la BD.
         try {
-            return repositorio.findAll().getLista().stream()
+            return service.findAll().getLista().stream()
                     .anyMatch(articulo -> articulo.getDescripcion().equals(src.getDescripcion()));
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error al comprobar el artículo en la BD.");
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     // Comprobamos si ya existe un cliente en la BD.
     public boolean checkCliente(Cliente src) {
-        // Creamos un repositorio para ejecutar acciones sobre la lista de clientes de la BD.
-        Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
         assert Objects.requireNonNull(src).getNif() != null;
         // Comprobamos si existe el cliente en la BD.
         try {
-            return repositorio.findAll().getLista().stream()
+            return service.findAll().getLista().stream()
                     .anyMatch(cliente -> cliente.getNif().equals(src.getNif()));
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error al comprobar el cliente en la BD.");
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     // Creamos un proceso para cargar los datos de test en la BD.
     public int loadTestData() {
-        // Creamos el repositorio para ejecutar acciones sobre la BD.
+        // Producto 4 ≥ Usamos los servicios
+        LoadDataService service = new LoadDataServiceImpl(this.em);
+
+        // Por seguridad, volvemos a comprobar si la BD está vacía.
+        if (service.checkData()) {
+            return 0;
+        }
+
+        // Ejecutamos el método para cargar los datos de test.
+        return service.loadData();
+
+        /*// Creamos el repositorio para ejecutar acciones sobre la BD.
         LoadDataRepositorio repositorio = new LoadDataImpl();
 
         // Por seguridad, volvemos a comprobar si la BD está vacía.
@@ -1033,15 +1310,15 @@ public class Datos {
             System.out.println("Error al cargar los datos de test en la BD.");
             e.printStackTrace();
             return -1;
-        }
+        }*/
     }
 
     // Comprobamos de forma independiente si la BD está vacía.
     public boolean checkData() {
-        // Creamos el repositorio para ejecutar acciones sobre la BD.
-        LoadDataRepositorio repositorio = new LoadDataImpl();
+        // Producto 4 ≥ Usamos los servicios
+        LoadDataService service = new LoadDataServiceImpl(this.em);
 
-        // Comprobamos si la BD está vacía.
-        return repositorio.checkData();
+        // Compobamos si la BD está vacía.
+        return service.checkData();
     }
 }

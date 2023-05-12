@@ -13,7 +13,7 @@ import jakarta.persistence.*;
 // Indicamos que se trata de una clase hija de Cliente.
 @PrimaryKeyJoinColumn(name = "cliente_id")
 public class ClienteEstandard extends Cliente {
-    // Producto 4 -> Añadimos los atributos Entity necesarios
+    // Producto 4 ≥ Añadimos los atributos Entity necesarios
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 /**
  * Esta clase implementa la lógica de negocio de un cliente que puede comprar en la tienda.
  * Es una superclase que heredan las clases ClienteEstandard y ClientePremium.
+ * Implementa la interface ICliente y la interface IClienteFactory.
+ * Implementa el patrón de diseño Factory Method.
+ * Manejamos la herencia en el modelo relacional mediante Hibnernate/JPA y el uso de la anotación @Inheritance.
  *
  * @author Cirice
  * @version 1.0
@@ -16,11 +19,13 @@ import jakarta.persistence.*;
 @Table(name = "clientes")
 // Indicamos que esta clase es una superclase de otras clases y que las clases hijas se representan
 // en una tabla independiente solo con sus campos específicos.
+// Esto se conoce como herencia mediante tablas independientes.
+// Nos aseguramos de que en caso de borrar un cliente, se borren también sus hijos.
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Cliente implements Comparable<Cliente>, ICliente, IClienteFactory {
 
     // Atributos de la clase.
-    // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    // Producto 3 ≥ Añadimos el id de nuestro modelo relacional
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_id")

@@ -73,12 +73,12 @@ public class Controlador {
                                    double pvp,
                                    double gastosEnvio,
                                    int tiempoPreparacion) {
-        return datos.createArticulo(descripcion, pvp, gastosEnvio, tiempoPreparacion);
+        return datos.createArticulo(descripcion, pvp, gastosEnvio, tiempoPreparacion).orElse(null);
     }
 
     // Recibimos un artículo y lo añadimos a la lista de artículos.
     public Articulo createArticulo(Articulo articulo) {
-        return datos.createArticulo(articulo);
+        return datos.createArticulo(articulo).orElse(null);
     }
 
     // Como Vista no debe tener acceso a la lógica implementada en Modelo, casteamos el retorno a un ArrayList
@@ -87,11 +87,11 @@ public class Controlador {
     }
 
     // Producto 3 -> Obtenemos un artículo por su id.
-    public Articulo getArticuloById(@NotNull Long id) { return datos.getArticuloById(id); }
+    public Articulo getArticuloById(@NotNull Long id) { return datos.getArticuloById(id).orElse(null); }
 
     // Buscamos un artículo por su código.
     public Articulo searchArticulo(@NotNull String codigo) {
-        return datos.searchArticulo(codigo);
+        return datos.searchArticulo(codigo).orElse(null);
     }
 
     // TODO -> Como extra podemos crear métodos para eliminar y modificar artículos
@@ -117,12 +117,12 @@ public class Controlador {
         // Generamos la dirección
         Direccion direccion = new Direccion(domicilio, poblacion, provincia, cp, pais);
 
-        return datos.createCliente(nombre, direccion, nif, email, tipo);
+        return datos.createCliente(nombre, direccion, nif, email, tipo).orElse(null);
     }
 
     // Recibimos un cliente y lo añadimos a la lista de clientes.
     public Cliente createCliente(@NotNull Cliente cliente) {
-        return datos.createCliente(cliente);
+        return datos.createCliente(cliente).orElse(null);
     }
 
     // Obtenemos una copia de la lista de clientes
@@ -131,7 +131,7 @@ public class Controlador {
     }
 
     // Producto 3 --> Obtenemos un cliente por su id.
-    public Cliente getClienteById(@NotNull Long id) { return datos.getClienteById(id); }
+    public Cliente getClienteById(@NotNull Long id) { return datos.getClienteById(id).orElse(null); }
 
     // Eliminamos un cliente
     public ArrayList<Cliente> filterClientesByType(String tipo) {
@@ -139,9 +139,7 @@ public class Controlador {
     }
 
     // Buscamos un cliente por su DNI
-    public Cliente searchCliente(@NotNull String nif) {
-        return datos.searchCliente(nif);
-    }
+    public Cliente searchCliente(@NotNull String nif) { return datos.searchCliente(nif).orElse(null); }
 
     // Limpiamos la lista de clientes
     public ArrayList<Cliente> clearClientes() {
@@ -150,7 +148,7 @@ public class Controlador {
 
     /* Pedidos */
     // Creamos un pedido nuevo y lo añadimos a la lista de pedidos.
-    public Pedido createPedido(@NotNull Cliente cliente, @NotNull Articulo articulo, @NotNull int cantidad) {
+    public Pedido createPedido(@NotNull Cliente cliente, @NotNull Articulo articulo, int cantidad) {
         return datos.createPedido(cliente, articulo, cantidad);
     }
 
@@ -165,7 +163,7 @@ public class Controlador {
     }
 
     // Producto 3 --> Obtenemos un pedido por su id.
-    public Pedido getPedidoById(@NotNull Long id) { return datos.getPedidoById(id); }
+    public Pedido getPedidoById(@NotNull Long id) { return datos.getPedidoById(id).orElse(null); }
 
     // Eliminamos un pedido
     public Pedido deletePedido(@NotNull Pedido pedido) {
@@ -174,7 +172,7 @@ public class Controlador {
 
     // Buscamos un pedido por su número de pedido
     public Pedido searchPedido(int numeroPedido) {
-        return datos.searchPedido(numeroPedido);
+        return datos.searchPedido(numeroPedido).orElse(null);
     }
 
     // Buscamos un pedido por su cliente recibiendo el NIF del cliente

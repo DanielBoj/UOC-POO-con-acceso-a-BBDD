@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ClientePremium extends Cliente implements HashCode {
 
     // Atributos de la clase.
-    // Producto 4 -> Añadimos los atributos Entity necesarios
+    // Producto 4 ≥ Añadimos los atributos Entity necesarios
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_id")

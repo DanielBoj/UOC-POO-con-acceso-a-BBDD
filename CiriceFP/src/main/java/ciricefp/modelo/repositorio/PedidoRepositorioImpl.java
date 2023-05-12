@@ -23,7 +23,6 @@ import java.text.MessageFormat;
  * @since 04-2023
  */
 public class PedidoRepositorioImpl implements Repositorio<Pedido> {
-
     // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
     // Creamos el atributo para nuestro Entity Manager.
     private final EntityManager em;
