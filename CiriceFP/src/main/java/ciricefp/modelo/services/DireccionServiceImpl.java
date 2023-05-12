@@ -79,7 +79,7 @@ public class DireccionServiceImpl implements DireccionService {
         } catch (Exception e) {
             System.out.println(MessageFormat.format("Error al guardar la dirección {0}", direccion.toString()));
             // Realizamos el rollback
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
 
@@ -90,7 +90,7 @@ public class DireccionServiceImpl implements DireccionService {
 
     @Override
     public boolean delete(Long id) {
-        // Comprobamos que la dirección no aparezca en ningún cliente.
+        // TODO Comprobamos que la dirección no aparezca en ningún cliente.
 
         // Llamamos al método del DAO, en este caso queremos eliminar una dirección por su Id.
         // Para ello usaremos el método remove() de la clase EntityManager.
@@ -104,15 +104,13 @@ public class DireccionServiceImpl implements DireccionService {
             // Confirmamos la transacción.
             em.getTransaction().commit();
 
-            // Si todo ha ido bien, devolvemos true.
+            // Si la operación ha ido bien, devolvemos true.
             return true;
         } catch (Exception e) {
             System.out.println(MessageFormat.format("No es posible eliminar el artículo con id {0}", id));
 
             // Realizamos un rollback en caso de error.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
 
@@ -133,8 +131,10 @@ public class DireccionServiceImpl implements DireccionService {
         } catch (Exception e) {
             System.out.println("No existen direcciones en la Base de Datos.");
             e.printStackTrace();
+
+            // Si la operación ha producido un error, retornamos el valor por defecto.
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     @Override
@@ -152,7 +152,6 @@ public class DireccionServiceImpl implements DireccionService {
     public boolean resetId() {
         // LLamamos al método del repositorio, es un método de escritura así que
         // necesitamos una transacción.
-        // Creamos la consulta, en este caso queremos resetear el contador de la tabla.
         try {
             // Como es una acción de escritura, iniciamos una transacción.
             em.getTransaction().begin();
@@ -169,15 +168,12 @@ public class DireccionServiceImpl implements DireccionService {
             System.out.println("No es posible resetear el contador de la tabla.");
 
             // Realizamos un rollback en caso de error.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
+
+            // Si la operación ha producido un error, retornamos false.
             return false;
-        } finally {
-            // Cerramos la conexión
-            em.close();
         }
     }
 }

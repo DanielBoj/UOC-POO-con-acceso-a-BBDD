@@ -23,35 +23,54 @@ import java.util.Objects;
  * @since 04-2023
  */
 public class ClienteRepositorioImpl implements Repositorio<Cliente> {
-
-    // Añadimos un atributo para capturar las variables de entorno del archivo .env.
-    private static final Dotenv dotenv = Dotenv.load();
-
-    /*// Comenzamos por usar un método para crear la conexión a la BBDD.
-    private Connection getConnection(String tipo) {
-        return Conexion.getInstance(tipo);
-    }*/
-
     // Producto 4 -> Refactorizamos la clase para usar Entity Manager.
-    private EntityManager getEntityManager() {
-        return ConexionJpa.getEntityManagerFactory();
+    // Creamos el atributo para nuestro Entity Manager.
+    private final EntityManager em;
+
+    // Seteamos nuestro Entity Manager a través del constructor.
+    public ClienteRepositorioImpl(EntityManager em) {
+        this.em = em;
     }
+
+    /* Producto 4 ≥ Refactoriazamos la clase para trabajar con Hibernate */
+
+    /* Simplificamos al máximo la implementación de nuestro contrato con la interfaz ya que trasladaremos
+     * toda la lógica a un servicio, para cumplir con las buenas prácticas. */
 
     @Override
     public Listas<Cliente> findAll() {
         // Creamos la lista de Clientes que recibiremos de la BD.
         Listas<Cliente> clientes = new Listas<>();
 
-        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
-        // Creamos la conexión
-        EntityManager em = getEntityManager();
+        // Reseteamos el número de clientes.
+        Cliente.resetTotalClientes();
 
-        // Creamos la sentencia SQL para la consulta.
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Creamos la sentencia para la consulta.
         // Como usamos listas personalizadas, no podemos usar getResultList() y debemos usar getResultStream().
+        em.createQuery("select c from Cliente c", Cliente.class).getResultStream().forEach(
+                cliente -> {
+                    // Añadimos el cliente a la lista.
+                    clientes.add(cliente);
+
+                    // Avanzamos el contador de clientes.
+                    Cliente.advanceTotalClientes();
+                }
+        );
+
+        // Devolvemos la lista de clientes.
+        return clientes;
+        /*
         try {
             em.createQuery("call get_clientes()").getResultStream().forEach(
-                    // Pasamos el resultado a la lista de clientes.
-                    clientes::add
+                    cliente -> {
+                        // Añadimos el cliente a la lista.
+                        clientes.add(cliente);
+
+                        // Avanzamos el contador de clientes.
+                        Cliente.advanceTotalClientes();
+                    }
+
             );
         } catch (Exception e) {
             System.out.println("No es posible obtener la lista de clientes.");
@@ -59,7 +78,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         } finally {
             // Cerramos la conexión.
             em.close();
-        }
+        }*/
 
         /*// Creamos la sentencia SQL para la consulta.
         String sql = "CALL get_clientes()";
@@ -87,15 +106,18 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         } catch (SQLException e) {
             System.out.println("No es posible obtener la lista de artículos.");
             e.printStackTrace();
-        }*/
+        }// Devolvemos la lista de artículos.
+        return clientes;*/
 
-        // Devolvemos la lista de artículos.
-        return clientes;
+
     }
 
     @Override
     public Cliente findById(Long id) {
-        // Creamos el objeto que recibirá el objeto de la BD.
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        return em.find(Cliente.class, id);
+
+        /*// Creamos el objeto que recibirá el objeto de la BD.
         Cliente cliente = null;
 
         // Creamos la sentencia SQL para la consulta.
@@ -124,12 +146,19 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             e.printStackTrace();
         }
 
-        return cliente;
+        return cliente;*/
     }
 
     @Override
     public Cliente findOne(String key) {
-        // Creamos el objeto que recibirá el objeto de la BD.
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Como find solo busca por Id, debemos crear una consulta HQL/JPQL.
+        return em.createQuery("select c from Cliente c where c.nif = :key", Cliente.class)
+                .setParameter("key", key)
+                .getSingleResult();
+
+
+        /*// Creamos el objeto que recibirá el objeto de la BD.
         Cliente cliente = null;
 
         // Creamos la sentencia SQL para la consulta.
@@ -158,7 +187,7 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             e.printStackTrace();
         }
 
-        return cliente;
+        return cliente;*/
     }
 
     /* Al estar guardando un modelo de objeto complejo, realizaremos una inserción por pasos.
@@ -166,9 +195,27 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
     * Después, insertaremos los datos de la tabla hija de las entidades Cliente.
     * A la vez, tenemos que tener en cuenta el manejo de la Dirección, que también es una entidad.
     */
+    /* Producto 4 ≥ Ahora Hibernate debería manejar la inserción de los datos de la tabla padre.
+     */
     @Override
-    public boolean save(Cliente cliente) {
-        // Deberemos determinar si tenemos que ejecutar una acción Create o un Update.
+    public void save(Cliente cliente) {
+        // Producto 4 -> Refactorizamos el método para usar Entity Manager.
+        // Comenzamos por determinar si es un CREATE o un UPDATE.
+        // Para ello, comprobamos si el id es null o no.
+        if (cliente.getId() != null && cliente.getId() > 0) {
+            // Si el id es mayor que 0, significa que ya existe en la BD.
+            // Por lo tanto, ejecutaremos un Update.
+            em.merge(cliente);
+        } else {
+            // Si el id es null o 0, significa que no existe en la BD.
+            // Por lo tanto, ejecutaremos un Create.
+            em.persist(cliente);
+        }
+
+
+
+
+        /*// Deberemos determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
         String sql = null;
@@ -335,12 +382,19 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
         }
 
         // Devolvemos el resultado de la operación.
-        return isSaved;
+        return isSaved;*/
     }
 
+    /* Producto 4 -> Al usar Hibernate, se realizará la eliminación de forma automática.
+    * mediante los decoradores que hemos añádido en las clases implicadas.
+    */
     @Override
-    public boolean delete(Long id) {
-        // La eliminación constará de 2 pasos, primero eliminaremos la dirección y luego el cliente.
+    public void delete(Long id) {
+        // Producto 4 ≥ Implementamos el método mediante Entity Manager.
+        em.remove(em.find(Cliente.class, id));
+
+
+        /*// La eliminación constará de 2 pasos, primero eliminaremos la dirección y luego el cliente.
         // Capturamos el ID de la dirección del objeto Cliente para poder eliminarlo.
 
         // Si el cliente aparece en algún pedido, no se podrá eliminar.
@@ -388,13 +442,20 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             System.out.println("No es posible eliminar el artículo con id " + id);
             e.printStackTrace();
         }
-        return false;
+        return false;*/
     }
 
     @Override
     public int count() {
+        // Producto 4 ≥ Implementamos el método mediante Entity Manager.
+        // Creamos la consulta usando lenguaje HQL/JPQL. Si no hay ningún artículo nos devolverá 0.
+        return em.createQuery("select count(c) from Cliente c", Long.class)
+                // retornamos un único valor.
+                .getSingleResult()
+                // convertimos el resultado a int.
+                .intValue();
 
-        // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
+        /*// Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
         String sql = "SELECT COUNT(_id) AS total FROM clientes";
 
         // Creamos la variable que recibirá el resultado de la consulta.
@@ -414,13 +475,22 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             e.printStackTrace();
         }
 
-        return total;
+        return total;*/
     }
 
     @Override
     public Cliente getLast() {
+        // Producto 4 ≥ Implementamos el método mediante Entity Manager.
+        // Creamos la consulta usando lenguaje HQL/JPQL.
+        // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
+        // ordenada de forma descendente por el id.
+        return em.createQuery("select c from Cliente c order by p=c._id desc", Cliente.class)
+                // retornamos un único valor.
+                .setMaxResults(1)
+                // obtenemos el resultado.
+                .getSingleResult();
 
-        // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
+        /*// Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
         String sql = "SELECT * FROM clientes c " +
                 "LEFT JOIN clientes_estandard ce ON (ce.cliente_id = c._id) " +
                 "LEFT JOIN clientes_premium cp ON (cp.cliente_id = c._id)" +
@@ -438,18 +508,18 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             System.out.println("No es posible obtener el último registro de la tabla.");
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return count() == 0;
+        return null;*/
     }
 
     @Override
     public boolean resetId() {
+        // Producto 4 ≥ Implementamos el método mediante Entity Manager.
+        // Creamos la consulta usando el método de Hibernate JPA para llamar a un procedimiento almacenado.
+        // Si el procedimiento se ejecuta correctamente, nos devolverá true.
+        return em.createStoredProcedureQuery("reset_id_clientes")
+                .execute();
 
-        // Creamos la sentencia para realizar la consulta.
+        /*// Creamos la sentencia para realizar la consulta.
         String sql = "call reset_id_clientes()";
 
         // Colocamos los recursos como argumentos del try-with-resources para que se cierren automáticamente.
@@ -463,10 +533,13 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             e.printStackTrace();
         }
 
-        return false;
+        return false;*/
     }
 
-    // Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
+    /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas porque lo
+    realiza automáticamente el framework. */
+
+    /*// Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
     // Recibe el ResultSet como parámetro.
     @NotNull
     private static Cliente getCliente(ResultSet res) throws SQLException {
@@ -520,5 +593,5 @@ public class ClienteRepositorioImpl implements Repositorio<Cliente> {
             stmt.setString(4, cliente.getNif());
             stmt.setString(5, cliente.getEmail());
 
-    }
+    }*/
 }

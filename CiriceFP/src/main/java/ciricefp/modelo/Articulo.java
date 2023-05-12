@@ -31,8 +31,11 @@ public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
     private double gastosEnvio;
     @Column(name = "tiempo_preparacion")
     private int tiempoPreparacion; // En días
+    // Informamos de que el atributo no debe persistir en el modelo relacional.
+    @Transient
     private static int totalArticulos = 0;
-
+    // Informamos de que el atributo no debe persistir en el modelo relacional.
+    @Transient
     private static ArrayList<String> codigos;
 
     // Constructor implementando la creación automática del código único de artículo.

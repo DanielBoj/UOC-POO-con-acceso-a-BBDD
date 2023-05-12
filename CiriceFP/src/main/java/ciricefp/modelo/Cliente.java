@@ -14,7 +14,9 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "clientes")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+// Indicamos que esta clase es una superclase de otras clases y que las clases hijas se representan
+// en una tabla independiente solo con sus campos específicos.
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Cliente implements Comparable<Cliente>, ICliente, IClienteFactory {
 
     // Atributos de la clase.
@@ -24,11 +26,19 @@ public abstract class Cliente implements Comparable<Cliente>, ICliente, ICliente
     @Column(name = "_id")
     private Long id;
     private String nombre;
-    // Un cliente tiene una dirección, una dirección podría tener varios clientes.
-    @ManyToOne(cascade = CascadeType.ALL)
+    // Un cliente tiene una dirección, una dirección está asociada a un cliente.
+    // Especificamos qué acciones se llevan a cabo en caso de borrar un cliente o una dirección.
+    // También especificamos que se cargue la dirección cuando se cargue el cliente.
+    // Por último, nos aseguramos de que se borre la dirección si se borra el cliente.
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    // Nos aseguramos de que la columna que hace referencia a la clave foránea se llame "direccion_id"
+    // Si se borra la dirección, el cliente no se borra.
+    @JoinColumn(name = "direccion_id", nullable = true)
     private Direccion domicilio;
     private String nif;
     private String email;
+    // Informamos de que el atributo no debe persistir en el modelo relacional.
+    @Transient
     private static Integer totalClientes = 0;
 
     // Constructor sin parámetros por si se necesitase en la implementación de algún método

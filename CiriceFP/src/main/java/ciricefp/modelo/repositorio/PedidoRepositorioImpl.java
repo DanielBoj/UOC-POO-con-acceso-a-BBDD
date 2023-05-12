@@ -182,7 +182,7 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
 
     @Override
     public void save(Pedido pedido) {
-        // Producto 4 -> Manejamos la petición con Entity Manager.
+        // Producto 4 ≥ Manejamos la petición con Entity Manager.
         // Comenzaremos por determinar si tenemos que ejecutar una acción Create o un Update.
         // Para ello, comprobaremos si el artículo tiene un id asignado que funcionará como un flag.
         // Creamos la sentencia SQL para la consulta. Recordamos que el id lo genera automáticamente la BD.
@@ -263,7 +263,10 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
     public void delete(Long id) {
         // Producto 4 ≥ Manejamos la petición con Entity Manager.
         // Buscamos el pedido en la misma llamada a la función ya que hemos de pasar un objeto al método remove.
-        em.remove(em.find(Pedido.class, id));
+        em.createStoredProcedureQuery("delete_pedido")
+                .registerStoredProcedureParameter("result", Long.class, ParameterMode.OUT)
+                .setParameter("id", id)
+                .execute();
 
 
         /*// Creamos la sentencia SQL para eliminar el pedido.

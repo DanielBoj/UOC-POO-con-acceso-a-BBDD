@@ -25,15 +25,21 @@ public class Pedido implements Comparable<Pedido>, IPedido {
     private int numeroPedido;
     // Un pedido solo puede tener un cliente, pero un cliente puede tener varios pedidos.
     @ManyToOne
+    // Nos aseguramos de la correcta ref de columna
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
     // Un pedido solo puede tener un artículo, pero un artículo puede estar en muchos pedidos.
     @ManyToOne
+    // Nos aseguramos de la correcta ref de columna
+    @JoinColumn(name = "articulo_id")
     private Articulo articulo;
     private int unidades;
     @Column(name = "fecha_pedido")
     private LocalDate fechaPedido;
     @Column(name = "es_enviado")
     private boolean esEnviado;
+    // Informamos de que el atributo no debe persistir en el modelo relacional.
+    @Transient
     private static int totalPedidos = 0;
 
     // Constructor sin argumentos por defecto

@@ -8,7 +8,9 @@ import ciricefp.modelo.repositorio.*;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataImpl;
 import ciricefp.modelo.repositorio.testdataloader.LoadDataRepositorio;
 import ciricefp.modelo.services.ArticuloServiceImpl;
+import ciricefp.modelo.services.ClienteServiceImpl;
 import ciricefp.modelo.services.interfaces.ArticuloService;
+import ciricefp.modelo.services.interfaces.ClienteService;
 import ciricefp.modelo.utils.Conexion;
 import ciricefp.modelo.utils.ConexionJpa;
 import jakarta.persistence.EntityManager;
@@ -205,11 +207,8 @@ public class Datos {
 
     // Añadimos un cliente generando la instancia en el método
     public Cliente createCliente(String nombre, Direccion domicilio, String nif, String email, String tipo) {
-
-        // Producto 3 -> Manejamos la creación de un cliente a través de la BD.
-
-        // Creamos un objeto Repositorio para la entidad Cliente.
-        Repositorio<Cliente> repositorio = new ClienteRepositorioImpl();
+        // Producto 4 ≥ Usamos los servicios
+        ClienteService service = new ClienteServiceImpl(this.em);
 
         // Añadimos el cliente a la BD, si se añade correctamente, devolvemos el Cliente.
         // Aplicamos la lógica de negocio para crear el cliente, no pueden haber dos clientes con el mismo
@@ -219,17 +218,16 @@ public class Datos {
             Cliente cliente = (Cliente) IClienteFactory.createCliente(nombre, domicilio, nif, email, tipo);
 
             // Comprobamos que el cliente no exista
-
             if (checkCliente(cliente)) {
                 System.out.println(MessageFormat.format("El cliente {0} ya existe", cliente.getNombre()));
                 return null;
             }
 
-            if (repositorio.save(cliente)) {
+            if (service.save(cliente)) {
                 // Avanzamos el contador de clientes
                 Cliente.advanceTotalClientes();
                 // Devolvemos el cliente
-                return repositorio.getLast();
+                return service.getLast();
             }
         } catch (NullPointerException e) {
             System.out.println("Error al crear el cliente");

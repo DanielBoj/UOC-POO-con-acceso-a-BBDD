@@ -1,13 +1,7 @@
 package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.HashCode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 
@@ -19,6 +13,8 @@ import java.util.ArrayList;
  */
 @Entity
 @Table(name = "clientes_premium")
+// Indicamos que se trata de una clase hija de Cliente.
+@PrimaryKeyJoinColumn(name = "cliente_id")
 public class ClientePremium extends Cliente implements HashCode {
 
     // Atributos de la clase.
@@ -27,14 +23,15 @@ public class ClientePremium extends Cliente implements HashCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_id")
     private Long id;
-    @Column(name = "cliente_id")
-    @OneToOne
-    private Long clienteId;
+    /*@OneToOne
+    @JoinColumn(name = "cliente_id")
+    private Long clienteId;*/
     private double cuota;
     private double descuento;
     @Column(name = "cod_socio")
     private String codSocio;
-
+    // Indicamos de que este atributo no debe persistir en nuestro modelo relacional.
+    @Transient
     private static ArrayList<String> codigos;
 
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.

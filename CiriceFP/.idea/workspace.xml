@@ -5,17 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="Update Commit. version: 1.0. Cambios: Finalizada refafactorización a Hibernate de las clases sin asociaciones.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ClienteServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/PedidoServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/interfaces/ClientesService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/interfaces/PedidoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Articulo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Cliente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClienteEstandard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClienteEstandard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/ClientePremium.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Pedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ArticuloRepositorioImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/DireccionRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/ClienteRepositorioImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ArticuloServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ArticuloServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ClienteServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/ClienteServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/DireccionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/DireccionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/PedidoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/PedidoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/interfaces/ClientesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/services/interfaces/ClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/batch.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/batch.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/script_olinestore_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/script_olinestore_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

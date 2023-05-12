@@ -1,8 +1,10 @@
 package ciricefp.modelo.services;
 
 import ciricefp.modelo.Articulo;
+import ciricefp.modelo.Pedido;
 import ciricefp.modelo.listas.Listas;
 import ciricefp.modelo.repositorio.ArticuloRepositorioImpl;
+import ciricefp.modelo.repositorio.PedidoRepositorioImpl;
 import ciricefp.modelo.repositorio.Repositorio;
 import ciricefp.modelo.services.interfaces.ArticuloService;
 import jakarta.persistence.EntityManager;
@@ -59,7 +61,6 @@ public class ArticuloServiceImpl implements ArticuloService {
         // Los métodos GET no necesitan transacción, pero en este caso, hay que manejar el retorno opcional.
         // Manejamos la excepción directamente con Optional.
         return Optional.ofNullable(repositorio.findOne(key));
-
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ArticuloServiceImpl implements ArticuloService {
         } catch (Exception e) {
             System.out.println(MessageFormat.format("Error al guardar el artículo {0}", articulo.getDescripcion()));
             // Realizamos el rollback
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
 
@@ -92,7 +93,21 @@ public class ArticuloServiceImpl implements ArticuloService {
     @Override
     public boolean delete(Long id) {
         // Si el artículo aparece en algún pedido, no podrá borrarse.
-        // TODO: Buscar el pedido en el repositorio de pedidos
+        // TODO: Comprobar que el código funcione bien.
+        // Creamos un repositorio para buscar los pedidos.
+        Repositorio<Pedido> repoPedidos = new PedidoRepositorioImpl(em);
+
+        // Comprobamos si el artículo aparece en algún pedido: La función podría escribirse en una
+        // única línea, pero la expandimos para explicarla.
+        // Obtenemos la lista de pedidos.
+        if (repoPedidos.findAll().getLista()
+                // La convertimos en un stream.
+                .stream()
+                // Comprobamos si el artículo aparece en algún pedido a través de su Id.
+                .anyMatch(p -> p.getArticulo().getId().equals(id))) {
+            System.out.println(MessageFormat.format("No es posible eliminar el artículo con id {0} porque aparece en algún pedido.", id));
+            return false;
+        }
 
         // Llamamos al método del DAO, en este caso queremos eliminar un artículo por su Id.
         // Para ello usaremos el método remove() de la clase EntityManager.
@@ -109,15 +124,13 @@ public class ArticuloServiceImpl implements ArticuloService {
             // Confirmamos la transacción.
             em.getTransaction().commit();
 
-            // Si todo ha ido bien, devolvemos true.
+            // Si la operación ha ido bien, devolvemos true.
             return true;
         } catch (Exception e) {
             System.out.println(MessageFormat.format("No es posible eliminar el artículo con id {0}", id));
 
             // Realizamos un rollback en caso de error.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
 
@@ -138,8 +151,10 @@ public class ArticuloServiceImpl implements ArticuloService {
         } catch (Exception e) {
             System.out.println("No existen artículos en la Base de Datos.");
             e.printStackTrace();
+
+            // Si la operación ha producido un error, retornamos el valor por defecto.
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     @Override
@@ -157,12 +172,11 @@ public class ArticuloServiceImpl implements ArticuloService {
     public boolean resetId() {
         // LLamamos al método del repositorio, es un método de escritura así que
         // necesitamos una transacción.
-        // Creamos la consulta, en este caso queremos resetear el contador de la tabla.
         try {
             // Como es una acción de escritura, iniciamos una transacción.
             em.getTransaction().begin();
 
-            // Ejecutamos el procedimiento y aseginamos el resultado a un flag.
+            // Ejecutamos el procedimiento y asignamos el resultado a un flag.
             boolean res = repositorio.resetId();
 
             // Confirmamos la transacción.
@@ -174,15 +188,10 @@ public class ArticuloServiceImpl implements ArticuloService {
             System.out.println("No es posible resetear el contador de la tabla.");
 
             // Realizamos un rollback en caso de error.
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
 
             e.printStackTrace();
             return false;
-        } finally {
-            // Cerramos la conexión
-            em.close();
         }
     }
 }

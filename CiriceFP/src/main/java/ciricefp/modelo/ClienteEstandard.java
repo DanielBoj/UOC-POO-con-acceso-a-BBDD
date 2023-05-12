@@ -10,14 +10,16 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "clientes_estandard")
+// Indicamos que se trata de una clase hija de Cliente.
+@PrimaryKeyJoinColumn(name = "cliente_id")
 public class ClienteEstandard extends Cliente {
     // Producto 4 -> Añadimos los atributos Entity necesarios
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "cliente_id")
-    @OneToOne
-    private Long clienteId;
+    /*@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    @JoinColumn(name = "cliente_id")
+    private Long clienteId;*/
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.
     public ClienteEstandard(String nombre, Direccion domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);

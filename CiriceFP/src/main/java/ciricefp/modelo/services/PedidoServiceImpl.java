@@ -7,6 +7,7 @@ import ciricefp.modelo.repositorio.Repositorio;
 import ciricefp.modelo.services.interfaces.PedidoService;
 import jakarta.persistence.EntityManager;
 
+import java.text.MessageFormat;
 import java.util.Optional;
 
 /**
@@ -36,46 +37,139 @@ public class PedidoServiceImpl implements PedidoService {
     /* Implementamos los métodos de la interface de servicios. */
     @Override
     public Listas<Pedido> findAll() {
-        return null;
+        // Listar no requiere transacción
+        try {
+            return repositorio.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Listas<>();
+        }
     }
 
     @Override
     public Optional<Pedido> findById(Long id) {
-        return Optional.empty();
+        // findById no requiere transacción porque es un método GET.
+        // Manejamos la excepción con Optional.
+        return Optional.ofNullable(repositorio.findById(id));
     }
 
     @Override
     public Optional<Pedido> findOne(String key) {
-        return Optional.empty();
+        // Los métodos GET no necesitan transacción, pero en este caso, hay que manejar el retorno opcional.
+        // Manejamos la excepción directamente con Optional.
+        return Optional.ofNullable(repositorio.findOne(key));
     }
 
     @Override
     public boolean save(Pedido articulo) {
-        return false;
+        // Los métodos de escritura POST, PUT y DELETE requieren transacción.
+        // Manejamos la excepción con Optional.
+        try {
+            // Iniciamos la transacción
+            em.getTransaction().begin();
+
+            // Guardamos el articulo
+            repositorio.save(articulo);
+
+            // Hacemos commit
+            em.getTransaction().commit();
+
+            // Devolvemos true
+            return true;
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("Error al guardar el pedido {0}", articulo.getNumeroPedido()));
+
+            // Hacemos rollback
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+
+            e.printStackTrace();
+
+            // Devolvemos false
+            return false;
+        }
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        // Las acciones de escritura usan una transacción.
+        try {
+            // Iniciamos la transacción
+            em.getTransaction().begin();
+
+            // Eliminamos el pedido
+            repositorio.delete(id);
+
+            // Hacemos commit
+            em.getTransaction().commit();
+
+            // Como no ha habido errores, devolvemos true.
+            return true;
+        } catch (Exception e) {
+            System.out.println(MessageFormat.format("Error al eliminar el pedido con id {0}", id));
+
+            // Hacemos rollback
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+
+            e.printStackTrace();
+
+            // Como ha habido un error, devolvemos false.
+            return false;
+        }
     }
 
     @Override
     public int count() {
-        return 0;
+        // Como es un método GET, no requieren transacción.
+        // Creamos un valor de retorno por defecto por si sucede algún error.
+        int defaultValue = 0;
+
+        try {
+            // Llamamos al método del repositorio, es un método de lectura así que no necesitamos transacción.
+            return repositorio.count();
+        } catch (Exception e) {
+            System.out.println("No existen pedidos en la Base de Datos.");
+            e.printStackTrace();
+
+            // Si ha habido algún error, devolvemos el valor por defecto.
+            return defaultValue;
+        }
     }
 
     @Override
     public Optional<Pedido> getLast() {
-        return Optional.empty();
+        // Como es un método GET, no requieren transacción.
+        // Manejamos las excepciones mediante Optional.
+        return Optional.ofNullable(repositorio.getLast());
     }
 
+    // Podemos llamar directamente al método.
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
+    public boolean isEmpty() { return count() == 0; }
 
     @Override
     public boolean resetId() {
-        return false;
+        // LLamamos al método del repositorio, es un método de escritura así que
+        // necesitamos una transacción.
+        try {
+            // Como es una acción de escritura, iniciamos una transacción.
+            em.getTransaction().begin();
+
+            // Ejecutamos el procedimiento y asignamos el resultado a un flag.
+            boolean res = repositorio.resetId();
+
+            // Confirmamos la transacción.
+            em.getTransaction().commit();
+
+            // Devolvemos true.
+            return res;
+        } catch (Exception e) {
+            System.out.println("No es posible resetear el contador de la tabla.");
+
+            // Realizamos un rollback en caso de error.
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+
+            e.printStackTrace();
+            return false;
+        }
     }
 }

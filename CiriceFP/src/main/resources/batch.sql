@@ -16,15 +16,18 @@ create procedure add_datos_test (out p_res int)
             insert into direcciones
                 (direccion, ciudad, provincia, codigo_postal, pais)
             values
-                ('Calle 1', 'Madrid', 'Madrid', '28001', 'España');
+                ('Calle 1', 'Madrid', 'Madrid', '28001', 'España'),
+                ('Calle 2', 'Madrid', 'Madrid', '28001', 'España'),
+                ('Calle 3', 'Madrid', 'Madrid', '28001', 'España')
+                ;
 
             -- Insertamos 3 clientes de prueba
             insert into clientes
                 (nombre, direccion_id, nif, email)
             values
                 ('Cirice Helada', 1, '12345678A', 'cirice@algo.com'),
-                ('Socrates Helada', 1, '12345678B', 'socartes@algo.com'),
-                ('Platon Helada', 1, '12345678C', 'platon@algo.com');
+                ('Socrates Helada', 2, '12345678B', 'socartes@algo.com'),
+                ('Platon Helada', 3, '12345678C', 'platon@algo.com');
 
             -- Los 2 primeros clientes serán estandard
             insert into clientes_estandard

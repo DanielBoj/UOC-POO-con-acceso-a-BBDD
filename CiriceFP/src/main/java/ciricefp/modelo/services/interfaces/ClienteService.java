@@ -13,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 05-2023
  */
-public interface ClientesService {
+public interface ClienteService {
     // Los métodos de lectura de todos los objetos de la entidad devolverán una Lista.
     Listas<Cliente> findAll();
 
@@ -28,7 +28,7 @@ public interface ClientesService {
     // Manejamos la creación y la actualización de un objeto de la entidad como un método único.
     // Si el objeto no existe, se creará, si existe, se actualizará.
     // Los métodos por separado serían create() y update().
-    boolean save(Cliente articulo);
+    boolean save(Cliente cliente);
 
     // Borrar un objeto de la entidad identificado por su id.
     boolean delete(Long id);
