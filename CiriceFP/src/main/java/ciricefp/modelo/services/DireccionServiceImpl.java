@@ -90,8 +90,6 @@ public class DireccionServiceImpl implements DireccionService {
 
     @Override
     public boolean delete(Long id) {
-        // TODO Comprobamos que la dirección no aparezca en ningún cliente.
-
         // Llamamos al método del DAO, en este caso queremos eliminar una dirección por su Id.
         // Para ello usaremos el método remove() de la clase EntityManager.
         try {

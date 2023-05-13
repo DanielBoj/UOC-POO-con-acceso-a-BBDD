@@ -3,25 +3,6 @@
 <!--    Definimos el nombre de la unidad de persistencia y el tipo de transacciones,
  lo dejamos en Local porque no estamos usando ningún servidor de aplicaciones -->
     <persistence-unit name="onlinestoreJPA" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-<!--        Declaramos las distintas clases de nuestro modelo como entidades -->
-        <class>ciricefp.modelo.Articulo</class>
-        <class>ciricefp.modelo.Cliente</class>
-        <class>ciricefp.modelo.ClienteEstandard</class>
-        <class>ciricefp.modelo.ClientePremium</class>
-        <class>ciricefp.modelo.Direccion</class>
-        <class>ciricefp.modelo.Pedido</class>
-<!--        Configuramos el Driver de conexión a SQL -->
-        <properties>
-<!--            Configuramos los valores de conexión a la BD -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/onlinestore_db?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Madrid" />
-            <property name="jakarta.persistence.jdbc.user" value="root" />
-            <property name="jakarta.persistence.jdbc.password" value="batty" />
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-<!--            Configuramos el dialecto de SQL de forma explícita -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
-<!--            Para poder visualizar las consultas nativas por terminal cuando sea necesario -->
-            <property name="hibernate.show_sql" value="true" />
-        </properties>
+<!--        Configuramos las opciones de forma programática en el util -->
     </persistence-unit>
 </persistence>

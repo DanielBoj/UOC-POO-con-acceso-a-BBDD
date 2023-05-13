@@ -60,7 +60,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
     @Override
     public Articulo findOne(String key) {
         // Creamos la consulta con los métodos de Hibernate JPA.
-        return em.createQuery("select a from Articulo a where a.cod_articulo = :codigo", Articulo.class)
+        return em.createQuery("select a from Articulo a where a.codArticulo = :codigo", Articulo.class)
                 // Asignamos el parámetro a la consulta.
                 .setParameter("codigo", key)
                 // Limitamos el resultado a un solo objeto.
@@ -118,7 +118,7 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         // Creamos la consulta usando lenguaje HQL/JPQL.
         // Obtenemos el último artículo de la BD recibiendo el primer resultado de la consulta
         // ordenada de forma descendente por el id.
-        return em.createQuery("select a from Articulo a order by a._id desc", Articulo.class)
+        return em.createQuery("select a from Articulo a order by a.id desc", Articulo.class)
                 // retornamos un único valor.
                 .setMaxResults(1)
                 // obtenemos el resultado.
@@ -130,42 +130,9 @@ public class ArticuloRepositorioImpl implements Repositorio<Articulo> {
         // Creamos la consulta usando el método de Hibernate JPA para llamar a un procedimiento almacenado.
         // Si el procedimiento se ejecuta correctamente, nos devolverá true.
         return em.createStoredProcedureQuery("reset_id_articulos")
-                .execute();
+                .executeUpdate() > 0;
     }
 
     /* Producto 4 ≥ Ya no necesitamos métodos auxiliares para mapear los resultados de las consultas porque lo
     realiza automáticamente el framework. */
-
-    /*// Creamos un método para mapear los ResultSet. Lo vamos a usar únicamente dentro de la clase.
-    // Recibe el ResultSet como parámetro.
-    @NotNull
-    private static Articulo getArticulo(ResultSet res) throws SQLException {
-
-        // Creamos un nuevo artículo. Para que se vea más ordenado, lo pasaremos por los métodos setter.
-        Articulo articulo = new Articulo();
-        articulo.setId(res.getLong("_id"));
-        articulo.setCodArticulo(res.getString("cod_articulo"));
-        articulo.setDescripcion(res.getString("descripcion"));
-        articulo.setPvp(res.getDouble("pvp"));
-        articulo.setGastosEnvio(res.getDouble("gastos_envio"));
-        articulo.setTiempoPreparacion(res.getInt("tiempo_preparacion"));
-
-        return articulo;
-    }
-
-    // Mapeamos un statement a partir de un artículo.
-    // No es una función pura, pero modifica únicamente una variable que usamos en un método.
-    private static void getStatement(Articulo articulo, CallableStatement stmt) throws SQLException {
-
-        // Asignamos los parámetros a la consulta desde el artículo que recibimos por parámetro.
-        // La elección del parámetro se hace por su posición.
-        // Preparamos el parámetro de salida.
-        stmt.registerOutParameter(1, Types.NUMERIC);
-
-        stmt.setString(2, articulo.getCodArticulo());
-        stmt.setString(3, articulo.getDescripcion());
-        stmt.setDouble(4, articulo.getPvp());
-        stmt.setDouble(5, articulo.getGastosEnvio());
-        stmt.setInt(6, articulo.getTiempoPreparacion());
-    }*/
 }

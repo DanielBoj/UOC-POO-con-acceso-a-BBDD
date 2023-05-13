@@ -6,10 +6,13 @@ import ciricefp.modelo.utils.ConexionJpa;
 import ciricefp.vista.MenuPrincipal;
 
 import java.sql.Connection;
+import java.sql.Date;
 
 // Librería para trabajar con archivos .env
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureQuery;
 
 /**
  * Esta clase implementa el main de la tienda.
@@ -52,6 +55,9 @@ public class OnlineStore {
 
         int exitValue = init(prg);
 
+        /* IMPORTANTE -> Cerramos la conexión a la BD */
+        prg.datos.getEm().close();
+
         System.exit(exitValue);
     }
 
@@ -87,10 +93,6 @@ public class OnlineStore {
 
             // Mensaje de despedida.
             System.out.println("Gracias por usar el software de gestión de la tienda online.");
-
-            /* IMPORTANTE -> Cerramos la conexión a la BD */
-            // Si no ha habido ningún error, devolvemos un valor de éxito.
-            exitValue = ConexionJpa.close() > 0 ? (exitValue * 10 + 4) : 0;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 

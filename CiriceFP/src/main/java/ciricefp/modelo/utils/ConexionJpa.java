@@ -43,9 +43,9 @@ public class ConexionJpa {
         properties.put("jakarta.persistence.transactionType", "RESOURCE_LOCAL");
 
         // Configuramos las propiedades de la conexión a la base de datos.
-        properties.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/onlinestore_db?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Madrid");
-        properties.put("jakarta.persistence.jdbc.user", dotenv.get("DB_LOCAL_USER"));
-        properties.put("jakarta.persistence.jdbc.password", dotenv.get("DB_LOCAL_PASS"));
+        properties.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/onlinestore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid");
+        properties.put("jakarta.persistence.jdbc.user", "root");
+        properties.put("jakarta.persistence.jdbc.password", "batty");
         properties.put("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         properties.put("hibernate.show_sql", "true");

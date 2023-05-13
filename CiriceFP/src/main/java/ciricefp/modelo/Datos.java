@@ -614,6 +614,7 @@ public class Datos {
     public Pedido createPedido(@NotNull Cliente cliente, @NotNull Articulo articulo, int cantidad) {
         // Producto 4 ≥ Usamos los servicios
         PedidoService service = new PedidoServiceImpl(this.em);
+        ClienteService clienteService = new ClienteServiceImpl(this.em);
 
         // Creamos el pedido
         Pedido pedido = new Pedido(cliente, articulo, cantidad);
@@ -630,6 +631,7 @@ public class Datos {
         // Ejecutamos el método para crear el pedido en la BD, si se añade correctamente devolvemos el pedido.
         // Comprobamos que el pedido no exista en la BD, si no existe lo añadimos.
         if (service.findOne(String.valueOf(pedido.getNumeroPedido())).isEmpty()) {
+            System.out.println("El pedido no existe, se va a crear." + pedido.getCliente());
             if (service.save(pedido)) {
                 // Avalamos el contador de pedidos
                 Pedido.avanzarTotalPedidos();

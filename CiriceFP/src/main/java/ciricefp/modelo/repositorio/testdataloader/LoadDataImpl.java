@@ -45,27 +45,10 @@ public class LoadDataImpl implements LoadDataRepositorio {
         StoredProcedureQuery query = em.createStoredProcedureQuery("add_datos_test")
                 .registerStoredProcedureParameter(1, Integer.class, ParameterMode.OUT);
         // Ejecutamos la consulta y recogemos el valor de retorno.
-        query.execute();
+        query.executeUpdate();
 
         // Capturamos el valor de retorno del procedimiento.
         return (int) query.getOutputParameterValue(1);
-
-        /*// Creamos la sentencia sql para ejecutar el procedimiento.
-        String sql = "call add_datos_test(?)";
-
-        // Colocamos los recursos en un bloque try-with-resources y preparamas la ejecución de la sentencia.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-            // Preparamaos el parámetro de salida.
-            stmt.registerOutParameter(1, Types.INTEGER);
-
-            // Ejecutamos la sentencia.
-            stmt.executeUpdate();
-            return stmt.getInt(1);
-        } catch (SQLException e) {
-            System.out.println("Error al ejecutar la carga de datos de test.");
-            e.printStackTrace();
-            return -1;
-        }*/
     }
 
     // Comprobamos si existen datos en la BD.
@@ -80,22 +63,5 @@ public class LoadDataImpl implements LoadDataRepositorio {
 
         // Capturamos el valor de retorno del procedimiento.
         return (boolean) query.getOutputParameterValue(1);
-
-        /*// Creamos la sentencia sql para ejecutar el procedimiento.
-        String sql = "call check_datos(?)";
-
-        // Colocamos los recursos en un bloque try-with-resources y preparamas la ejecución de la sentencia.
-        try (CallableStatement stmt = getConnection(dotenv.get("ENV")).prepareCall(sql)) {
-            // Preparamos el parámetro de salida.
-            stmt.registerOutParameter(1, Types.NUMERIC);
-
-            // Ejecutamos la sentencia.
-            stmt.executeUpdate();
-            return stmt.getBoolean(1);
-        } catch (SQLException e) {
-            System.out.println("Error al ejecutar la carga de datos de test.");
-            e.printStackTrace();
-            return false;
-        }*/
     }
 }

@@ -26,6 +26,7 @@ public class ClientePremium extends Cliente implements HashCode {
     /*@OneToOne
     @JoinColumn(name = "cliente_id")
     private Long clienteId;*/
+    @Column(name = "cuota_anual")
     private double cuota;
     private double descuento;
     @Column(name = "cod_socio")

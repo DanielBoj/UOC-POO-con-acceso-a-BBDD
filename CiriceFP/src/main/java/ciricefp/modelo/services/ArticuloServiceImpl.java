@@ -93,7 +93,6 @@ public class ArticuloServiceImpl implements ArticuloService {
     @Override
     public boolean delete(Long id) {
         // Si el artículo aparece en algún pedido, no podrá borrarse.
-        // TODO: Comprobar que el código funcione bien.
         // Creamos un repositorio para buscar los pedidos.
         Repositorio<Pedido> repoPedidos = new PedidoRepositorioImpl(em);
 
