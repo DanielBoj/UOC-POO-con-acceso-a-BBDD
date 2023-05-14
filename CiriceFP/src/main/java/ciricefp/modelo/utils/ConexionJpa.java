@@ -22,11 +22,11 @@ public class ConexionJpa {
     // Para trabajar de forma programática, hemos de añadir aquí el nombre de la unidad de persistencia
     private static final String PERSISTENCE_UNIT_NAME = "onlinestoreJPA";
 
-    // Creamos el atributo para instanciar los objetos de tipo EntityManagerFactory.
-    private static final EntityManagerFactory entityManagerFactory = buildEntityManagerFactory();
-
     // Atributo env para manejar las variables de entorno
     private static final Dotenv dotenv = Dotenv.load();
+
+    // Creamos el atributo para instanciar los objetos de tipo EntityManagerFactory.
+    private static final EntityManagerFactory entityManagerFactory = buildEntityManagerFactory();
 
     /* Para mantener las variables de env secretas, podemos configurar Hibernate programáticamente
     * en lugar de mediante el archivo xml. */
@@ -43,12 +43,12 @@ public class ConexionJpa {
         properties.put("jakarta.persistence.transactionType", "RESOURCE_LOCAL");
 
         // Configuramos las propiedades de la conexión a la base de datos.
-        properties.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/onlinestore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid");
-        properties.put("jakarta.persistence.jdbc.user", "root");
-        properties.put("jakarta.persistence.jdbc.password", "batty");
+        properties.put("jakarta.persistence.jdbc.url", "jdbc:mysql://" + dotenv.get("DB_LOCAL_URL") + "/onlinestore_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Madrid");
+        properties.put("jakarta.persistence.jdbc.user", dotenv.get("DB_LOCAL_USER"));
+        properties.put("jakarta.persistence.jdbc.password", dotenv.get("DB_LOCAL_PASS"));
         properties.put("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
-        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.show_sql", "false");
 
         // Añadimos las clases
         properties.put("jakarta.persistence.mapping.resources", "ciricefp.modelo.Articulo, ciricefp.modelo.Cliente, ciricefp.modelo.ClienteEstandard, ciricefp.modelo.ClientePremium, ciricefp.modelo.Direccion, ciricefp.modelo.Pedido");
