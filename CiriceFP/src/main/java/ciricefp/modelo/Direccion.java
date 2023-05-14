@@ -1,19 +1,28 @@
 package ciricefp.modelo;
 
+import jakarta.persistence.*;
+
 /**
  * Esta clase funciona como un prototipo para añadir elementos dirección en las clases que lo necesiten implementar.
  * En nuestro caso lo usará la clase Cliente.
  *
  * @author Cirice
  */
+
+@Entity
+@Table(name="direcciones")
 public class Direccion {
 
     // Atributos de clase
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
     private Long id;
     String direccion;
     String ciudad;
     String provincia;
+    @Column(name="codigo_postal")
     String codigoPostal;
     String pais;
 

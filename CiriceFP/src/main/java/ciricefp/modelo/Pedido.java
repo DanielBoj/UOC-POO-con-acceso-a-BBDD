@@ -2,6 +2,7 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.IPedido;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -10,17 +11,35 @@ import java.time.LocalDate;
  *
  * @author Cirice
  */
+
+@Entity
+@Table(name="pedidos")
 public class Pedido implements Comparable<Pedido>, IPedido {
 
     // Atributos de la clase.
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
     private Long id;
+    @Column(name="numero_pedido")
     private int numeroPedido;
+    // Un pedido solo puede tener un cliente, pero un cliente puede tener varios pedidos.
+    @ManyToOne
+    // Nos aseguramos de la correcta ref de columna
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+    // Un pedido solo puede tener un artículo, pero un artículo puede estar en muchos pedidos.
+    @ManyToOne
+    // Nos aseguramos de la correcta ref de columna
+    @JoinColumn(name = "articulo_id")
     private Articulo articulo;
     private int unidades;
+    @Column(name="fecha_pedido")
     private LocalDate fechaPedido;
+    @Column(name="es_enviado")
     private boolean esEnviado;
+    @Transient
     private static int totalPedidos = 0;
 
     // Constructor sin argumentos por defecto

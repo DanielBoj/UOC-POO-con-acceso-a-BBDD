@@ -1,6 +1,7 @@
 package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.HashCode;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 
@@ -10,13 +11,24 @@ import java.util.ArrayList;
  *
  * @author Cirice
  */
+
+@Entity
+@Table(name="clientes_premium")
+// Indicamos que se trata de una clase hija de Cliente.
+@PrimaryKeyJoinColumn(name = "cliente_id")
 public class ClientePremium extends Cliente implements HashCode {
 
     // Atributos de la clase.
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
+    private Long id;
+    @Column(name="cuota_anual")
     private double cuota;
     private double descuento;
+    @Column(name="cod_socio")
     private String codSocio;
-
+    @Transient
     private static ArrayList<String> codigos;
 
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.

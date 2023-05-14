@@ -2,6 +2,7 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.ICliente;
 import ciricefp.modelo.interfaces.factory.IClienteFactory;
+import jakarta.persistence.*;
 
 /**
  * Esta clase implementa la lógica de negocio de un cliente que puede comprar en la tienda.
@@ -9,15 +10,35 @@ import ciricefp.modelo.interfaces.factory.IClienteFactory;
  *
  * @author Cirice
  */
+
+@Entity
+@Table(name="clientes")
+// Indicamos que esta clase es una superclase de otras clases y que las clases hijas se representan
+// en una tabla independiente solo con sus campos específicos.
+// Esto se conoce como herencia mediante tablas independientes.
+// Nos aseguramos de que en caso de borrar un cliente, se borren también sus hijos.
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Cliente implements Comparable<Cliente>, ICliente, IClienteFactory {
 
     // Atributos de la clase.
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
     private Long id;
     private String nombre;
+    // Un cliente tiene una dirección, una dirección está asociada a un cliente.
+    // Especificamos qué acciones se llevan a cabo en caso de borrar un cliente o una dirección.
+    // También especificamos que se cargue la dirección cuando se cargue el cliente.
+    // Por último, nos aseguramos de que se borre la dirección si se borra el cliente.
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    // Nos aseguramos de que la columna que hace referencia a la clave foránea se llame "direccion_id"
+    // Si se borra la dirección, el cliente no se borra.
+    @JoinColumn(name = "direccion_id", nullable = true)
     private Direccion domicilio;
     private String nif;
     private String email;
+    @Transient
     private static Integer totalClientes = 0;
 
     // Constructor sin parámetros por si se necesitase en la implementación de algún método

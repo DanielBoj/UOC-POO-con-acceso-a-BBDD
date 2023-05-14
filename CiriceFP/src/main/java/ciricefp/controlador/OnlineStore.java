@@ -2,12 +2,16 @@ package ciricefp.controlador;
 
 import ciricefp.modelo.*;
 import ciricefp.modelo.utils.Conexion;
+import ciricefp.modelo.utils.JpaUtil;
 import ciricefp.vista.MenuPrincipal;
 
-import java.sql.Connection;
+import java.sql.Connection;import java.sql.Date;
 
 // Librería para trabajar con archivos .env
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureQuery;
 
 /**
  * Esta clase implementa el main de la tienda.
@@ -35,7 +39,10 @@ public class OnlineStore {
         OnlineStore prg = new OnlineStore();
 
         // Instanciamos una nueva conexión a la BD siguiendo el patrón Singleton.
-        Connection db = Conexion.getInstance(dotenv.get("ENV"));
+        // Connection db = Conexion.getInstance(dotenv.get("ENV"));
+
+        // Producto 4 -> Instanciamos el Entity Manager para poder conectarnos a la BD.
+        EntityManager em = JpaUtil.getEntityManagerFactory();
 
         // Instanciamos los controladores.
         prg.datos = new Datos();
@@ -43,8 +50,12 @@ public class OnlineStore {
         prg.controlador = new Controlador(prg.datos, prg.ventana);
         prg.ventana.setControlador(prg.controlador);
         prg.datos.setControlador(prg.controlador);
+        prg.datos.setEm(em);
 
         int exitValue = init(prg);
+
+        /* IMPORTANTE -> Cerramos la conexión a la BD */
+        prg.datos.getEm().close();
 
         System.exit(exitValue);
     }
@@ -82,9 +93,6 @@ public class OnlineStore {
             // Mensaje de despedida.
             System.out.println("Gracias por usar el software de gestión de la tienda online.");
 
-            /* IMPORTANTE -> Cerramos la conexión a la BD */
-            // Si no ha habido ningún error, devolvemos un valor de éxito.
-            exitValue = Conexion.closeConnection() > 0 ? (exitValue * 10 + 4) : 0;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 

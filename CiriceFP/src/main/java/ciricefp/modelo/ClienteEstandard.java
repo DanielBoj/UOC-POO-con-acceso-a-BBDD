@@ -1,12 +1,26 @@
 package ciricefp.modelo;
 
+import jakarta.persistence.*;
+
 /**
  * Esta clase implementa la lógica de negocio para el subtipo de Cliente Estandard.
  * Esta clase es una subclase de la superclase Cliente e implementa los métodos abstractos.
  *
  * @author Cirice
  */
+@Entity
+@Table(name="clientes_estandard")
+// Indicamos que se trata de una clase hija de Cliente.
+@PrimaryKeyJoinColumn(name = "cliente_id")
 public class ClienteEstandard extends Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
+    private Long id;
+    /*@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
+    @JoinColumn(name = "cliente_id")
+    private Long clienteId;*/
     // Constructor por defecto, recibe todos los elementos necesarios por parámetro. Llama al constructor de la superclase.
     public ClienteEstandard(String nombre, Direccion domicilio, String nif, String email) {
         super(nombre, domicilio, nif, email);

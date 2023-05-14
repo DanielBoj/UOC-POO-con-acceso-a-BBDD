@@ -2,6 +2,7 @@ package ciricefp.modelo;
 
 import ciricefp.modelo.interfaces.HashCode;
 import ciricefp.modelo.interfaces.IArticulo;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 
@@ -10,19 +11,30 @@ import java.util.ArrayList;
  *
  * @author Cirice
  */
+
+@Entity
+@Table(name="articulos")
 public class Articulo implements Comparable<Articulo>, IArticulo, HashCode {
 
     // Atributos de la clase.
 
     // Producto 3 -> Añadimos el id de nuestro modelo relacional
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="_id")
     private Long id;
+    @Column(name="cod_articulo")
     private String codArticulo;
     private String descripcion;
     private double pvp;
+    @Column(name="gastos_envio")
     private double gastosEnvio;
+    @Column(name="tiempo_preparacion")
     private int tiempoPreparacion; // En días
+    // Informamos de que el atributo no debe persistir en el modelo relacional.
+    @Transient
     private static int totalArticulos = 0;
-
+    @Transient
     private static ArrayList<String> codigos;
 
     // Constructor implementando la creación automática del código único de artículo.

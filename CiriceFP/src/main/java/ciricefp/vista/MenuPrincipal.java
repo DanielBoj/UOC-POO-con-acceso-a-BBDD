@@ -525,6 +525,11 @@ public class MenuPrincipal {
         // Obtenemos la lista de pedidos filtrados por el estado
         ArrayList<Pedido> pedidos = controlador.filterPedidosByEstado(opt);
 
+        if (pedidos.isEmpty()) {
+            System.out.println("No hay pedidos en la lista.");
+            return;
+        }
+
         // Mostramos la lista por pantalla
         System.out.println("Lista de pedidos " + opt + ":");
         for (Pedido pedido : pedidos) {
