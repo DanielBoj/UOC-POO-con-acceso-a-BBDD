@@ -16,7 +16,7 @@ import io.github.cdimascio.dotenv.Dotenv;
  */
 public class Conexion {
 
-    private static String baseDatos;
+    /*private static String baseDatos;
     private static String login;
     private static String pass;
     private static String url;
@@ -84,10 +84,10 @@ public class Conexion {
         }
     }
 
-    /* Getters & Setters */
-    /* No van a haber setters para los atributos de la clase. Porque todos los valores
+    *//* Getters & Setters *//*
+    *//* No van a haber setters para los atributos de la clase. Porque todos los valores
     ** se obtienen mediante env variables.
-    */
+    *//*
 
     public String getBaseDatos() {
         return baseDatos;
@@ -163,7 +163,7 @@ public class Conexion {
     // https://www.baeldung.com/java-encrypt-decrypt
     // https://www.baeldung.com/java-aes-encryption-decryption
 
-    /* Ejemplo de creación de un Pool de conexiones. */
+    *//* Ejemplo de creación de un Pool de conexiones. *//*
     public static BasicDataSource getPoolInstance() throws SQLException {
         if (pool == null) {
             pool = new BasicDataSource();
@@ -186,5 +186,5 @@ public class Conexion {
     // Obtenemos una sola conexión del pool de conexiones
     public static Connection getPoolConnection() throws SQLException {
         return getPoolInstance().getConnection();
-    }
+    }*/
 }

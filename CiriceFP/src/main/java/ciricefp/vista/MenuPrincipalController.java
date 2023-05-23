@@ -7,6 +7,7 @@ import ciricefp.modelo.Pedido;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -20,28 +21,28 @@ import java.util.Scanner;
  *
  * @author Cirice
  */
-public class MenuPrincipal {
+public class MenuPrincipalController {
     // Atributos de clase.
     private Controlador controlador;
-    private VistaArticulos vistaArticulos;
-    private VistaClientes vistaClientes;
+    private ArticulosController articulosController;
+    private ClientesController clientesController;
     private VistaPedidos vistaPedidos;
 
     // Búffer de entrada de datos por teclado.
     Scanner teclado = new Scanner(System.in);
 
     // Constructor sin argumentos, instancia la clase y queda a la espera del controlador.
-    public MenuPrincipal() {
-        this.vistaArticulos = new VistaArticulos(this);
-        this.vistaClientes = new VistaClientes(this);
+    public MenuPrincipalController() {
+        this.articulosController = new ArticulosController(this);
+        this.clientesController = new ClientesController(this);
         this.vistaPedidos = new VistaPedidos(this);
     }
 
     // Constructor con argumentos, instancia la clase y recibe el controlador y las vistas
-    public MenuPrincipal(Controlador controlador, VistaArticulos vistaArticulos, VistaClientes vistaClientes, VistaPedidos vistaPedidos) {
+    public MenuPrincipalController(Controlador controlador, ArticulosController articulosController, ClientesController clientesController, VistaPedidos vistaPedidos) {
         this.controlador = controlador;
-        this.vistaArticulos = vistaArticulos;
-        this.vistaClientes = vistaClientes;
+        this.articulosController = articulosController;
+        this.clientesController = clientesController;
         this.vistaPedidos = vistaPedidos;
     }
 
@@ -54,20 +55,20 @@ public class MenuPrincipal {
         this.controlador = controlador;
     }
 
-    public VistaArticulos getVistaArticulos() {
-        return vistaArticulos;
+    public ArticulosController getVistaArticulos() {
+        return articulosController;
     }
 
-    public void setVistaArticulos(VistaArticulos vistaArticulos) {
-        this.vistaArticulos = vistaArticulos;
+    public void setVistaArticulos(ArticulosController articulosController) {
+        this.articulosController = articulosController;
     }
 
-    public VistaClientes getVistaClientes() {
-        return vistaClientes;
+    public ClientesController getVistaClientes() {
+        return clientesController;
     }
 
-    public void setVistaClientes(VistaClientes vistaClientes) {
-        this.vistaClientes = vistaClientes;
+    public void setVistaClientes(ClientesController clientesController) {
+        this.clientesController = clientesController;
     }
 
     public VistaPedidos getVistaPedidos() {
@@ -80,17 +81,17 @@ public class MenuPrincipal {
 
     @Override
     public String toString() {
-        return "MenuPrincipal{" +
+        return "MenuPrincipalController{" +
                 "controlador=" + controlador +
-                ", vistaArticulos=" + vistaArticulos +
-                ", vistaClientes=" + vistaClientes +
+                ", articulosController=" + articulosController +
+                ", clientesController=" + clientesController +
                 ", vistaPedidos=" + vistaPedidos +
                 '}';
     }
 
     // Método que inicia la aplicación y muestra el menú principal por terminal.
     public void inicio() {
-        boolean salir = false;
+       /* boolean salir = false;
         char opcio;
 
         // Mostramos un menú inicial si no existen datos en la BD para que el usuario cargar datos de test.
@@ -111,15 +112,15 @@ public class MenuPrincipal {
             opcio = pedirOpcion(4);
 
             // Mostramos el menú correspondiente según la opción elegida.
-            switch (opcio) {
+            *//*switch (opcio) {
                 case '1' -> vistaArticulos();
                 case '2' -> vistaClientes();
-                case '3' -> vistaPedidos();
+                case '3' -> vistaPedidos();*//*
                 case '0' -> salir = true;
                 // Manejamos el error de opción incorrecta.
                 default -> System.out.println("Opción incorrecta.");
             }
-        } while (!salir);
+        } while (!salir);*/
     }
 
     // Método que pide una opción al usuario y la devuelve.
@@ -162,17 +163,17 @@ public class MenuPrincipal {
     }
 
     // Métodos para mostrar las vistas de los menús.
-    private void vistaArticulos() {
-        vistaArticulos.inicio();
+    /*private void vistaArticulos() {
+        articulosController.inicio();
     }
 
     private void vistaClientes() {
-        vistaClientes.inicio();
+        clientesController.inicio();
     }
 
     private void vistaPedidos() {
         vistaPedidos.inicio();
-    }
+    }*/
 
     // Métodos que manejan las acciones implementadas en el controlador.
     // Los métodos llaman a la lógica implementada en el controlador y devuelven el resultado.
@@ -183,45 +184,15 @@ public class MenuPrincipal {
                                    double pvp,
                                    double gastosEnvio,
                                    int tiempoPreparacion) {
-
+        // Producto 5 --> Adaptamos el método a GUI
         // Creamos un objeto Articulo con los datos recibidos para manejar el posible retorno de un objeto null.
-        try {
-            Articulo newArticulo = controlador.createArticulo(descripcion, pvp, gastosEnvio, tiempoPreparacion);
-
-            // Comprobamos que no sea null.
-            if (newArticulo != null) {
-                System.out.println("Artículo creado correctamente.");
-                System.out.println(newArticulo);
-                return true;
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        // En caso de error retornamos false
-        System.out.println("Error al crear el artículo.");
-        return false;
+        return controlador.createArticulo(descripcion, pvp, gastosEnvio, tiempoPreparacion) != null;
     }
 
     // Mostramos por pantalla una lista de artículos
-    public void listArticulos() {
-
-        System.out.println("Listado de artículos:");
-
-        // Primero comprobamos que la lista no esté vacía.
-        if (controlador.listArticulos().isEmpty()) {
-            System.out.println("No hay artículos en la lista.");
-            return;
-        }
-
-        // Iteramos todos los elementos de la lista esperando una pulsación de tecla para mostrar el siguiente.
-        for (Articulo articulo : controlador.listArticulos()) {
-            System.out.println(articulo);
-            System.out.println("==================================");
-            System.out.println("Pulsa ENTER para continuar.");
-            // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
-            teclado.nextLine();
-        }
+    public Optional<ArrayList<Articulo>> listArticulos() {
+        /* Producto 5 --> Adaptamos el método a GUI */
+        return Optional.of(controlador.listArticulos());
     }
 
     // Buscamos un artículo por su código.
@@ -281,29 +252,14 @@ public class MenuPrincipal {
                                  String nif,
                                  String email,
                                  String tipo) {
-        // Creamos el nuevo objeto Cliente con los datos recibidos para manejar el posible retorno de un objeto null.
-        try {
-            Cliente newCliente = controlador.createCliente(nombre, domicilio, poblacion, provincia, cp, pais, nif, email, tipo);
-
-            // Comprobamos que no sea null.
-            if (newCliente != null) {
-                System.out.println("Cliente creado correctamente.");
-                System.out.println(newCliente);
-                return true;
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        // En caso de error retornamos false
-        System.out.println("Error al crear el cliente.");
-        return false;
+        // Producto 5 --> Adaptamos el método a GUI
+        return controlador.createCliente(nombre, domicilio, poblacion, provincia, cp, pais, nif, email, tipo) != null;
     }
 
     // Mostramos por pantalla una lista de clientes
-    public void listClientes() {
+    public Optional<ArrayList<Cliente>> listClientes() {
 
-        System.out.println("Lista de clientes:");
+        /*System.out.println("Lista de clientes:");
 
         // Primero comprobamos que la lista no esté vacía.
         if (controlador.listClientes().isEmpty()) {
@@ -318,7 +274,9 @@ public class MenuPrincipal {
             System.out.println("Pulsa ENTER para continuar.");
             // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
             teclado.nextLine();
-        }
+        }*/
+        // Producto 5 --> Adaptamos el método a GUI
+        return Optional.of(controlador.listClientes());
     }
 
     // Buscamos un cliente por su NIF

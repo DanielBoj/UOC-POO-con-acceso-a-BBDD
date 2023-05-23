@@ -1,10 +1,9 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
-import ciricefp.vista.MenuPrincipal;
-import org.jetbrains.annotations.NotNull;
+import ciricefp.vista.MenuPrincipalController;
 
-import java.sql.SQLOutput;
+import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -19,16 +18,16 @@ import java.util.ArrayList;
 public class Controlador {
 
     private Datos datos;
-    private MenuPrincipal menu;
+    private MenuPrincipalController menu;
 
     // Constructor por defecto sin parámetros.
     public Controlador() {
         this.datos = new Datos();
-        this.menu = new MenuPrincipal();
+        this.menu = new MenuPrincipalController();
     }
 
     // Constructor con parámetros.
-    public Controlador(Datos datos, MenuPrincipal menu) {
+    public Controlador(Datos datos, MenuPrincipalController menu) {
         this.datos = datos;
         this.menu = menu;
     }
@@ -42,11 +41,11 @@ public class Controlador {
         this.datos = datos;
     }
 
-    public MenuPrincipal getMenu() {
+    public MenuPrincipalController getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuPrincipal menu) {
+    public void setMenu(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
@@ -58,10 +57,10 @@ public class Controlador {
                 '}';
     }
 
-    // TODO --> updateMenu()
-    public void showMenu() {
-        menu.inicio();
-    }
+    /*// TODO --> updateMenu()
+    public void showMenu(String[] args) {
+        OnlineStoreApplication.main(args);
+    }*/
 
     // Implementamos los métodos para las acciones CRUD que hemos creado en la clase Datos para que sean accesibles desde el controlador.
     // Estos métodos se encargarán de llamar a los métodos de la clase Datos y actualizar la vista.

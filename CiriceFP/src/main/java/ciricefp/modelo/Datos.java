@@ -22,7 +22,6 @@ import ciricefp.modelo.utils.ConexionJpa;
 import jakarta.persistence.EntityManager;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.html.Option;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.*;

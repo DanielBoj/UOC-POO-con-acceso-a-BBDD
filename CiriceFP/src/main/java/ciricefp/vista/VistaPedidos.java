@@ -4,26 +4,26 @@ import ciricefp.vista.interfaces.IVista;
 
 /**
  * Esta clase implementa la lógica de negocio de la vista de pedidos.
- * Delega en el controlador interno MenuPrincipal la gestión de las opciones del menú.
+ * Delega en el controlador interno MenuPrincipalController la gestión de las opciones del menú.
  *
  * @author Cirice
  */
 public class VistaPedidos implements IVista {
 
     // Atributos de la clase.
-    private MenuPrincipal menu;
+    private MenuPrincipalController menu;
 
     // Constructor por defecto.
-    public VistaPedidos(MenuPrincipal menu) {
+    public VistaPedidos(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
     /* Getters & Setters */
-    public MenuPrincipal getMenu() {
+    public MenuPrincipalController getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuPrincipal menu) {
+    public void setMenu(MenuPrincipalController menu) {
         this.menu = menu;
     }
 

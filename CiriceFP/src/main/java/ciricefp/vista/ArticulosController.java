@@ -1,35 +1,42 @@
 package ciricefp.vista;
 
+import ciricefp.modelo.Articulo;
 import ciricefp.vista.interfaces.IVista;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Esta clase implementa la lógica de negocio de la vista de artículos.
- * Delega en el controlador interno MenuPrincipal la gestión de las opciones del menú.
+ * Delega en el controlador interno MenuPrincipalController la gestión de las opciones del menú.
  *
  * @author Cirice
  */
-public class VistaArticulos implements IVista {
+public class ArticulosController {
 
     // Atributos de la clase.
-    private MenuPrincipal menu;
+    private MenuPrincipalController menu;
+    public ArticulosController() {
+        this.menu = new MenuPrincipalController();
+    }
 
-    public VistaArticulos(MenuPrincipal menu) {
+    public ArticulosController(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
     /* Getters & Setters */
 
-    public MenuPrincipal getMenu() {
+    public MenuPrincipalController getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuPrincipal menu) {
+    public void setMenu(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
     @Override
     public String toString() {
-        return "VistaArticulos{" +
+        return "ArticulosController{" +
                 "menu=" + menu +
                 '}';
     }
@@ -37,7 +44,7 @@ public class VistaArticulos implements IVista {
     /* Métodos de la clase */
 
     // Iniciador de la vista: Genera el submenú de Artículos.
-    public void inicio() {
+   /* public void inicio() {
 
         boolean salir = false;
         char opt;
@@ -54,9 +61,9 @@ public class VistaArticulos implements IVista {
             // Pedimos la opción al usuario.
             opt = menu.pedirOpcion(4);
             switch (opt) {
-                case '1' -> addArticulo();
+                *//*case '1' -> addArticulo();
                 case '2' -> listArticulos();
-                case '3' -> clearArticulos();
+                case '3' -> clearArticulos();*//*
                 case '0' -> salir = true;
                 // Manejamos el caso de opción incorrecta.
                 default -> System.out.println("Opción incorrecta");
@@ -65,38 +72,48 @@ public class VistaArticulos implements IVista {
 
         // Mensaje de salida.
         System.out.println("Saliendo de la gestión de artículos...");
-    }
+    }*/
 
     // Implementamos los métodos necesarios para la gestión de artículos llamando al controlador.
     // Añadir un nuevo artículo
-    public void addArticulo() {
-        System.out.println("Añadir artículo nuevo: ");
-
-        // Capturamos los datos necesarios para crear el artículo y los parsemos.
-        String descripcion = menu.pedirDatos("Introduce la descripción del artículo: ");
-        double precio = Double.parseDouble(menu.pedirDatos("Introduce el precio del artículo: "));
-        double gastosEnvio = Double.parseDouble(menu.pedirDatos("Introduce los gastos de envío del artículo: "));
-        int tiempoPreparacion = Integer.parseInt(menu.pedirDatos("Introduce el tiempo de preparación del artículo: "));
-
+    public boolean addArticulo(String descripcion, double precio, double gastosEnvio, int tiempoPreparacion) {
+           /* Producto 5 --> Implementación de la interfaz gráfica */
         // Creamos el artículo
         if (descripcion != null && precio > 0 && gastosEnvio > 0 && tiempoPreparacion > 0) {
             // Llamamos al controlador para añadir el artículo
             try{
-                menu.createArticulo(descripcion, precio, gastosEnvio, tiempoPreparacion);
+                return menu.createArticulo(descripcion, precio, gastosEnvio, tiempoPreparacion);
             } catch (Exception e) {
                 System.out.println("Error al crear el artículo: " + e.getMessage());
             }
         }
+        // Si no es posible crear el artículo devolvemos false
+        return false;
     }
 
     // Mostrar todos los artículos
-    public void listArticulos() {
-        menu.listArticulos();
+    public Optional<ArrayList<Articulo>> listArticulos() {
+        // Producto 5 -->
+        try {
+            return menu.listArticulos();
+        } catch (Exception e) {
+            System.out.println("Error al listar los artículos: " + e.getMessage());
+        }
+        // Si no es posible listar los artículos devolvemos un Optional vacío
+        return Optional.empty();
     }
 
     // Borrar todos los artículos
-    public void clearArticulos() {
-        menu.clearArticulos();
+    public boolean clearArticulos() {
+        // Producto 5 --> Adaptamos el método para trabajar con un GUI
+        try {
+            menu.clearArticulos();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Si no es posible borrar los artículos devolvemos false
+        return false;
     }
 
 }

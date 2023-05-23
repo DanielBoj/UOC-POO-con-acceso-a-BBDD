@@ -1,18 +1,12 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
-import ciricefp.modelo.utils.Conexion;
 import ciricefp.modelo.utils.ConexionJpa;
-import ciricefp.vista.MenuPrincipal;
-
-import java.sql.Connection;
-import java.sql.Date;
+import ciricefp.vista.MenuPrincipalController;
 
 // Librería para trabajar con archivos .env
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureQuery;
 
 /**
  * Esta clase implementa el main de la tienda.
@@ -27,7 +21,7 @@ import jakarta.persistence.StoredProcedureQuery;
 public class OnlineStore {
 
     public Datos datos;
-    public MenuPrincipal ventana;
+    public MenuPrincipalController ventana;
     public Controlador controlador;
 
     // Instanciamos el archivo .env
@@ -47,13 +41,13 @@ public class OnlineStore {
 
         // Instanciamos los controladores.
         prg.datos = new Datos();
-        prg.ventana = new MenuPrincipal();
+        prg.ventana = new MenuPrincipalController();
         prg.controlador = new Controlador(prg.datos, prg.ventana);
         prg.ventana.setControlador(prg.controlador);
         prg.datos.setControlador(prg.controlador);
         prg.datos.setEm(em);
 
-        int exitValue = init(prg);
+        int exitValue = init(prg, args);
 
         /* IMPORTANTE -> Cerramos la conexión a la BD */
         prg.datos.getEm().close();
@@ -62,7 +56,7 @@ public class OnlineStore {
     }
 
     // Los valores de retorno nos informarán de los errores que se han producido durante la ejecución.
-    public static int init(OnlineStore prg) {
+    public static int init(OnlineStore prg, String[] args) {
 
         // Creamos un valor de retorno por defecto.
         int exitValue = 0;
@@ -85,7 +79,7 @@ public class OnlineStore {
             // Iniciamos el menú principal.
             // Los errores de ejecución de menus se reconocerán por el valor de retorno 2.
             try {
-                prg.controlador.showMenu();
+                //prg.controlador.showMenu(args);
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
                 exitValue = exitValue * 10 + 3;

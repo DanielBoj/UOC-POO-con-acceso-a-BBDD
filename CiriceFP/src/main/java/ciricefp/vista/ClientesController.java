@@ -4,115 +4,72 @@ import ciricefp.modelo.Cliente;
 import ciricefp.vista.interfaces.IVista;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
  * Esta clase implementa la lógica de negocio de la vista de clientes.
- * Delega en la clase MenuPrincipal la gestión de las opciones del menú.
+ * Delega en la clase MenuPrincipalController la gestión de las opciones del menú.
  *
  * @author Cirice
  */
-public class VistaClientes implements IVista {
+public class ClientesController {
 
     // Atributos de la clase.
 
     // Buffer de entrada por teclado.
     Scanner teclado = new Scanner(System.in);
 
-    private MenuPrincipal menu;
+    private MenuPrincipalController menu;
+
+    // Producto 5 --> Constructor para GUI
+    public ClientesController() {
+        this.menu = new MenuPrincipalController();
+    }
 
     // Constructor por defecto.
-    public VistaClientes(MenuPrincipal menu) {
+    public ClientesController(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
     /* Getters & Setters */
-    public MenuPrincipal getMenu() {
+    public MenuPrincipalController getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuPrincipal menu) {
+    public void setMenu(MenuPrincipalController menu) {
         this.menu = menu;
     }
 
     @Override
     public String toString() {
-        return "VistaClientes{" +
+        return "ClientesController{" +
                 ", menu=" + menu +
                 '}';
     }
 
     /* Métodos de la clase */
 
-    // Iniciador de la vista: Genera el submenú de Clientes.
-    public void inicio() {
-
-        boolean salir = false;
-        char opt;
-
-        do {
-            // Mostramos el submenú para las funcionalidades de artículo
-            System.out.println("Gestión de clientes");
-            System.out.println("====================");
-            System.out.println("1. Añadir cliente");
-            System.out.println("2. Mostrar clientes");
-            System.out.println("3. Buscar cliente por NIF");
-            System.out.println("4. Filtrar clientes por tipo");
-            System.out.println("0. Volver al menú principal");
-
-            // Pedimos la opción al usuario.
-            opt = menu.pedirOpcion(5);
-            switch (opt) {
-                case '1' -> addCliente();
-                case '2' -> listClientes();
-                case '3' -> buscarCliente();
-                case '4' -> filtrarClientes();
-                case '0' -> salir = true;
-                // Manejamos el caso de opción incorrecta.
-                default -> System.out.println("Opción incorrecta");
-            }
-        } while (!salir);
-
-        // Mensaje de salida.
-        System.out.println("Saliendo de la gestión de clientes...");
-    }
-
     // Implementamos los métodos necesarios para la gestión de artículos llamando al controlador.
     // Creamos un nuevo cliente
-    public void addCliente() {
-
-        System.out.println("Añadir cliente nuevo: ");
-        System.out.println("=====================");
-
-        // Pedimos los datos del cliente
-        System.out.println("Por favor, indica el tipo de cliente");
-        String tipo = "";
-        tipo = pedirTipoCliente();
-
-        // Solicitamos los datos del cliente
-        String nombre = menu.pedirDatos("Nombre: ");
-        String nif = menu.pedirDatos("NIF: ");
-        String email = menu.pedirDatos("Email: ");
-        System.out.println("Dirección: ");
-        String domicilio = menu.pedirDatos("Domicilio: ");
-        String poblacion = menu.pedirDatos("Población: ");
-        String provincia = menu.pedirDatos("Provincia: ");
-        String cp = menu.pedirDatos("Código postal: ");
-        String pais = menu.pedirDatos("País: ");
-
-        // Creamos el cliente
+    public boolean addCliente(String nombre, String nif, String email, String domicilio, String poblacion,
+                           String provincia, String cp, String pais, String tipo) {
+        // Producto 5 --> Creamos el cliente mediante GUI
         try {
-            menu.createCliente(nombre, domicilio, poblacion, provincia, cp, pais, nif, email, tipo);
+            return menu.createCliente(nombre, domicilio, poblacion, provincia, cp, pais, nif, email, tipo);
         } catch (Exception e) {
             System.out.println("Error al crear el cliente");
         }
+        // Si ha habido un error, devolvemos false
+        return false;
     }
 
     // Mostrar por pantalla una lista de los clientes
-    public void listClientes() {
-        System.out.println("Listado de clientes: ");
-        System.out.println("====================");
-        menu.listClientes();
+    public Optional<ArrayList<Cliente>> listClientes() {
+        /*System.out.println("Listado de clientes: ");
+        System.out.println("====================");*/
+        // Producto 5 --> Mostramos los clientes mediante GUI
+        return menu.listClientes();
     }
 
     // Buscamos un cliente por su nif y lo presentramos por pantalla
