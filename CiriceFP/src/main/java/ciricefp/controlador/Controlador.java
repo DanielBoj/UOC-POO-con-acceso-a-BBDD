@@ -1,7 +1,7 @@
 package ciricefp.controlador;
 
 import ciricefp.modelo.*;
-import ciricefp.vista.MenuPrincipalController;
+import ciricefp.vista.controladores.MenuPrincipalController;
 
 import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;

@@ -1,18 +1,18 @@
 package ciricefp.vista;
 
+import ciricefp.vista.controladores.MenuPrincipalController;
 import ciricefp.vista.dictionaries.ColorsDictionary;
 import ciricefp.vista.dictionaries.FontsDictionary;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /* Generamos una Scene para cargar el menú principal de la aplicación.
 * Contendrá los 3 botones para acceder a los 3 submenús/ */
@@ -22,7 +22,7 @@ public class MenuPrincipalView {
     // Obtenemos los rem para no trabajar con pixels
     private static final double rem = new Text("").getBoundsInParent().getHeight();
     private final Scene scene;
-    private static MenuPrincipalController  controller = new MenuPrincipalController();
+    private static MenuPrincipalController controller = new MenuPrincipalController();
 
     public MenuPrincipalView(MenuPrincipalController srcController) {
         controller = srcController;
@@ -84,7 +84,7 @@ public class MenuPrincipalView {
         btClientes.setFont(FontsDictionary.getFont("button"));
         // Cargamos la vista de Clientes
         btClientes.setOnAction(event -> {
-            Pane clientesView = new ClientesView().getPane();
+            Pane clientesView = new ClientesView(controller).getPane();
             contentSection.getChildren().clear();
             contentSection.getChildren().add(clientesView);
         });
@@ -92,7 +92,7 @@ public class MenuPrincipalView {
         btPedidos.setFont(FontsDictionary.getFont("button"));
         // Cargamos la vista de Pedidos
         btPedidos.setOnAction(event -> {
-            Pane pedidosView = new PedidosView().getPane();
+            Pane pedidosView = new PedidosView(controller).getPane();
             contentSection.getChildren().clear();
             contentSection.getChildren().add(pedidosView);
         });
@@ -114,7 +114,80 @@ public class MenuPrincipalView {
         // Cargamos la hoja de estilos
         scene.getStylesheets().add("file:src/main/resources/styles.css");
 
+        // Cargamos los datos iniciales
+        if (!controller.getControlador().checkData()) {
+            // Si hay datos, cargamos la vista de carga de datos
+            Stage windowTestData = testDataLoaderView();
+            windowTestData.showAndWait();
+        }
+
         return scene;
+    }
+
+    // Generamos una ventana para la carga de datos por defecto
+    public static Stage testDataLoaderView() {
+        // Creamos la ventana
+        Stage windowTestData = new Stage();
+        windowTestData.setTitle("Carga de datos iniciales");
+        windowTestData.initModality(Modality.APPLICATION_MODAL);
+
+        // Creamos el layout
+        VBox root = new VBox();
+        root.setSpacing(0.5 * rem);
+        root.setPadding(new Insets(0.8 * rem));
+        Background background = new Background(new BackgroundFill(ColorsDictionary.getColor("background-dark"), CornerRadii.EMPTY, Insets.EMPTY));
+        root.setBackground(background);
+
+        HBox buttons = new HBox();
+        buttons.setSpacing(0.5 * rem);
+
+        // Creamos los elementos de la vista
+        Text testDatatitle = new Text("Carga de datos iniciales");
+        testDatatitle.setFill(ColorsDictionary.getColor("text-light"));
+        testDatatitle.setFont(FontsDictionary.getFont("title"));
+        Text testDataText = new Text("¿Desea cargar los datos iniciales?");
+        testDataText.setFill(ColorsDictionary.getColor("text-light"));
+        testDataText.setFont(FontsDictionary.getFont("subtitle"));
+
+        // Creamos los botones
+        Button btAceptar = new Button("Aceptar");
+        btAceptar.setFont(FontsDictionary.getFont("button"));
+        btAceptar.setOnAction(event -> {
+            if (controller.getControlador().loadTestData() >= 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Carga de datos iniciales");
+                alert.setHeaderText("Datos cargados correctamente");
+                alert.setContentText("Los datos se han cargado correctamente");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Carga de datos iniciales");
+                alert.setHeaderText("Error al cargar los datos");
+                alert.setContentText("Ha ocurrido un error al cargar los datos");
+                alert.showAndWait();
+            }
+            windowTestData.close();
+        });
+
+        Button btCancelar = new Button("Cancelar");
+        btCancelar.setFont(FontsDictionary.getFont("button"));
+        btCancelar.setOnAction(event -> windowTestData.close());
+
+        // Cargamos los elementos en el layout
+        buttons.getChildren().addAll(btAceptar, btCancelar);
+        root.getChildren().addAll(testDatatitle, testDataText, buttons);
+
+        // Creamos la escena
+        Scene scene = new Scene(root, 800, 600);
+        // Establecemos un fondo de color
+        scene.setFill(ColorsDictionary.getColor("background-dark"));
+        // Cargamos la hoja de estilos
+        scene.getStylesheets().add("file:src/main/resources/styles.css");
+
+        // Cargamos la escena en la ventana
+        windowTestData.setScene(scene);
+
+        return windowTestData;
     }
 
     public static MenuBar getMenu() {
@@ -133,5 +206,17 @@ public class MenuPrincipalView {
         MenuBar mainMenu = new MenuBar(fileMenu);
 
         return mainMenu;
+    }
+
+    // Mensaje de despedida
+    public static void exitMessage() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Cirice");
+        alert.setHeaderText("¡Hasta pronto!");
+        alert.setContentText("Gracias por usar el software Online Shop.");
+        // Cargamos la hoja de estilos
+        alert.getDialogPane().getStylesheets().add("file:src/main/resources/styles.css");
+        // Mostramos la ventana
+        alert.showAndWait();
     }
 }

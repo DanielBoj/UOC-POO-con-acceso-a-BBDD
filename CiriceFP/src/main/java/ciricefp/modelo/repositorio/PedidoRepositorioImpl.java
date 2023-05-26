@@ -99,46 +99,11 @@ public class PedidoRepositorioImpl implements Repositorio<Pedido> {
             // En la práctica, se recomienda usar un método HQL/JPQL a no ser que necesitemos restringir la seguridad
             // de forma explícita a usuarios que solo puedan ejecutar procedimientos.
             // Cómo el primer parámetro del procedimiento es de salida, tenemos que registrarlo.
-            em.createStoredProcedureQuery("update_pedido")
-                    .registerStoredProcedureParameter("result", Integer.class, ParameterMode.OUT)
-                    .registerStoredProcedureParameter("numero_pedido", Integer.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("cliente_id", Long.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("articulo_id", Long.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("unidades", Integer.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("fecha_pedido", Date.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("es_enviado", Integer.class, ParameterMode.IN)
-                    .setParameter("numero_pedido", pedido.getNumeroPedido())
-                    .setParameter("cliente_id", pedido.getCliente().getId())
-                    .setParameter("articulo_id", pedido.getArticulo().getId())
-                    .setParameter("unidades", pedido.getUnidades())
-                    .setParameter("fecha_pedido", Date.valueOf(pedido.getFechaPedido()))
-                    // Realizamos el cast automáticamente a un tiny int para replicar un booleano.
-                    .setParameter("es_enviado", pedido.getEsEnviado() ? 1 : 0)
-                    .setParameter("id", pedido.getId())
-                    .executeUpdate();
-
-            // em.merge(pedido);
+            em.merge(pedido);
         } else {
             System.out.println(pedido);
             // Si no, creamos un nuevo pedido.
-            em.createStoredProcedureQuery("add_pedido")
-                    .registerStoredProcedureParameter("idout", Integer.class, ParameterMode.OUT)
-                    .registerStoredProcedureParameter("numero_pedido", Integer.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("cliente_id", Long.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("articulo_id", Long.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("unidades", Integer.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("fecha_pedido", Date.class, ParameterMode.IN)
-                    .registerStoredProcedureParameter("es_enviado", Integer.class, ParameterMode.IN)
-                    .setParameter("numero_pedido", pedido.getNumeroPedido())
-                    .setParameter("cliente_id", pedido.getCliente().getId())
-                    .setParameter("articulo_id", pedido.getArticulo().getId())
-                    .setParameter("unidades", pedido.getUnidades())
-                    .setParameter("fecha_pedido", Date.valueOf(pedido.getFechaPedido()))
-                    // Realizamos el cast automáticamente a un tiny int para replicar un booleano.
-                    .setParameter("es_enviado", pedido.getEsEnviado() ? 1 : 0)
-                    .executeUpdate();
-
-            //em.persist(pedido);
+            em.persist(pedido);
         }
     }
 

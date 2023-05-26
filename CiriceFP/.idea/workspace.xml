@@ -5,36 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="Update Commit. version: 1.0. Cambios: Finalizada refafactorización a Hibernate de las clases sin asociaciones.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStoreApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/PedidosView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/ColorsDictionary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/FontsDictionary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/logo-cirice.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IArticuloController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IClienteController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IPedidoController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStoreApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStoreApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/utils/Conexion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaArticulos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaClientes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaPedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaPedidos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/IArticulo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/IArticulo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/ArticulosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/ClientesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/MenuPrincipalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/PedidosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/PedidosView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaPedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/PedidosController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/ColorsDictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/ColorsDictionary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/listas/Listas.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/utils/Conexion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/MenuPrincipal.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaArticulos.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaClientes.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,10 +43,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="JavaFXApplication" />
         <option value="module-info" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -72,18 +71,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/VirtualMachines/workspace/UOC-POO-con-acceso-a-BBDD/CiriceFP/src/main/resources/assets",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;daniel&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/VirtualMachines/workspace/UOC-POO-con-acceso-a-BBDD/CiriceFP/src/main/resources/assets&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\VirtualMachines\workspace\UOC-POO-con-acceso-a-BBDD\CiriceFP\src\main\resources\assets" />

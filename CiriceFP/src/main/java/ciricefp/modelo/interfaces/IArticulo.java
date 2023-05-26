@@ -1,5 +1,10 @@
 package ciricefp.modelo.interfaces;
 
+import ciricefp.modelo.Articulo;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
 /**
  * Lss interfaces nos permiten prototipar los métodos que por defecto usará una clase que implemente la interfaz.
  * Resultan especialmente útiles cuando se realiza la implementación de la capa de acceso a datos.
@@ -9,4 +14,5 @@ package ciricefp.modelo.interfaces;
 
 // TODO --> Por el momento no necesitamos implementar ningún prototipo.
 public interface IArticulo  {
+
 }

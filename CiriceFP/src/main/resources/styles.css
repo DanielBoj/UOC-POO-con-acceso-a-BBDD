@@ -1,4 +1,5 @@
 /* Creamos los estilos generales para nuestras vistas */
+
 /* Seleccionamos un tamaño de fuente para que funcione em correctamente */
 .root {
     -fx-font-size: 12pt;
@@ -20,23 +21,6 @@
     -fx-cursor: hand;
 }
 
-.menu,
-.menu-item,
-.context-menu,
-.menu-bar,
-.menu-button {
-    -fx-background-color: #393e46;
-    -fx-text-fill: #f2f2f2;
-}
-
-menu-item:hover,
-.menu-item:focused,
-.menu-button:hover,
-.menu-button:focused {
-    -fx-background-color: #f5a855;
-    -fx-text-fill: #2f2b2b;
-}
-
 .button:hover,
 .button:active,
 .button:focused {
@@ -44,6 +28,77 @@ menu-item:hover,
     -fx-text-fill: #2f2b2b;
 }
 
+/* Menú superior */
+.menu,
+.menu-item,
+.context-menu,
+.menu-bar {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > menu-button {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > menu-button:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu.bar > .menu-button > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .menu-button > .label:hover {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-bar > .container > .menu-button > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button:hover > .label {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-item > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-item:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-item:hover > .label {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+
+/* Paneles */
 .alert {
     -fx-background-color: #393e46;
     -fx-text-fill: #f2f2f2;
@@ -90,4 +145,13 @@ menu-item:hover,
 .highlighted: active {
     -fx-background-color: #f5a855;
     -fx-text-fill: #2f2b2b;
+}
+
+/* El pane de pedidos tendrá un fondo gris claro */
+.pedido-pane {
+    -fx-background-color: #a0a0a0;
+}
+
+.pedido-pane > .separator {
+    -fx-background-color: #333333;
 }

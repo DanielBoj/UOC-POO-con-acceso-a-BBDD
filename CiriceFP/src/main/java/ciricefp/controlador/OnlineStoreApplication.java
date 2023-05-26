@@ -2,15 +2,12 @@ package ciricefp.controlador;
 
 import ciricefp.modelo.Datos;
 import ciricefp.modelo.utils.ConexionJpa;
-import ciricefp.vista.MenuPrincipalController;
+import ciricefp.vista.controladores.MenuPrincipalController;
 import ciricefp.vista.MenuPrincipalView;
 import jakarta.persistence.EntityManager;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 /* Está clase es el nuevo controlador principal de las vistas ya que se encarga de generar la GUI de la aplicación. */
 public class OnlineStoreApplication extends Application {
@@ -95,6 +92,8 @@ public class OnlineStoreApplication extends Application {
     // Cierre de la aplicación
     @Override
     public void stop() throws Exception {
+        // Cerramos la conexión a la BD
+        MenuPrincipalView.exitMessage();
         if (datos.getEm().isOpen()) datos.getEm().close();
         super.stop();
         System.exit(exitValue);

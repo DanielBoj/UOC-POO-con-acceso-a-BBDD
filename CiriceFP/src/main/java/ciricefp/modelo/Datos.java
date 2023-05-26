@@ -1295,23 +1295,6 @@ public class Datos {
 
         // Ejecutamos el método para cargar los datos de test.
         return service.loadData();
-
-        /*// Creamos el repositorio para ejecutar acciones sobre la BD.
-        LoadDataRepositorio repositorio = new LoadDataImpl();
-
-        // Por seguridad, volvemos a comprobar si la BD está vacía.
-        if (repositorio.checkData()) {
-            return 0;
-        }
-
-        // Ejecutamos el método para cargar los datos de test.
-        try {
-            return repositorio.loadData();
-        } catch (Exception e) {
-            System.out.println("Error al cargar los datos de test en la BD.");
-            e.printStackTrace();
-            return -1;
-        }*/
     }
 
     // Comprobamos de forma independiente si la BD está vacía.

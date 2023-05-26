@@ -1,16 +1,15 @@
 module CiriceFP.OnlineStore {
+    requires javafx.base;
     requires javafx.controls;
     requires javafx.fxml;
-    requires javafx.base;
-    requires javafx.web;
     requires spring.context;
     requires org.jetbrains.annotations;
     requires org.hibernate.orm.core;
-    requires org.controlsfx.controls;
     requires net.synedra.validatorfx;
     requires jakarta.persistence;
     requires java.dotenv;
     requires commons.dbcp2;
+    requires commons.validator;
 
     opens ciricefp.controlador to javafx.fxml;
     exports ciricefp.controlador;
@@ -19,4 +18,5 @@ module CiriceFP.OnlineStore {
     exports ciricefp.modelo.utils;
     opens ciricefp.modelo.utils to org.hibernate.orm.core;
     exports ciricefp.vista;
+    exports ciricefp.vista.controladores;
 }

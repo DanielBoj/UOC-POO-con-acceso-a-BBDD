@@ -12,9 +12,13 @@ public class ColorsDictionary {
     static {
         addColor("background-dark", "#222831");
         addColor("background-medium", "#393e46");
+        addColor("background-light", "#00adb5");
         addColor("orange", "#f96d00");
         addColor("orange-light", "#f5a855");
         addColor("text-light", "#f2f2f2");
+        addColor("text-dark", "#222831");
+        addColor("border-dark", "#222831");
+        addColor("border-orange", "#f96d00");
     }
 
     // Método para cargar los colores en el diccionario
