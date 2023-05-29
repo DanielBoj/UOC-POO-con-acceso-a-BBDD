@@ -5,35 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="Update Commit. version: 1.0. Cambios: Finalizada refafactorización a Hibernate de las clases sin asociaciones.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IArticuloController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IClienteController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/interfaces/IPedidoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/Controlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStore.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStoreApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/controlador/OnlineStoreApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/Datos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/IArticulo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/interfaces/IArticulo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/modelo/repositorio/PedidoRepositorioImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/ArticulosController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ArticulosView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/ClientesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/ClientesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/MenuPrincipalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/MenuPrincipalView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/PedidosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/PedidosView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/VistaPedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/controladores/PedidosController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/ColorsDictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ciricefp/vista/dictionaries/ColorsDictionary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/controlador/Controlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/controlador/OnlineStore.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/Datos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ciricefp/modelo/repositorio/PedidoRepositorioImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciricefp/vista/VistaPedidos.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

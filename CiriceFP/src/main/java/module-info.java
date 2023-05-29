@@ -11,8 +11,8 @@ module CiriceFP.OnlineStore {
     requires commons.dbcp2;
     requires commons.validator;
 
-    opens ciricefp.controlador to javafx.fxml;
     exports ciricefp.controlador;
+    opens ciricefp.controlador to javafx.fxml;
     exports ciricefp.modelo;
     opens ciricefp.modelo to org.hibernate.orm.core;
     exports ciricefp.modelo.utils;
