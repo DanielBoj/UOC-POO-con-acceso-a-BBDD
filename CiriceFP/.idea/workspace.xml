@@ -7,8 +7,7 @@
     <list default="true" id="4bac9325-a0bc-482a-8f2f-6dcc26cd7815" name="Changes" comment="Update Commit. version: 1.0. Cambios: Finalizada refafactorización a Hibernate de las clases sin asociaciones.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/.env" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/CiriceFP-OnlineStore.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

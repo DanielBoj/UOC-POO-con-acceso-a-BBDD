@@ -23,7 +23,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-
+                    <mainClass>CiriceFP.OnlineStore/ciricefp.controlador.OnlineStoreApplication</mainClass>
                     <executable>java</executable>
                     <jlinkExecutable>jlink</jlinkExecutable>
                     <stripDebug>true</stripDebug>
