@@ -5,7 +5,6 @@ module CiriceFP.OnlineStore {
     requires spring.context;
     requires org.jetbrains.annotations;
     requires org.hibernate.orm.core;
-    requires net.synedra.validatorfx;
     requires jakarta.persistence;
     requires java.dotenv;
     requires commons.dbcp2;
