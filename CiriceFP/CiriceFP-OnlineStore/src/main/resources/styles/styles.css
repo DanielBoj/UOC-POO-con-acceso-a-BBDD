@@ -1,0 +1,157 @@
+/* Creamos los estilos generales para nuestras vistas */
+
+/* Seleccionamos un tamaño de fuente para que funcione em correctamente */
+.root {
+    -fx-font-size: 12pt;
+}
+
+/* DEFAULT CLASSES */
+
+/* Botones */
+.button {
+    -fx-min-width: 15em;
+    -fx-min-height: 3em;
+    -fx-background-color: #00000030;
+    -fx-margin: 0.8em;
+    -fx-padding: 0.3em;;
+    -fx-text-fill: #f5a855;
+    -fx-border-color: #f2f2f2;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-cursor: hand;
+}
+
+.button:hover,
+.button:active,
+.button:focused {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+/* Menú superior */
+.menu,
+.menu-item,
+.context-menu,
+.menu-bar {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > menu-button {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > menu-button:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu.bar > .menu-button > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .menu-button > .label:hover {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-bar > .container > .menu-button > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-bar > .container > .menu-button:hover > .label {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-item > .label {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.menu-item:hover {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+.menu-item:hover > .label {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+
+/* Paneles */
+.alert {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.alert > .header {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+}
+
+.alert,
+.dialog-pane > .header > .label {
+    -fx-background-color: #222831;
+    -fx-text-fill: #f2f2f2;
+    -fx-font-size: 1.5em;
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
+}
+
+.alert,
+.dialog-pane > .content {
+    -fx-background-color: #393e46;
+    -fx-text-fill: #f2f2f2;
+    -fx-font-family: "Segoe UI";
+}
+
+.dialog-pane > .content {
+    -fx-font-size: 0.8em;
+}
+
+/* Resaltado de elementos focused */
+.highlighted: focused,
+.highlighted: active {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+/* CUSTOM CLASSES */
+.banner {
+}
+
+/* Resaltado de elementos focused */
+.highlighted: focused,
+.highlighted: active {
+    -fx-background-color: #f5a855;
+    -fx-text-fill: #2f2b2b;
+}
+
+/* El pane de pedidos tendrá un fondo gris claro */
+.pedido-pane {
+    -fx-background-color: #a0a0a0;
+}
+
+.pedido-pane > .separator {
+    -fx-background-color: #333333;
+}
