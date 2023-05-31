@@ -128,7 +128,11 @@
 
     <build>
         <plugins>
+<<<<<<< HEAD
             <!-- Añadimos los archivos necesarios para ejecutar el programa fuera del IDE -->
+=======
+            <!-- adds file to let you run program outside of IDE -->
+>>>>>>> c47aee2fd62dde697419ba670d31fefd495ff989
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -155,7 +159,11 @@
                 </executions>
             </plugin>
 
+<<<<<<< HEAD
             <!-- Configuramos la versión de Java que usará el programa -->
+=======
+            <!-- sets up the version of Java you are running -->
+>>>>>>> c47aee2fd62dde697419ba670d31fefd495ff989
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -171,8 +179,12 @@
                     </dependency>
                 </dependencies>
             </plugin>
+<<<<<<< HEAD
 
             <!-- Añadimos la clase main y los recursos -->
+=======
+            <!-- Adds the mainClass to the jar so it will run outside -->
+>>>>>>> c47aee2fd62dde697419ba670d31fefd495ff989
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -197,8 +209,12 @@
                     </includes>
                 </configuration>
             </plugin>
+<<<<<<< HEAD
 
             <!-- Copiamos las dependencias  -->
+=======
+            <!-- Copies the depend FX files to your program  -->
+>>>>>>> c47aee2fd62dde697419ba670d31fefd495ff989
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -218,7 +234,10 @@
                 </executions>
             </plugin>
 
+<<<<<<< HEAD
 <!--            Añadimos JavaFX a nuestra apliación -->
+=======
+>>>>>>> c47aee2fd62dde697419ba670d31fefd495ff989
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
