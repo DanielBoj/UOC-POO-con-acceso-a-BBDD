@@ -8,6 +8,6 @@ ENV MYSQL_ROOT_PASSWORD=ciricefp
 ENV MYSQL_DATABASE=onlinestore_db
 
 # Archivo SQL de inicialización de la base de datos
-COPY CiriceFP/src/main/resources/script_olinestore_db.sql /docker-entrypoint-initdb.d/
+COPY CiriceFP/CiriceFP-OnlineStore/src/main/resources/script_olinestore_db.sql /docker-entrypoint-initdb.d/
 
 EXPOSE 3306
