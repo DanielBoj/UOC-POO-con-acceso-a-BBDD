@@ -277,28 +277,6 @@ public class MenuPrincipalController {
         }
         // Si ha habido cualquier problema, devolvemos un Optional vacío.
         return Optional.empty();
-
-       /* // Actualizamos el estado de los pedidos para evitar errores
-        controlador.actualizarEstadoPedidos();
-
-
-        // Obtenemos la lista de pedidos filtrados por el estado
-        ArrayList<Pedido> pedidos = controlador.filterPedidosByEstado(opt);
-
-        // Mostramos la lista por pantalla
-        if (pedidos.isEmpty()) {
-            System.out.println("No hay pedidos en la lista.");
-            return;
-        }
-
-        System.out.println("Lista de pedidos " + opt + ":");
-        for (Pedido pedido : pedidos) {
-            controlador.printTicket(pedido);
-            System.out.println("==================================");
-            System.out.println("Pulsa ENTER para continuar.");
-            // Esperamos una pulsación de tecla para mostrar el siguiente artículo.
-            teclado.nextLine();
-        }*/
     }
 
     // Obtenemos una lista de los pedidos de un cliente filtrándolos por su nif.

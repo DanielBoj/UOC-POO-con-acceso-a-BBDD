@@ -309,6 +309,7 @@ public class PedidosView {
                 if (newValue.equals(rbClienteNuevo)) {
                     // Lanazamos el formulario para crear un cliente
                     Stage windowAddCliente = addCliente();
+                    windowAddCliente.show();
 
                     // Capturamos el evento de cerrar la ventana -> Tenemos que llegar a la propiedad NIF del cliente
                     windowAddCliente.setOnCloseRequest(closeEvent -> {
@@ -783,7 +784,6 @@ public class PedidosView {
                     if (value == 0) {
                         throwExitPane("actualizar-0");
                     } else {
-                        System.out.println(value);
                         throwExitPane("actualizar", value);
                     }
                 },
